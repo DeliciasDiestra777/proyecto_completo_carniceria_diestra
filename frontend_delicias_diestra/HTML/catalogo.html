@@ -1,0 +1,244 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Catálogo de Productos - Carnicería Delicias</title>
+    <link rel="stylesheet" href="../CSS/styles.css">
+    <link rel="stylesheet" href="../CSS/catalogo.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <script src="../JS/categoria.js"></script>
+    <script src="../JS/carrito.js"></script>
+    <script src="../JS/catalogo-filtros.js"></script>
+    <script src="../JS/client-session.js"></script>
+    <script src="../JS/notificaciones-cliente.js"></script>
+</head>
+
+<body>
+    <!-- Header -->
+    <header class="header">
+        <div class="container">
+            <div class="header-content">
+                <!-- Logo -->
+                <div class="logo">
+                    <div class="logo-icon">
+                        <a href="index.html"><img src="../IMG/logoCarniceria.png" alt="Logo Carnicería Delicias"
+                                class="logo-image"></a>
+                    </div>
+                    <span class="logo-text">Carnicería Delicias a tu Diestra</span>
+                </div>
+
+                <!-- Navigation -->
+                <nav class="nav">
+                    <ul class="nav-list">
+                        <li>
+                            <a href="index.html" class="nav-link">Inicio</a>
+                        </li>
+                        <li><a href="#catalogo" class="nav-link active">Catálogo</a></li>
+                        <li>
+                            <a href="carrito.html" class="nav-link" id="carrito-link">
+                                <i class="fas fa-shopping-cart"></i>
+                                <span class="carrito-badge" id="carrito-badge">0</span>
+                            </a>
+                        </li>
+                        <li id="notificaciones-cliente-li" style="display: none;">
+                            <a href="#" class="nav-link" id="notificaciones-cliente-link"
+                                onclick="event.preventDefault(); abrirNotificacionesCliente();">
+                                <i class="fas fa-bell"></i>
+                                <span class="notificacion-badge-cliente" id="notificacion-badge-cliente"
+                                    style="display: none;">0</span>
+                            </a>
+                        </li>
+                    </ul>
+                </nav>
+
+                <!-- User Area -->
+                <div class="nav-user">
+                    <ul class="nav-list">
+                        <!-- Área de usuario (se muestra cuando no está logueado) -->
+                        <li class="nav-user-area" id="nav-user-area" style="display: flex;">
+                            <a href="login.html" class="nav-link" id="login-link" target="_self">Iniciar Sesión</a>
+                            <a href="registro.html" class="btn btn-primary" id="registro-link"
+                                target="_self">Registrarse</a>
+                        </li>
+
+                        <!-- Usuario logueado (se muestra cuando está logueado) -->
+                        <li class="nav-user-logged" id="nav-user-logged" style="display: none;">
+                            <div class="user-dropdown">
+                                <button class="user-button" id="user-button">
+                                    <i class="fas fa-user-circle"></i>
+                                    <span id="user-name"></span>
+                                    <i class="fas fa-chevron-down"></i>
+                                </button>
+                                <div class="user-menu" id="user-menu">
+                                    <a href="#" class="user-menu-item" id="user-profile">
+                                        <i class="fas fa-user"></i>
+                                        Mi Perfil
+                                    </a>
+                                    <a href="#" class="user-menu-item" id="user-orders">
+                                        <i class="fas fa-shopping-bag"></i>
+                                        Mis Pedidos
+                                    </a>
+                                    <div class="user-menu-divider"></div>
+                                    <a href="#" class="user-menu-item" id="user-logout">
+                                        <i class="fas fa-sign-out-alt"></i>
+                                        Cerrar Sesión
+                                    </a>
+                                </div>
+                            </div>
+                        </li>
+                    </ul>
+                </div>
+
+                <!-- Mobile Menu Toggle -->
+                <button class="mobile-menu-toggle" id="mobile-menu-toggle">
+                    <span></span>
+                    <span></span>
+                    <span></span>
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <!-- Catálogo de Productos -->
+    <div class="catalogo-container" id="catalogo-container">
+        <div class="catalogo-content">
+            <div class="catalogo-header">
+                <h2>Catálogo de Productos</h2>
+                <p>Encuentra los mejores cortes y embutidos</p>
+            </div>
+
+            <div class="catalogo-body">
+                <!-- Sidebar de Filtros -->
+                <div class="catalogo-sidebar">
+                    <div class="buscar-productos">
+                        <h3>Buscar Productos</h3>
+                        <div class="buscar-input">
+                            <i class="fas fa-search"></i>
+                            <input type="text" placeholder="Buscar por nombre..." id="buscar-producto">
+                        </div>
+                    </div>
+
+                    <div class="filtros-section">
+                        <h3>Rango de Precio</h3>
+                        <div class="filtros-precio">
+                            <div class="precio-slider">
+                                <input type="range" min="0" max="50000" value="50000" class="precio-range"
+                                    id="precio-max">
+                                <div class="precio-labels">
+                                    <span>$0</span>
+                                    <span>$50.000</span>
+                                </div>
+                            </div>
+                            <div class="precio-input">
+                                <label>Hasta: $<input type="number" id="precio-max-input" value="50000" min="0"
+                                        max="50000"></label>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="filtros-section">
+                        <h3>Ordenar Por</h3>
+                        <select class="filtros-ordenar" id="filtros-ordenar">
+                            <option value="nombre">Nombre A-Z</option>
+                            <option value="precio-asc">Precio: Menor a Mayor</option>
+                            <option value="precio-desc">Precio: Mayor a Menor</option>
+                            <option value="stock">Stock Disponible</option>
+                        </select>
+                    </div>
+
+                    <button class="btn-limpiar-filtros" id="btn-limpiar-filtros">
+                        Limpiar Filtros
+                    </button>
+                </div>
+
+                <!-- Área de Productos -->
+                <div class="catalogo-productos">
+                    <div class="productos-header">
+                        <div class="productos-botones">
+                            <button class="btn-productos btn-productos-activo" id="btn-productos">
+                                <i class="fas fa-box"></i>
+                                Productos
+                            </button>
+                        </div>
+                        <div class="productos-contador">
+                            <span id="productos-contador">Mostrando 12 de 12 productos</span>
+                        </div>
+                    </div>
+
+                    <div class="productos-grid" id="productos-grid">
+                        <!-- Los productos se cargarán dinámicamente aquí -->
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-section">
+                    <div class="footer-logo">
+                        <div class="logo-icon">
+                            <img src="../IMG/logoCarniceria.png" alt="Logo Carnicería Delicias" class="logo-image">
+                        </div>
+                        <span class="logo-text">Carnicería Delicias a tu Diestra</span>
+                    </div>
+                    <p class="footer-description">Los mejores cortes de carne fresca, pollo, cerdo y embutidos de la más
+                        alta calidad.</p>
+                </div>
+                <div class="footer-section">
+                    <h3 class="footer-title">Categorias</h3>
+                    <ul class="footer-links" id="footer-categorias">
+                        <!-- Las categorías se cargarán dinámicamente aquí -->
+                    </ul>
+                </div>
+                <div class="footer-section">
+                    <h3 class="footer-title">Enlaces</h3>
+                    <ul class="footer-links">
+                        <li><a href="catalogo.html">Catálogo</a></li>
+                        <li><a href="carrito.html">Carrito</a></li>
+                        <li><a href="#perfil">Mi Cuenta</a></li>
+                    </ul>
+                </div>
+                <div class="footer-section">
+                    <h3 class="footer-title">Contacto</h3>
+                    <div class="contact-info">
+                        <p><i class="fas fa-phone"></i> +57 321 123 4567</p>
+                        <p><i class="fas fa-envelope"></i> info@carniceria.com</p>
+                        <p><i class="fas fa-map-marker-alt"></i> Carrera 26 # 28 - 02, Palmira, Valle - Colombia</p>
+                    </div>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>&copy; 2025 Carnicería Delicias a tu Diestra. Todos los derechos reservados.</p>
+                <p class="scripture">"Delicias a tu diestra" - Salmos 16:11</p>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        // Cargar categorías dinámicamente al inicializar la página
+        document.addEventListener('DOMContentLoaded', function () {
+            // Cargar categorías en el footer
+            const footerContainer = document.getElementById('footer-categorias');
+            if (footerContainer) {
+                loadCategoriasAsLinks(footerContainer);
+            }
+        });
+
+        // Funciones básicas para los controles de productos
+        function cambiarCantidad(producto, cambio) {
+            const input = document.getElementById(`cantidad-${producto}`);
+            let cantidad = parseInt(input.value) + cambio;
+            if (cantidad < 1) cantidad = 1;
+            input.value = cantidad;
+        }
+    </script>
+
+</body>
+
+</html>

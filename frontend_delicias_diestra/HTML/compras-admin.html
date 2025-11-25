@@ -1,0 +1,298 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gestión de Compras - Carnicería Delicias a tu Diestra</title>
+    <meta name="description" content="Panel de gestión de compras - Crear, editar, eliminar y listar compras">
+    <link rel="stylesheet" href="../CSS/compras-admin.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script src="../JS/unidades-medida.js"></script>
+</head>
+
+<body class="compras-body">
+    <!-- Modal de Gestión de Compras -->
+    <div class="compras-modal show" id="compras-modal">
+        <div class="compras-modal-content compras-modal-large">
+            <div class="compras-modal-header">
+                <h3 class="compras-modal-title" id="compras-modal-title">Gestión de Compras</h3>
+                <a href="panel-admin.html">
+                    <button class="compras-modal-close" id="close-compras-modal">
+                        <i class="fas fa-times"></i>
+                    </button>
+                </a>
+            </div>
+
+            <div class="compras-modal-body">
+                <!-- Botones de Acción -->
+                <div class="compras-actions-section">
+                    <div class="compras-actions-grid">
+                        <button class="compras-action-btn compras-action-primary" id="btn-crear-compra">
+                            <div class="compras-action-icon">
+                                <i class="fas fa-shopping-bag"></i>
+                            </div>
+                            <div class="compras-action-content">
+                                <h4 class="compras-action-title">Nueva Compra</h4>
+                                <p class="compras-action-description">Registrar una nueva compra a proveedores</p>
+                            </div>
+                        </button>
+
+                        <button class="compras-action-btn compras-action-info" id="btn-listar-compras">
+                            <div class="compras-action-icon">
+                                <i class="fas fa-list"></i>
+                            </div>
+                            <div class="compras-action-content">
+                                <h4 class="compras-action-title">Listar Compras</h4>
+                                <p class="compras-action-description">Ver todas las compras registradas</p>
+                            </div>
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Formulario de Compra (se muestra dinámicamente) -->
+                <div class="compras-form-section" id="compras-form-section" style="display: none;">
+                    <form class="compras-form" id="compras-form">
+                        <!-- Información de la Compra -->
+                        <div class="compras-form-section">
+                            <h4 class="compras-form-section-title">Información de la Compra</h4>
+                            <div class="compras-form-row">
+                                <div class="compras-form-group">
+                                    <label class="compras-form-label">Proveedor *</label>
+                                    <select class="compras-form-select" id="compra-id-proveedor" name="id_proveedor" required>
+                                        <option value="">Seleccionar proveedor</option>
+                                        <!-- Se cargarán dinámicamente desde la API -->
+                                    </select>
+                                </div>
+                                <div class="compras-form-group">
+                                    <label class="compras-form-label">Fecha de Compra *</label>
+                                    <input type="datetime-local" class="compras-form-input" id="compra-fecha" name="fecha_compra" required>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Detalle de Compra -->
+                        <div class="compras-form-section">
+                            <h4 class="compras-form-section-title">Detalle de Productos</h4>
+                            <div class="compras-detail-actions">
+                                <button type="button" class="compras-btn compras-btn-secondary" id="btn-agregar-producto">
+                                    <i class="fas fa-plus"></i>
+                                    Agregar Producto
+                                </button>
+                            </div>
+                            <div class="compras-detail-table-container">
+                                <table class="compras-detail-table" id="compras-detail-table">
+                                    <thead>
+                                        <tr>
+                                            <th>Producto</th>
+                                            <th>Cantidad</th>
+                                            <th>Unidad</th>
+                                            <th>Precio Unitario</th>
+                                            <th>Subtotal</th>
+                                            <th>Acciones</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="compras-detail-tbody">
+                                        <!-- Los detalles se agregarán dinámicamente -->
+                                    </tbody>
+                                    <tfoot>
+                                        <tr>
+                                            <td colspan="4" style="text-align: right; font-weight: bold;">Total:</td>
+                                            <td id="compra-total" style="font-weight: bold;">$0.00</td>
+                                            <td></td>
+                                        </tr>
+                                    </tfoot>
+                                </table>
+                            </div>
+                            <input type="hidden" id="compra-total-hidden" name="total_compra" value="0">
+                        </div>
+                    </form>
+                </div>
+
+                <!-- Lista de Compras (se muestra dinámicamente) -->
+                <div class="compras-list-section" id="compras-list-section" style="display: none;">
+                    <div class="compras-list-header">
+                        <h4 class="compras-list-title">Lista de Compras</h4>
+                        <div class="compras-list-actions">
+                            <div class="compras-search-box">
+                                <i class="fas fa-search"></i>
+                                <input type="text" placeholder="Buscar compras..." id="search-compras">
+                            </div>
+                            <input type="date" class="compras-date-input" id="filter-fecha-compra">
+                            <select class="compras-select" id="filter-proveedor-compra">
+                                <option value="">Todos los proveedores</option>
+                                <!-- Se cargarán dinámicamente -->
+                            </select>
+                        </div>
+                    </div>
+                    <div class="compras-table-container">
+                        <table class="compras-table" id="compras-table">
+                            <thead>
+                                <tr>
+                                    <th>ID</th>
+                                    <th>Proveedor</th>
+                                    <th>Fecha</th>
+                                    <th>Total</th>
+                                    <th>Detalles</th>
+                                    <th>Acciones</th>
+                                </tr>
+                            </thead>
+                            <tbody id="compras-tbody">
+                                <!-- Las compras se cargarán dinámicamente -->
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+            <div class="compras-modal-footer">
+                <button class="compras-btn compras-btn-outline" id="cancel-compras">
+                    <i class="fas fa-arrow-left"></i>
+                    Volver
+                </button>
+                <button class="compras-btn compras-btn-danger" id="delete-compra" style="display: none;">
+                    <i class="fas fa-trash"></i>
+                    Eliminar
+                </button>
+                <button class="compras-btn compras-btn-primary" id="save-compra" style="display: none;">
+                    <i class="fas fa-save"></i>
+                    Guardar Compra
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal para agregar producto al detalle -->
+    <div class="compras-modal-producto" id="modal-producto" style="display: none;">
+        <div class="compras-modal-producto-content">
+            <div class="compras-modal-producto-header">
+                <h4>Agregar Producto</h4>
+                <button class="compras-modal-producto-close" onclick="cerrarModalProducto()">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            <div class="compras-modal-producto-body">
+                <div class="compras-form-group">
+                    <label class="compras-form-label">Producto *</label>
+                    <div class="compras-autocomplete-wrapper">
+                        <input type="text" class="compras-form-input" id="modal-producto-search" 
+                            placeholder="Buscar producto (ej: salchichas)" autocomplete="off">
+                        <input type="hidden" id="modal-producto-id" name="id_producto">
+                        <div class="compras-autocomplete-dropdown" id="modal-producto-dropdown" style="display: none;"></div>
+                    </div>
+                    <small class="compras-form-help">Escribe para buscar y filtrar productos</small>
+                </div>
+                <div class="compras-form-row">
+                    <div class="compras-form-group">
+                        <label class="compras-form-label">Cantidad *</label>
+                        <input type="number" class="compras-form-input" id="modal-producto-cantidad" step="0.001" min="0" required>
+                    </div>
+                    <div class="compras-form-group">
+                        <label class="compras-form-label">Unidad *</label>
+                        <select class="compras-form-select" id="modal-producto-unidad" required>
+                            <option value="">Seleccionar unidad</option>
+                            <option value="lb">Libra (lb)</option>
+                            <option value="unidad">Unidad</option>
+                        </select>
+                        <small class="compras-form-help" id="modal-unidad-help" style="display: none;"></small>
+                    </div>
+                </div>
+                <div class="compras-form-group">
+                    <label class="compras-form-label">Precio Unitario *</label>
+                    <input type="number" class="compras-form-input" id="modal-producto-precio" step="0.01" min="0" required>
+                </div>
+            </div>
+            <div class="compras-modal-producto-footer">
+                <button class="compras-btn compras-btn-outline" onclick="cerrarModalProducto()">Cancelar</button>
+                <button class="compras-btn compras-btn-primary" onclick="agregarProductoDetalle()">Agregar</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal de Detalles de Compra -->
+    <div class="compras-modal-detalle" id="modal-detalle-compra" style="display: none;">
+        <div class="compras-modal-detalle-content">
+            <div class="compras-modal-detalle-header">
+                <h3 class="compras-modal-detalle-title">
+                    <i class="fas fa-shopping-bag"></i>
+                    Detalle de Compra #<span id="detalle-compra-id"></span>
+                </h3>
+                <button class="compras-modal-detalle-close" onclick="cerrarModalDetalleCompra()">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            <div class="compras-modal-detalle-body">
+                <!-- Información General -->
+                <div class="compras-detalle-info-section">
+                    <div class="compras-detalle-info-grid">
+                        <div class="compras-detalle-info-item">
+                            <span class="compras-detalle-info-label">
+                                <i class="fas fa-user-tie"></i> Proveedor:
+                            </span>
+                            <span class="compras-detalle-info-value" id="detalle-compra-proveedor">-</span>
+                        </div>
+                        <div class="compras-detalle-info-item">
+                            <span class="compras-detalle-info-label">
+                                <i class="fas fa-calendar"></i> Fecha:
+                            </span>
+                            <span class="compras-detalle-info-value" id="detalle-compra-fecha">-</span>
+                        </div>
+                        <div class="compras-detalle-info-item">
+                            <span class="compras-detalle-info-label">
+                                <i class="fas fa-dollar-sign"></i> Total:
+                            </span>
+                            <span class="compras-detalle-info-value compras-detalle-total" id="detalle-compra-total">$0.00</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Tabla de Productos -->
+                <div class="compras-detalle-table-section">
+                    <h4 class="compras-detalle-table-title">
+                        <i class="fas fa-boxes"></i> Productos Comprados
+                    </h4>
+                    <div class="compras-detalle-table-container">
+                        <table class="compras-detalle-table">
+                            <thead>
+                                <tr>
+                                    <th>#</th>
+                                    <th>Producto</th>
+                                    <th>Cantidad</th>
+                                    <th>Unidad</th>
+                                    <th>Precio Unitario</th>
+                                    <th>Subtotal</th>
+                                </tr>
+                            </thead>
+                            <tbody id="detalle-compra-tbody">
+                                <!-- Los detalles se cargarán dinámicamente -->
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+            <div class="compras-modal-detalle-footer">
+                <button class="compras-btn compras-btn-primary" onclick="cerrarModalDetalleCompra()">
+                    <i class="fas fa-check"></i> Cerrar
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Loading Overlay -->
+    <div class="compras-loading-overlay" id="compras-loading">
+        <div class="compras-loading-spinner">
+            <i class="fas fa-spinner fa-spin"></i>
+            <p>Cargando...</p>
+        </div>
+    </div>
+
+    <!-- Script para funcionalidad -->
+    <script src="../JS/dateHelper.js"></script>
+    <script src="../JS/compras-admin.js"></script>
+</body>
+
+</html>
+

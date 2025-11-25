@@ -1,0 +1,444 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Crear Cuenta - Carnicería Delicias a tu Diestra</title>
+    <link rel="stylesheet" href="../CSS/registro.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    <!-- Script para limpiar sesiones automáticamente -->
+    <script src="../JS/limpiar-sesion.js"></script>
+</head>
+
+<body class="registro-body">
+    <!-- Header -->
+    <header class="header">
+        <div class="container">
+            <div class="header-content">
+                <!-- Logo -->
+                <div class="logo">
+                    <div class="logo-icon">
+                        <img src="../IMG/logoCarniceria.png" alt="Logo Carnicería Delicias" class="logo-image">
+                    </div>
+                    <span class="logo-text">Carnicería Delicias a tu Diestra</span>
+                </div>
+
+                <!-- Navigation -->
+                <nav class="nav">
+                    <ul class="nav-list">
+                        <li><a href="index.html" class="nav-link">Inicio</a></li>
+                        <li><a href="index.html#catalogo" class="nav-link">Catálogo</a></li>
+                        <li><a href="index.html#carrito" class="nav-link">
+                                <i class="fas fa-shopping-cart"></i>
+                                <span class="carrito-badge">0</span>
+                            </a></li>
+                        <li><a href="login.html" class="nav-link">Iniciar Sesión</a></li>
+                        <li><a href="registro.html" class="btn btn-primary active">Registrarse</a></li>
+                    </ul>
+                </nav>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <main class="main-content">
+        <div class="fondo-autenticacion">
+            <div class="fondo-autenticacion-imagen">
+                <div class="fondo-autenticacion-overlay"></div>
+            </div>
+        </div>
+        <div class="container">
+            <div class="contenedor-formulario-autenticacion">
+                <!-- Registration Form -->
+                <div class="auth-card">
+                    <div class="auth-header">
+                        <a href="index.html"><button type="button" class="cerrar-formulario" id="cerrar-registro"
+                                title="Cerrar formulario">
+                                <i class="fas fa-times"></i>
+                            </button></a>
+                        <h1 class="auth-title">Crear Cuenta</h1>
+                        <p class="auth-subtitle">Únete a nuestra comunidad</p>
+                    </div>
+
+                    <form class="auth-form" id="registro-form">
+                        <!-- Name Fields -->
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="nombre" class="form-label">Nombre</label>
+                                <input type="text" id="nombre" name="nombre" class="form-input" placeholder="Tu nombre"
+                                    required>
+                            </div>
+                            <div class="form-group">
+                                <label for="apellido" class="form-label">Apellido</label>
+                                <input type="text" id="apellido" name="apellido" class="form-input"
+                                    placeholder="Tu apellido" required>
+                            </div>
+                        </div>
+
+                        <!-- Document Type and Number -->
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="tipo_documento" class="form-label">Tipo de Documento</label>
+                                <select id="tipo_documento" name="tipo_documento" class="form-select" required>
+                                    <option value="">Seleccionar</option>
+                                    <option value="CC">Cédula de Ciudadanía</option>
+                                    <option value="CE">Cédula de Extranjería</option>
+                                    <option value="NIT">NIT</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label for="numero_documento" class="form-label">Número de Documento</label>
+                                <input type="text" id="numero_documento" name="numero_documento" class="form-input"
+                                    placeholder="12345678" required>
+                            </div>
+                        </div>
+
+                        <!-- Dirección Field -->
+                        <div class="form-group">
+                            <label for="direccion" class="form-label">Dirección</label>
+                            <div class="input-group">
+                                <i class="fas fa-map-marker-alt input-icon"></i>
+                                <input type="text" id="direccion" name="direccion" class="form-input"
+                                    placeholder="Calle 123 #45-67, Barrio Centro" required>
+                            </div>
+                            <div class="form-error" id="direccion-error"></div>
+                        </div>
+
+                        <!-- Email Field -->
+                        <div class="form-group">
+                            <label for="email" class="form-label">Correo Electrónico</label>
+                            <div class="input-group">
+                                <i class="fas fa-envelope input-icon"></i>
+                                <input type="email" id="email" name="email" class="form-input"
+                                    placeholder="tu@email.com"
+                                    pattern="^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$" required>
+                            </div>
+                            <div class="form-error" id="email-error"></div>
+                        </div>
+
+
+
+                        <!-- Phone Field -->
+                        <div class="form-group">
+                            <label for="telefono" class="form-label">Teléfono</label>
+                            <div class="input-group">
+                                <i class="fas fa-phone input-icon"></i>
+                                <input type="tel" id="telefono" name="telefono" class="form-input"
+                                    placeholder="321 456 7890" required>
+                            </div>
+                        </div>
+
+                        <!-- Password Fields -->
+                        <div class="form-group">
+                            <label for="password" class="form-label">Contraseña</label>
+                            <div class="input-group">
+                                <i class="fas fa-lock input-icon"></i>
+                                <input type="password" id="password" name="password" class="form-input"
+                                    placeholder="Mínimo 8 caracteres" required>
+                                <button type="button" class="password-toggle" id="toggle-password">
+                                    <i class="fas fa-eye"></i>
+                                </button>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="confirm-password" class="form-label">Confirmar Contraseña</label>
+                            <div class="input-group">
+                                <i class="fas fa-lock input-icon"></i>
+                                <input type="password" id="confirm-password" name="confirm_password" class="form-input"
+                                    placeholder="Repite tu contraseña" required>
+                                <button type="button" class="password-toggle" id="toggle-confirm-password">
+                                    <i class="fas fa-eye"></i>
+                                </button>
+                            </div>
+                        </div>
+
+
+
+                        <!-- Terms and Conditions -->
+                        <div class="form-group">
+                            <label class="checkbox-label terms-checkbox">
+                                <input type="checkbox" id="terms" name="terms" required>
+                                <span class="checkmark"></span>
+                                Acepto los <a href="#" class="terms-link" id="link-terminos">términos y
+                                    condiciones</a> y la <a href="#" class="terms-link" id="link-privacidad">política de
+                                    privacidad</a>
+                            </label>
+                        </div>
+
+                        <!-- Register Button -->
+                        <button type="submit" class="btn btn-primary btn-large btn-full">
+                            Crear Cuenta
+                        </button>
+
+                        <!-- Login Link -->
+                        <div class="auth-footer">
+                            <p>¿Ya tienes una cuenta? <a href="login.html" class="auth-link">Inicia sesión aquí</a></p>
+                        </div>
+
+                        <!-- Social Registration Divider -->
+                        <div class="divider">
+                            <span>O regístrate con</span>
+                        </div>
+
+                        <!-- Social Registration Buttons -->
+                        <div class="social-login">
+                            <button type="button" class="btn btn-social btn-google">
+                                <i class="fab fa-google"></i>
+                                Google
+                            </button>
+                            <button type="button" class="btn btn-social btn-facebook">
+                                <i class="fab fa-facebook-f"></i>
+                                Facebook
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- Modal Términos y Condiciones -->
+    <div id="modal-terminos" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>Términos y Condiciones</h2>
+                <button class="modal-close" data-modal="terminos">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="terminos-content">
+                    <h3>1. Información General</h3>
+                    <p>Bienvenido a Carnicería Delicias a tu Diestra. Estos términos y condiciones rigen el uso de
+                        nuestros servicios y productos. Al registrarte y utilizar nuestros servicios, aceptas cumplir
+                        con estos términos.</p>
+
+                    <h3>2. Servicios Ofrecidos</h3>
+                    <p>Ofrecemos productos cárnicos frescos y de calidad, incluyendo:</p>
+                    <ul>
+                        <li>Carnes de res, cerdo y pollo</li>
+                        <li>Embutidos artesanales</li>
+                        <li>Productos transformados</li>
+                        <li>Servicio de entrega a domicilio</li>
+                    </ul>
+
+                    <h3>3. Registro de Usuario</h3>
+                    <p>Para utilizar nuestros servicios, debes:</p>
+                    <ul>
+                        <li>Proporcionar información veraz y actualizada</li>
+                        <li>Ser mayor de 18 años o tener autorización de un tutor</li>
+                        <li>Mantener la confidencialidad de tu cuenta</li>
+                        <li>Notificar inmediatamente cualquier uso no autorizado</li>
+                    </ul>
+
+                    <h3>4. Precios y Pagos</h3>
+                    <p>Los precios están expresados en pesos colombianos (COP) e incluyen IVA. Nos reservamos el derecho
+                        de modificar precios con previo aviso. Los pagos se procesan de forma segura a través de
+                        nuestros proveedores de pago autorizados.</p>
+
+                    <h3>5. Calidad y Garantía</h3>
+                    <p>Garantizamos la frescura y calidad de nuestros productos. En caso de productos defectuosos,
+                        ofrecemos:</p>
+                    <ul>
+                        <li>Reembolso completo del producto</li>
+                        <li>Reemplazo del producto</li>
+                        <li>Crédito para futuras compras</li>
+                    </ul>
+
+                    <h3>6. Entregas</h3>
+                    <p>Realizamos entregas en el área metropolitana. Los tiempos de entrega son estimados y pueden
+                        variar según condiciones externas. El cliente debe estar presente para recibir el pedido.</p>
+
+                    <h3>7. Cancelaciones y Devoluciones</h3>
+                    <p>Las cancelaciones deben realizarse antes del procesamiento del pedido. Las devoluciones están
+                        sujetas a:</p>
+                    <ul>
+                        <li>Estado del producto</li>
+                        <li>Tiempo transcurrido desde la compra</li>
+                        <li>Causa de la devolución</li>
+                    </ul>
+
+                    <h3>8. Responsabilidades del Usuario</h3>
+                    <p>El usuario se compromete a:</p>
+                    <ul>
+                        <li>Usar el servicio de manera responsable</li>
+                        <li>No realizar actividades ilegales</li>
+                        <li>Respetar los derechos de propiedad intelectual</li>
+                        <li>No interferir con el funcionamiento del sistema</li>
+                    </ul>
+
+                    <h3>9. Limitación de Responsabilidad</h3>
+                    <p>Nuestra responsabilidad se limita al valor del producto adquirido. No nos hacemos responsables
+                        por daños indirectos, lucro cesante o daños consecuenciales.</p>
+
+                    <h3>10. Modificaciones</h3>
+                    <p>Nos reservamos el derecho de modificar estos términos en cualquier momento. Los cambios serán
+                        notificados a través de nuestros canales oficiales.</p>
+
+                    <h3>11. Ley Aplicable</h3>
+                    <p>Estos términos se rigen por las leyes de la República de Colombia. Cualquier disputa será
+                        resuelta en los tribunales competentes de Colombia.</p>
+
+                    <h3>12. Contacto</h3>
+                    <p>Para consultas sobre estos términos, contáctanos en:</p>
+                    <ul>
+                        <strong>Email:</strong> privacidad@deliciasatudiestra.com</li>
+                        <li><strong>Teléfono:</strong> +57 321 123 4567</li>
+                        <li><strong>Dirección:</strong> Carrera 26 # 28 - 02, Palmira, Valle - Colombiaa</li>
+                    </ul>
+
+                    <p class="terminos-fecha"><strong>Última actualización:</strong> Octubre 2025</p>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-primary" data-modal="terminos">Entendido</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal Política de Privacidad -->
+    <div id="modal-privacidad" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>Política de Privacidad</h2>
+                <button class="modal-close" data-modal="privacidad">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="privacidad-content">
+                    <h3>1. Información que Recopilamos</h3>
+                    <p>Recopilamos información personal que nos proporcionas directamente, incluyendo:</p>
+                    <ul>
+                        <li><strong>Datos de identificación:</strong> Nombre, apellido, tipo y número de documento</li>
+                        <li><strong>Información de contacto:</strong> Dirección, teléfono, correo electrónico</li>
+                        <li><strong>Datos de compra:</strong> Historial de pedidos, preferencias</li>
+                        <li><strong>Información técnica:</strong> Dirección IP, tipo de navegador, cookies</li>
+                    </ul>
+
+                    <h3>2. Uso de la Información</h3>
+                    <p>Utilizamos tu información personal para:</p>
+                    <ul>
+                        <li>Procesar y entregar tus pedidos</li>
+                        <li>Comunicarnos contigo sobre tu cuenta</li>
+                        <li>Mejorar nuestros productos y servicios</li>
+                        <li>Enviar promociones y ofertas especiales</li>
+                        <li>Cumplir con obligaciones legales</li>
+                    </ul>
+
+                    <h3>3. Compartir Información</h3>
+                    <p>No vendemos tu información personal. Podemos compartirla únicamente con:</p>
+                    <ul>
+                        <li><strong>Proveedores de servicios:</strong> Empresas de entrega, procesadores de pago</li>
+                        <li><strong>Autoridades:</strong> Cuando sea requerido por ley</li>
+                        <li><strong>Socios comerciales:</strong> Solo con tu consentimiento explícito</li>
+                    </ul>
+
+                    <h3>4. Seguridad de los Datos</h3>
+                    <p>Implementamos medidas de seguridad técnicas y organizacionales para proteger tu información:</p>
+                    <ul>
+                        <li>Encriptación SSL/TLS para transmisión de datos</li>
+                        <li>Almacenamiento seguro en servidores protegidos</li>
+                        <li>Acceso restringido solo a personal autorizado</li>
+                        <li>Monitoreo continuo de seguridad</li>
+                    </ul>
+
+                    <h3>5. Cookies y Tecnologías Similares</h3>
+                    <p>Utilizamos cookies para:</p>
+                    <ul>
+                        <li>Recordar tus preferencias</li>
+                        <li>Mejorar la experiencia de navegación</li>
+                        <li>Analizar el uso del sitio web</li>
+                        <li>Personalizar contenido y anuncios</li>
+                    </ul>
+                    <p>Puedes gestionar las cookies desde la configuración de tu navegador.</p>
+
+                    <h3>6. Derechos del Usuario</h3>
+                    <p>De acuerdo con la Ley 1581 de 2012 de Colombia, tienes derecho a:</p>
+                    <ul>
+                        <li><strong>Conocer:</strong> Qué información tenemos sobre ti</li>
+                        <li><strong>Actualizar:</strong> Corregir información inexacta</li>
+                        <li><strong>Eliminar:</strong> Solicitar la eliminación de tus datos</li>
+                        <li><strong>Revocar:</strong> Retirar el consentimiento en cualquier momento</li>
+                        <li><strong>Acceder:</strong> Solicitar una copia de tus datos</li>
+                    </ul>
+
+                    <h3>7. Retención de Datos</h3>
+                    <p>Conservamos tu información personal durante el tiempo necesario para:</p>
+                    <ul>
+                        <li>Cumplir con los propósitos para los cuales fue recopilada</li>
+                        <li>Satisfacer requisitos legales y regulatorios</li>
+                        <li>Resolver disputas y hacer cumplir acuerdos</li>
+                    </ul>
+
+                    <h3>8. Transferencias Internacionales</h3>
+                    <p>En caso de transferir datos fuera de Colombia, garantizamos que el país receptor ofrezca un nivel
+                        adecuado de protección o que existan garantías apropiadas.</p>
+
+                    <h3>9. Menores de Edad</h3>
+                    <p>Nuestros servicios están dirigidos a personas mayores de 18 años. No recopilamos intencionalmente
+                        información de menores sin el consentimiento de sus padres o tutores.</p>
+
+                    <h3>10. Cambios en la Política</h3>
+                    <p>Nos reservamos el derecho de actualizar esta política. Los cambios significativos serán
+                        notificados a través de:</p>
+                    <ul>
+                        <li>Correo electrónico</li>
+                        <li>Aviso en nuestro sitio web</li>
+                        <li>Notificación en la aplicación</li>
+                    </ul>
+
+                    <h3>11. Base Legal</h3>
+                    <p>El procesamiento de tus datos se basa en:</p>
+                    <ul>
+                        <li><strong>Consentimiento:</strong> Para comunicaciones de marketing</li>
+                        <li><strong>Contrato:</strong> Para procesar pedidos</li>
+                        <li><strong>Interés legítimo:</strong> Para mejorar nuestros servicios</li>
+                        <li><strong>Obligación legal:</strong> Para cumplir con regulaciones</li>
+                    </ul>
+
+                    <h3>12. Contacto y Ejercicio de Derechos</h3>
+                    <p>Para ejercer tus derechos o consultas sobre privacidad:</p>
+                    <ul>
+                        <li><strong>Email:</strong> privacidad@deliciasatudiestra.com</li>
+                        <li><strong>Teléfono:</strong> +57 321 123 4567</li>
+                        <li><strong>Dirección:</strong> Carrera 26 # 28 - 02, Palmira, Valle - Colombiaa</li>
+                        <li><strong>Horario:</strong> Lunes a Viernes, 5:00 AM - 01:00 PM</li>
+                    </ul>
+
+                    <h3>13. Autoridad de Control</h3>
+                    <p>Si consideras que tus derechos han sido vulnerados, puedes contactar a la Superintendencia de
+                        Industria y Comercio (SIC) de Colombia.</p>
+
+                    <p class="privacidad-fecha"><strong>Última actualización:</strong> Octubre 2025</p>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-primary" data-modal="privacidad">Entendido</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Scripts -->
+    <script src="../JS/registro.js"></script>
+
+    <!-- Script de verificación -->
+    <script>
+        // Verificar que las funciones estén cargadas
+        document.addEventListener('DOMContentLoaded', function () {
+            if (typeof abrirModalTerminos === 'undefined') {
+                console.error('Error: Las funciones de modal no se cargaron correctamente');
+            } else {
+                console.log('Funciones de modal cargadas correctamente');
+            }
+        });
+    </script>
+</body>
+
+</html>

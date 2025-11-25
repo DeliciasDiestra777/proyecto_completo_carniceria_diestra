@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Historial de Compras - Carnicería Delicias a tu Diestra</title>
+    <meta name="description" content="Consulta tu historial de pedidos y compras">
+    <link rel="stylesheet" href="../CSS/styles.css">
+    <link rel="stylesheet" href="../CSS/historial-compras.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script src="../JS/client-session.js"></script>
+    <script src="../JS/notificaciones-cliente.js"></script>
+</head>
+
+<body>
+    <!-- Header -->
+    <header class="header">
+        <div class="container">
+            <div class="header-content">
+                <!-- Logo -->
+                <div class="logo">
+                    <div class="logo-icon">
+                        <a href="index.html"><img src="../IMG/logoCarniceria.png" alt="Logo Carnicería Delicias"
+                                class="logo-image"></a>
+                    </div>
+                    <span class="logo-text">Carnicería Delicias a tu Diestra</span>
+                </div>
+
+                <!-- Navigation -->
+                <nav class="nav">
+                    <ul class="nav-list">
+                        <li><a href="index.html" class="nav-link">Inicio</a></li>
+                        <li><a href="catalogo.html" class="nav-link">Catálogo</a></li>
+                        <li>
+                            <a href="carrito.html" class="nav-link" id="carrito-link">
+                                <i class="fas fa-shopping-cart"></i>
+                                <span class="carrito-badge" id="carrito-badge" style="display: none;">0</span>
+                            </a>
+                        </li>
+                        <li id="notificaciones-cliente-li" style="display: none;">
+                            <a href="#" class="nav-link" id="notificaciones-cliente-link"
+                                onclick="event.preventDefault(); abrirNotificacionesCliente();">
+                                <i class="fas fa-bell"></i>
+                                <span class="notificacion-badge-cliente" id="notificacion-badge-cliente"
+                                    style="display: none;">0</span>
+                            </a>
+                        </li>
+                    </ul>
+                </nav>
+
+                <!-- User Area -->
+                <div class="nav-user">
+                    <ul class="nav-list">
+                        <li class="nav-user-area" id="nav-user-area" style="display: none;">
+                            <a href="login.html" class="nav-link" id="login-link" target="_self">Iniciar Sesión</a>
+                            <a href="registro.html" class="btn btn-primary" id="registro-link"
+                                target="_self">Registrarse</a>
+                        </li>
+
+                        <li class="nav-user-logged" id="nav-user-logged" style="display: none;">
+                            <div class="user-dropdown">
+                                <button class="user-button" id="user-button">
+                                    <i class="fas fa-user-circle"></i>
+                                    <span id="user-name"></span>
+                                    <i class="fas fa-chevron-down"></i>
+                                </button>
+                                <div class="user-menu" id="user-menu">
+                                    <a href="#" class="user-menu-item" id="user-profile">
+                                        <i class="fas fa-user"></i>
+                                        Mi Perfil
+                                    </a>
+                                    <a href="#" class="user-menu-item" id="user-orders">
+                                        <i class="fas fa-shopping-bag"></i>
+                                        Mis Pedidos
+                                    </a>
+                                    <div class="user-menu-divider"></div>
+                                    <a href="#" class="user-menu-item" id="user-logout">
+                                        <i class="fas fa-sign-out-alt"></i>
+                                        Cerrar Sesión
+                                    </a>
+                                </div>
+                            </div>
+                        </li>
+                    </ul>
+                </div>
+
+                <!-- Mobile Menu Button -->
+                <button class="mobile-menu-btn" id="mobile-menu-btn">
+                    <i class="fas fa-bars"></i>
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <!-- Historial Container - J Rodriguez ADSO -->
+    <div class="historial-container">
+        <div class="historial-content">
+            <div class="historial-header">
+                <h1><i class="fas fa-history"></i> Historial de Compras</h1>
+                <p>Consulta todos tus pedidos realizados</p>
+            </div>
+
+            <div class="historial-card">
+                <div class="loading" id="loading">
+                    <i class="fas fa-spinner fa-spin"></i>
+                    <p>Cargando historial...</p>
+                </div>
+
+                <div id="pedidos-container" style="display: none;">
+                    <div class="pedidos-list" id="pedidos-list">
+                        <!-- Los pedidos se cargarán aquí -->
+                    </div>
+                </div>
+
+                <div class="empty-state" id="empty-state" style="display: none;">
+                    <i class="fas fa-shopping-bag"></i>
+                    <h3>No tienes pedidos aún</h3>
+                    <p>Cuando realices tu primer pedido, aparecerá aquí</p>
+                    <a href="catalogo.html" class="btn-volver">
+                        <i class="fas fa-arrow-left"></i>
+                        Ir al Catálogo
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-section">
+                    <div class="footer-logo">
+                        <div class="logo-icon">
+                            <img src="../IMG/logoCarniceria.png" alt="Logo Carnicería Delicias" class="logo-image">
+                        </div>
+                        <span class="logo-text">Carnicería Delicias a tu Diestra</span>
+                    </div>
+                    <p class="footer-description">Los mejores cortes de carne fresca, pollo, cerdo y embutidos de la más
+                        alta calidad.</p>
+                </div>
+                <div class="footer-section">
+                    <h3 class="footer-title">Categorias</h3>
+                    <ul class="footer-links">
+                        <li><a href="catalogo.html?categoria=pollo">Pollo</a></li>
+                        <li><a href="catalogo.html?categoria=res">Carne de Res</a></li>
+                        <li><a href="catalogo.html?categoria=cerdo">Carne de Cerdo</a></li>
+                        <li><a href="catalogo.html?categoria=embutidos">Embutidos</a></li>
+                    </ul>
+                </div>
+                <div class="footer-section">
+                    <h3 class="footer-title">Enlaces</h3>
+                    <ul class="footer-links">
+                        <li><a href="catalogo.html">Catálogo</a></li>
+                        <li><a href="carrito.html">Carrito</a></li>
+                        <li><a href="perfil-cliente.html">Mi Cuenta</a></li>
+                    </ul>
+                </div>
+                <div class="footer-section">
+                    <h3 class="footer-title">Contacto</h3>
+                    <div class="contact-info">
+                        <p><i class="fas fa-phone"></i> +57 321 123 4567</p>
+                        <p><i class="fas fa-envelope"></i> info@carniceria.com</p>
+                        <p><i class="fas fa-map-marker-alt"></i> Carrera 26 # 28 - 02, Palmira, Valle - Colombia</p>
+                    </div>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>&copy; 2025 Carnicería Delicias a tu Diestra. Todos los derechos reservados.</p>
+                <p class="scripture">"Delicias a tu diestra" - Salmos 16:11</p>
+            </div>
+        </div>
+    </footer>
+
+    <script src="../JS/carrito.js"></script>
+    <script src="../JS/historial-compras.js"></script>
+</body>
+
+</html>
+

@@ -1,0 +1,194 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gestión de Producción - Carnicería Delicias a tu Diestra</title>
+    <meta name="description" content="Panel de gestión de producción basado en recetas">
+    <link rel="stylesheet" href="../CSS/produccion-admin.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+
+<body class="produccion-body">
+    <!-- Modal de Gestión de Producción -->
+    <div class="produccion-modal show" id="produccion-modal" role="dialog" aria-modal="true"
+        aria-labelledby="produccion-modal-title">
+        <div class="produccion-modal-content">
+            <div class="produccion-modal-header">
+                <h3 class="produccion-modal-title" id="produccion-modal-title">Gestión de Producción</h3>
+                <a href="panel-admin.html">
+                    <button class="produccion-modal-close" id="close-produccion-modal" aria-label="Cerrar modal">
+                        <i class="fas fa-times"></i>
+                    </button>
+                </a>
+            </div>
+
+            <div class="produccion-modal-body">
+                <!-- Botones de Acción Principal -->
+                <div class="produccion-actions-section">
+                    <div class="produccion-actions-grid">
+                        <button class="produccion-action-btn produccion-action-primary" id="btn-registrar-produccion">
+                            <div class="produccion-action-icon">
+                                <i class="fas fa-industry"></i>
+                            </div>
+                            <div class="produccion-action-content">
+                                <h4 class="produccion-action-title">Registrar Producción</h4>
+                                <p class="produccion-action-description">Registrar una nueva producción basada en una receta existente</p>
+                            </div>
+                        </button>
+
+                        <button class="produccion-action-btn produccion-action-secondary" id="btn-historial-producciones">
+                            <div class="produccion-action-icon">
+                                <i class="fas fa-history"></i>
+                            </div>
+                            <div class="produccion-action-content">
+                                <h4 class="produccion-action-title">Historial de Producciones</h4>
+                                <p class="produccion-action-description">Consultar el historial completo de producciones realizadas</p>
+                            </div>
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Formulario de Registro de Producción -->
+                <div class="produccion-form-section" id="produccion-registro-section" style="display: none;">
+                    <form class="produccion-form" id="produccion-registro-form">
+                        <!-- Diseño de Dos Columnas -->
+                        <div class="produccion-dos-columnas">
+                            <!-- Columna Izquierda: Producción Salida -->
+                            <div class="produccion-columna-izquierda">
+                                <div class="produccion-columna-header">
+                                    <h4 class="produccion-columna-title">
+                                        <i class="fas fa-arrow-up"></i> Producción Salida
+                                    </h4>
+                                </div>
+                                <div class="produccion-form-group-section">
+                                    <div class="produccion-form-group">
+                                        <label for="produccion-receta" class="produccion-form-label">Receta *</label>
+                                        <select class="produccion-form-select" id="produccion-receta" name="id_receta" required>
+                                            <option value="">Seleccionar receta</option>
+                                            <!-- Se cargarán dinámicamente desde la API -->
+                                        </select>
+                                        <div class="produccion-form-error" id="error-receta"></div>
+                                    </div>
+                                    <div class="produccion-form-group">
+                                        <label for="produccion-cantidad" class="produccion-form-label">Cantidad a Producir *</label>
+                                        <input type="number" class="produccion-form-input" id="produccion-cantidad"
+                                            name="cantidad_producida" step="0.01" min="0.01" required placeholder="Ej: 200">
+                                        <small class="produccion-form-help">Cantidad del producto final a producir</small>
+                                        <div class="produccion-form-error" id="error-cantidad"></div>
+                                    </div>
+                                    <div class="produccion-form-group">
+                                        <label for="produccion-unidad" class="produccion-form-label">Unidad *</label>
+                                        <select class="produccion-form-select" id="produccion-unidad" name="unidad" required>
+                                            <option value="">Seleccionar unidad</option>
+                                            <option value="lb">Libras (lb)</option>
+                                            <option value="unidad">Unidad</option>
+                                        </select>
+                                        <small class="produccion-form-help">Unidad del producto final</small>
+                                        <div class="produccion-form-error" id="error-unidad"></div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Columna Derecha: Producción Entrada -->
+                            <div class="produccion-columna-derecha">
+                                <div class="produccion-columna-header">
+                                    <h4 class="produccion-columna-title">
+                                        <i class="fas fa-arrow-down"></i> Producción Entrada
+                                    </h4>
+                                </div>
+                                <div class="produccion-ingredientes-section">
+                                    <div id="ingredientes-container">
+                                        <p class="produccion-info-text">
+                                            <i class="fas fa-info-circle"></i>
+                                            Selecciona una receta y cantidad para ver los ingredientes necesarios
+                                        </p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+
+                <!-- Historial de Producciones -->
+                <div class="produccion-list-section" id="produccion-historial-section" style="display: none;">
+                    <div class="produccion-list-header">
+                        <h4 class="produccion-list-title">Historial de Producciones</h4>
+                        <div class="produccion-list-actions">
+                            <div class="produccion-search-box">
+                                <i class="fas fa-search"></i>
+                                <input type="text" placeholder="Buscar producciones..."
+                                    id="search-producciones">
+                            </div>
+                            <select class="produccion-select" id="filter-receta">
+                                <option value="">Todas las recetas</option>
+                                <!-- Se cargarán dinámicamente -->
+                            </select>
+                            <input type="date" class="produccion-date-input" id="filter-fecha-inicio"
+                                placeholder="Fecha inicio">
+                            <input type="date" class="produccion-date-input" id="filter-fecha-fin"
+                                placeholder="Fecha fin">
+                        </div>
+                    </div>
+                    <div class="produccion-table-container">
+                        <table class="produccion-table" id="produccion-table">
+                            <thead>
+                                <tr>
+                                    <th>ID</th>
+                                    <th>Fecha</th>
+                                    <th>Receta</th>
+                                    <th>Cantidad Producida</th>
+                                    <th>Unidad</th>
+                                    <th>Rendimiento</th>
+                                    <th>Acciones</th>
+                                </tr>
+                            </thead>
+                            <tbody id="produccion-tbody">
+                                <!-- Las producciones se cargarán dinámicamente -->
+                                <tr class="produccion-empty-state">
+                                    <td colspan="7">
+                                        <div class="produccion-empty-message">
+                                            <i class="fas fa-inbox"></i>
+                                            <p>No se encontraron producciones registradas</p>
+                                            <p class="produccion-empty-subtitle">Comienza registrando una nueva producción</p>
+                                        </div>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+            <div class="produccion-modal-footer">
+                <button class="produccion-btn produccion-btn-outline" id="cancel-produccion">
+                    <i class="fas fa-arrow-left"></i>
+                    Volver
+                </button>
+                <button class="produccion-btn produccion-btn-primary" id="save-produccion" style="display: none;">
+                    <i class="fas fa-save"></i>
+                    Guardar Producción
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Loading Overlay -->
+    <div class="produccion-loading-overlay" id="produccion-loading">
+        <div class="produccion-loading-spinner">
+            <i class="fas fa-spinner fa-spin"></i>
+            <p>Procesando producción...</p>
+        </div>
+    </div>
+
+    <!-- Script para funcionalidad -->
+    <script src="../JS/unidades-medida.js"></script>
+    <script src="../JS/produccion-admin.js"></script>
+</body>
+
+</html>
+

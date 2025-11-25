@@ -1,0 +1,203 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gestión de Recetas - Carnicería Delicias a tu Diestra</title>
+    <meta name="description" content="Panel de gestión de recetas y ingredientes">
+    <link rel="stylesheet" href="../CSS/recetas-admin.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script src="../JS/categoria.js"></script>
+    <script src="../JS/unidades-medida.js"></script>
+    <script src="../JS/recetas-admin.js"></script>
+</head>
+
+<body class="recetas-body">
+    <!-- Modal de Gestión de Recetas -->
+    <div class="recetas-modal show" id="recetas-modal" role="dialog" aria-modal="true"
+        aria-labelledby="recetas-modal-title">
+        <div class="recetas-modal-content">
+            <div class="recetas-modal-header">
+                <h3 class="recetas-modal-title" id="recetas-modal-title">Gestión de Recetas</h3>
+                <a href="panel-admin.html">
+                    <button class="recetas-modal-close" id="close-recetas-modal" aria-label="Cerrar modal">
+                        <i class="fas fa-times"></i>
+                    </button>
+                </a>
+            </div>
+
+            <div class="recetas-modal-body">
+                <!-- Botones de Acción Principal -->
+                <div class="recetas-actions-section">
+                    <div class="recetas-actions-grid">
+                        <button class="recetas-action-btn recetas-action-primary" id="btn-crear-receta">
+                            <div class="recetas-action-icon">
+                                <i class="fas fa-plus-circle"></i>
+                            </div>
+                            <div class="recetas-action-content">
+                                <h4 class="recetas-action-title">Crear Nueva Receta</h4>
+                                <p class="recetas-action-description">Crear nuevas recetas con ingredientes específicos
+                                    y cantidades para productos finales</p>
+                            </div>
+                        </button>
+
+                        <button class="recetas-action-btn recetas-action-secondary" id="btn-listar-recetas">
+                            <div class="recetas-action-icon">
+                                <i class="fas fa-list"></i>
+                            </div>
+                            <div class="recetas-action-content">
+                                <h4 class="recetas-action-title">Listar Recetas</h4>
+                                <p class="recetas-action-description">Ver todas las recetas creadas, editarlas o
+                                    eliminarlas según sea necesario</p>
+                            </div>
+                        </button>
+
+                    </div>
+                </div>
+
+                <!-- Formulario de Crear Receta -->
+                <div class="recetas-form-section" id="recetas-crear-section" style="display: none;">
+                    <form class="recetas-form" id="recetas-crear-form">
+                        <!-- Información de la Receta -->
+                        <div class="recetas-form-group-section">
+                            <h4 class="recetas-form-section-title">Información de la Receta</h4>
+                            <!-- Usuario creador eliminado - no está en la nueva estructura de BD -->
+                            <div class="recetas-form-row">
+                                <div class="recetas-form-group">
+                                    <label for="receta-nombre" class="recetas-form-label">Nombre de la Receta *</label>
+                                    <input type="text" class="recetas-form-input" id="receta-nombre"
+                                        name="nombre_receta" required placeholder="Ej: Chorizos Artesanales">
+                                    <div class="recetas-form-error" id="error-nombre"></div>
+                                </div>
+                                <div class="recetas-form-group">
+                                    <label for="receta-rendimiento" class="recetas-form-label">Rendimiento</label>
+                                    <input type="number" class="recetas-form-input" id="receta-rendimiento"
+                                        name="rendimiento" step="0.01" min="0" placeholder="Ej: 2.5">
+                                    <small class="recetas-form-help">Cantidad producida por la receta</small>
+                                </div>
+                            </div>
+                            <div class="recetas-form-row">
+                                <div class="recetas-form-group">
+                                    <label for="receta-unidad" class="recetas-form-label">Unidad de Medida</label>
+                                    <select class="recetas-form-select" id="receta-unidad" name="unidad">
+                                        <option value="">Seleccionar unidad</option>
+                                        <option value="kg">Kilogramo (kg)</option>
+                                        <option value="lb">Libra (lb)</option>
+                                        <option value="g">Gramo (g)</option>
+                                        <option value="unidad">Unidad</option>
+                                    </select>
+                                </div>
+                                <div class="recetas-form-group">
+                                    <label for="receta-estado" class="recetas-form-label">Estado de la Receta *</label>
+                                    <select class="recetas-form-select" id="receta-estado" name="estado_receta" required>
+                                        <option value="activa" selected>Activa</option>
+                                        <option value="inactiva">Inactiva</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="recetas-form-group">
+                                <label for="receta-descripcion" class="recetas-form-label">Descripción</label>
+                                <textarea class="recetas-form-textarea" id="receta-descripcion" name="descripcion"
+                                    rows="3" placeholder="Descripción de la receta (opcional)..."></textarea>
+                            </div>
+                        </div>
+
+                        <!-- Ingredientes de la Receta -->
+                        <div class="recetas-form-group-section">
+                            <h4 class="recetas-form-section-title">Ingredientes de la Receta</h4>
+                            <div class="recetas-ingredientes-container" id="recetas-ingredientes-container">
+                                <!-- Los ingredientes se agregarán dinámicamente -->
+                            </div>
+                            <button type="button" class="recetas-btn recetas-btn-outline" id="btn-agregar-ingrediente">
+                                <i class="fas fa-plus"></i>
+                                Agregar Ingrediente
+                            </button>
+                        </div>
+                    </form>
+                </div>
+
+                <!-- Lista de Recetas -->
+                <div class="recetas-list-section" id="recetas-listar-section" style="display: none;">
+                    <div class="recetas-list-header">
+                        <h4 class="recetas-list-title">Lista de Recetas</h4>
+                        <div class="recetas-list-actions">
+                            <div class="recetas-search-box">
+                                <i class="fas fa-search"></i>
+                                <input type="text" placeholder="Buscar recetas..." id="search-recetas">
+                            </div>
+                            <select class="recetas-select" id="filter-estado">
+                                <option value="">Todas las recetas</option>
+                                <option value="activa">Recetas Activas</option>
+                                <option value="inactiva">Recetas Inactivas</option>
+                            </select>
+                            <select class="recetas-select" id="filter-producto">
+                                <option value="">Todos los productos</option>
+                                <option value="hamburguesa">Hamburguesas</option>
+                                <option value="embutido">Embutidos</option>
+                                <option value="otro">Otros</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="recetas-table-container">
+                        <table class="recetas-table" id="recetas-table">
+                            <thead>
+                                <tr>
+                                    <th>ID</th>
+                                    <th>Nombre</th>
+                                    <th>Producto Final</th>
+                                    <th>Ingredientes</th>
+                                    <th>Estado</th>
+                                    <th>Fecha Creación</th>
+                                    <th>Acciones</th>
+                                </tr>
+                            </thead>
+                            <tbody id="recetas-tbody">
+                                <!-- Las recetas se cargarán dinámicamente -->
+                                <tr class="recetas-empty-state">
+                                    <td colspan="7">
+                                        <div class="recetas-empty-message">
+                                            <i class="fas fa-book-open"></i>
+                                            <p>No se encontraron recetas registradas</p>
+                                            <p class="recetas-empty-subtitle">Comienza creando una nueva receta</p>
+                                        </div>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+            </div>
+
+            <div class="recetas-modal-footer">
+                <button class="recetas-btn recetas-btn-outline" id="cancel-recetas">
+                    <i class="fas fa-arrow-left"></i>
+                    Volver
+                </button>
+                <button class="recetas-btn recetas-btn-danger" id="eliminar-receta" style="display: none;">
+                    <i class="fas fa-trash"></i>
+                    Eliminar Receta
+                </button>
+                <button class="recetas-btn recetas-btn-primary" id="save-recetas" style="display: none;">
+                    <i class="fas fa-save"></i>
+                    Guardar Receta
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Loading Overlay -->
+    <div class="recetas-loading-overlay" id="recetas-loading">
+        <div class="recetas-loading-spinner">
+            <i class="fas fa-spinner fa-spin"></i>
+            <p>Procesando receta...</p>
+        </div>
+    </div>
+
+</body>
+
+</html>

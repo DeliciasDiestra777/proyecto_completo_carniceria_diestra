@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gestión de Usuarios - Carnicería Delicias a tu Diestra</title>
+    <meta name="description" content="Panel de gestión de usuarios - Clientes y Administradores">
+    <link rel="stylesheet" href="../CSS/usuarios-admin.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+
+<body class="usuarios-body">
+    <!-- Modal de Gestión de Usuarios -->
+    <div class="usuarios-modal" id="usuarios-modal">
+        <div class="usuarios-modal-content">
+            <div class="usuarios-modal-header">
+                <h3 class="usuarios-modal-title">Gestión de Usuarios</h3>
+                <a href="panel-admin.html">
+                    <button class="usuarios-modal-close" id="close-usuarios-modal">
+                        <i class="fas fa-times"></i>
+                    </button>
+                </a>
+            </div>
+
+            <div class="usuarios-modal-body">
+                <div class="usuarios-intro">
+                    <p class="usuarios-intro-text">Selecciona el tipo de usuarios que deseas gestionar:</p>
+                </div>
+
+                <div class="usuarios-options-grid">
+                    <!-- Botón para Clientes -->
+                    <div class="usuarios-option-card" id="gestion-clientes">
+                        <div class="usuarios-option-icon">
+                            <i class="fas fa-users"></i>
+                        </div>
+                        <div class="usuarios-option-content">
+                            <h4 class="usuarios-option-title">Clientes</h4>
+                            <p class="usuarios-option-description">
+                                Gestiona los usuarios clientes del sistema.
+                                Crea, edita, elimina y visualiza información de clientes.
+                            </p>
+                            <div class="usuarios-option-features">
+                                <span class="usuarios-feature-tag">
+                                    <i class="fas fa-user-plus"></i>
+                                    Crear Cliente
+                                </span>
+                                <span class="usuarios-feature-tag">
+                                    <i class="fas fa-user-edit"></i>
+                                    Editar Cliente
+                                </span>
+                                <span class="usuarios-feature-tag">
+                                    <i class="fas fa-list"></i>
+                                    Listar Clientes
+                                </span>
+                            </div>
+                        </div>
+                        <div class="usuarios-option-action">
+                            <button class="usuarios-btn usuarios-btn-primary" id="btn-clientes">
+                                <i class="fas fa-arrow-right"></i>
+                                Gestionar Clientes
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Botón para Administradores -->
+                    <div class="usuarios-option-card" id="gestion-administradores">
+                        <div class="usuarios-option-icon">
+                            <i class="fas fa-user-shield"></i>
+                        </div>
+                        <div class="usuarios-option-content">
+                            <h4 class="usuarios-option-title">Administradores</h4>
+                            <p class="usuarios-option-description">
+                                Gestiona los usuarios administradores del sistema.
+                                Crea, edita, elimina y asigna permisos a administradores.
+                            </p>
+                            <div class="usuarios-option-features">
+                                <span class="usuarios-feature-tag">
+                                    <i class="fas fa-user-plus"></i>
+                                    Crear Admin
+                                </span>
+                                <span class="usuarios-feature-tag">
+                                    <i class="fas fa-user-edit"></i>
+                                    Editar Admin
+                                </span>
+                                <span class="usuarios-feature-tag">
+                                    <i class="fas fa-key"></i>
+                                    Permisos
+                                </span>
+                            </div>
+                        </div>
+                        <div class="usuarios-option-action">
+                            <button class="usuarios-btn usuarios-btn-secondary" id="btn-administradores">
+                                <i class="fas fa-arrow-right"></i>
+                                Gestionar Administradores
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="usuarios-modal-footer">
+                <button class="usuarios-btn usuarios-btn-outline" id="cancel-usuarios">
+                    <i class="fas fa-arrow-left"></i>
+                    Volver al Panel
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Loading Overlay -->
+    <div class="usuarios-loading-overlay" id="usuarios-loading">
+        <div class="usuarios-loading-spinner">
+            <i class="fas fa-spinner fa-spin"></i>
+            <p>Cargando...</p>
+        </div>
+    </div>
+
+    <!-- Scripts -->
+    <script src="../JS/usuarios-admin.js"></script>
+</body>
+
+</html>

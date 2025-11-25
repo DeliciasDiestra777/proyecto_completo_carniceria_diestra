@@ -1,0 +1,353 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Carnicería Delicias a tu Diestra - La Mejor Carne de palmira</title>
+    <meta name="description" Carniceria_Proyecto_Backend-Frontend
+        content="Ofrecemos los cortes más frescos y de mejor calidad. Pollo, Carne de res, Carne cerdo y embutidos artesanales con entrega a domicilio.">
+    <link rel="stylesheet" href="../CSS/styles.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    <!-- Script para limpiar sesiones automáticamente -->
+    <script src="../JS/limpiar-sesion.js"></script>
+    <!-- Script para manejo de sesión de cliente -->
+    <script src="../JS/client-session.js"></script>
+    <!-- Script para notificaciones de cliente -->
+    <script src="../JS/notificaciones-cliente.js"></script>
+</head>
+
+<body>
+    <!-- Header -->
+    <header class="header">
+        <div class="container">
+            <div class="header-content">
+                <!-- Logo -->
+                <div class="logo">
+                    <div class="logo-icon">
+                        <img src="../IMG/logoCarniceria.png" alt="Logo Carnicería Delicias" class="logo-image">
+                    </div>
+                    <span class="logo-text">Carnicería Delicias a tu Diestra</span>
+                </div>
+
+                <!-- Navigation -->
+                <nav class="nav">
+                    <ul class="nav-list">
+                        <li>
+                            <a href="#inicio" class="nav-link active">Inicio</a>
+                        </li>
+                        <li><a href="catalogo.html" class="nav-link">Catálogo</a></li>
+                        <li>
+                            <a href="carrito.html" class="nav-link" id="carrito-link">
+                                <i class="fas fa-shopping-cart"></i>
+                                <span class="carrito-badge" id="carrito-badge">0</span>
+                            </a>
+                        </li>
+                        <li id="notificaciones-cliente-li" style="display: none;">
+                            <a href="#" class="nav-link" id="notificaciones-cliente-link"
+                                onclick="event.preventDefault(); abrirNotificacionesCliente();">
+                                <i class="fas fa-bell"></i>
+                                <span class="notificacion-badge-cliente" id="notificacion-badge-cliente"
+                                    style="display: none;">0</span>
+                            </a>
+                        </li>
+                        <!-- Área de usuario (se muestra cuando no está logueado) -->
+                        <li class="nav-user-area" id="nav-user-area" style="display: flex;">
+                            <a href="login.html" class="nav-link" id="login-link" target="_self">Iniciar Sesión</a>
+                            <a href="registro.html" class="btn btn-primary" id="registro-link"
+                                target="_self">Registrarse</a>
+                        </li>
+
+                        <!-- Usuario logueado (se muestra cuando está logueado) -->
+                        <li class="nav-user-logged" id="nav-user-logged" style="display: none;">
+                            <div class="user-dropdown">
+                                <button class="user-button" id="user-button">
+                                    <i class="fas fa-user-circle"></i>
+                                    <span id="user-name">Usuario</span>
+                                    <i class="fas fa-chevron-down"></i>
+                                </button>
+                                <div class="user-menu" id="user-menu">
+                                    <a href="#" class="user-menu-item" id="user-profile">
+                                        <i class="fas fa-user"></i>
+                                        Mi Perfil
+                                    </a>
+                                    <a href="#" class="user-menu-item" id="user-orders">
+                                        <i class="fas fa-shopping-bag"></i>
+                                        Mis Pedidos
+                                    </a>
+                                    <div class="user-menu-divider"></div>
+                                    <a href="#" class="user-menu-item" id="user-logout">
+                                        <i class="fas fa-sign-out-alt"></i>
+                                        Cerrar Sesión
+                                    </a>
+                                </div>
+                            </div>
+                        </li>
+                    </ul>
+                </nav>
+
+                <!-- Mobile Menu Button -->
+                <button class="mobile-menu-btn" id="mobile-menu-btn">
+                    <i class="fas fa-bars"></i>
+                </button>
+            </div>
+        </div>
+
+        <!-- Mobile Menu -->
+        <div class="mobile-menu" id="mobile-menu">
+            <ul class="nav-list">
+                <li>
+                    <a href="#inicio" class="nav-link active">Inicio</a>
+                </li>
+                <li><a href="catalogo.html" class="nav-link">Catálogo</a></li>
+                <li>
+                    <a href="carrito.html" class="nav-link" id="carrito-link-mobile">
+                        <i class="fas fa-shopping-cart"></i>
+                        <span class="carrito-badge" id="carrito-badge-mobile">0</span>
+                    </a>
+                </li>
+                <li id="notificaciones-cliente-li-mobile" style="display: none;">
+                    <a href="#" class="nav-link" id="notificaciones-cliente-link-mobile"
+                        onclick="event.preventDefault(); abrirNotificacionesCliente();">
+                        <i class="fas fa-bell"></i>
+                        <span class="notificacion-badge-cliente" id="notificacion-badge-cliente-mobile"
+                            style="display: none;">0</span>
+                    </a>
+                </li>
+                <!-- Área de usuario móvil -->
+                <li class="nav-user-area" id="nav-user-area-mobile"
+                    style="display: flex; flex-direction: column; gap: var(--spacing-2);">
+                    <a href="login.html" class="nav-link" id="login-link-mobile" target="_self">Iniciar Sesión</a>
+                    <a href="registro.html" class="btn btn-primary btn-full" id="registro-link-mobile"
+                        target="_self">Registrarse</a>
+                </li>
+                <!-- Usuario logueado móvil -->
+                <li class="nav-user-logged" id="nav-user-logged-mobile" style="display: none;">
+                    <div class="user-dropdown">
+                        <button class="user-button" id="user-button-mobile">
+                            <i class="fas fa-user-circle"></i>
+                            <span id="user-name-mobile">Usuario</span>
+                        </button>
+                        <div class="user-menu" id="user-menu-mobile">
+                            <a href="#" class="user-menu-item" id="user-profile-mobile">
+                                <i class="fas fa-user"></i>
+                                Mi Perfil
+                            </a>
+                            <a href="#" class="user-menu-item" id="user-orders-mobile">
+                                <i class="fas fa-shopping-bag"></i>
+                                Mis Pedidos
+                            </a>
+                            <div class="user-menu-divider"></div>
+                            <a href="#" class="user-menu-item" id="user-logout-mobile">
+                                <i class="fas fa-sign-out-alt"></i>
+                                Cerrar Sesión
+                            </a>
+                        </div>
+                    </div>
+                </li>
+            </ul>
+        </div>
+    </header>
+
+    <!-- Hero Section -->
+    <section class="hero" id="inicio">
+        <div class="hero-background">
+            <div class="hero-overlay"></div>
+        </div>
+        <div class="container">
+            <div class="hero-content">
+                <h1 class="hero-title">La Mejor Carne de la Ciudad</h1>
+                <p class="hero-subtitle">Ofrecemos los cortes más frescos y de mejor calidad. Pollo, res, cerdo y
+                    embutidos artesanales.</p>
+                <div class="hero-buttons">
+                    <a href="catalogo.html" class="btn btn-primary btn-large">Ver Catálogo</a>
+                    <!-- <a href="produccion.html" class="btn btn-outline btn-large">Producción</a> -->
+                    <a href="registro.html" class="btn btn-secondary btn-large">Registrarse</a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Categorías Section -->
+    <section class="categorias" id="categorias">
+        <div class="container">
+            <div class="section-header">
+                <h2 class="section-title">Nuestras Categorías</h2>
+                <p class="section-subtitle">Encuentra los mejores productos para tu mesa</p>
+            </div>
+            <div class="categorias-grid">
+
+                <!-- Pollo -->
+                <div class="categoria-card" data-categoria="Pollo" onclick="app.filtrarPorCategoria('Pollo')">
+                    <div class="categoria-imagen">
+                        <img src="../IMG/pollo-muestra.jpg" alt="Pollo fresco">
+                    </div>
+                    <h3 class="categoria-titulo">Pollo</h3>
+                    <p class="categoria-subtitulo">Pollo fresco de granja</p>
+                </div>
+
+                <!-- Carne de Res -->
+                <div class="categoria-card" data-categoria="Res" onclick="app.filtrarPorCategoria('Res')">
+                    <div class="categoria-imagen">
+                        <img src="../IMG/carne-res.jpg" alt="Carne de res">
+                    </div>
+                    <h3 class="categoria-titulo">Carne de Res</h3>
+                    <p class="categoria-subtitulo">Los mejores cortes de res</p>
+                </div>
+
+                <!-- Carne de Cerdo -->
+                <div class="categoria-card" data-categoria="Cerdo" onclick="app.filtrarPorCategoria('Cerdo')">
+                    <div class="categoria-imagen">
+                        <img src="../IMG/carne-cerdo.jpg" alt="Carne de cerdo">
+                    </div>
+                    <h3 class="categoria-titulo">Carne de Cerdo</h3>
+                    <p class="categoria-subtitulo">Cerdo de primera calidad</p>
+                </div>
+
+                <!-- Embutidos -->
+                <div class="categoria-card" data-categoria="Embutidos" onclick="app.filtrarPorCategoria('Embutidos')">
+                    <div class="categoria-imagen">
+                        <img src="../IMG/embutidos.jpg" alt="Embutidos">
+                    </div>
+                    <h3 class="categoria-titulo">Embutidos</h3>
+                    <p class="categoria-subtitulo">Embutidos artesanales</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Productos Destacados Section -->
+    <section class="productos-destacados" id="productos-destacados">
+        <div class="container">
+            <div class="section-header">
+                <h2 class="section-title">Productos Destacados</h2>
+                <p class="section-subtitle">Nuestras mejores ofertas de la semana</p>
+            </div>
+            <div class="productos-grid" id="productos-grid">
+                <!-- Los productos se cargarán dinámicamente -->
+            </div>
+            <div class="section-footer">
+                <a href="catalogo.html" class="btn btn-primary btn-large">Ver Todos los
+                    Productos</a>
+            </div>
+        </div>
+    </section>
+
+    <!-- Por qué Elegirnos Section -->
+    <section class="por-que-elegirnos" id="por-que-elegirnos">
+        <div class="container">
+            <div class="section-header">
+                <h2 class="section-title">¿Por qué Elegirnos?</h2>
+                <p class="section-subtitle">Compromiso con la calidad y frescura</p>
+            </div>
+            <div class="features-grid">
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <i class="fas fa-leaf"></i>
+                    </div>
+                    <h3 class="feature-title">100% Fresco</h3>
+                    <p class="feature-description">Todos nuestros productos llegan frescos diariamente de granjas
+                        locales certificadas.</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <i class="fas fa-shield-alt"></i>
+                    </div>
+                    <h3 class="feature-title">Calidad Garantizada</h3>
+                    <p class="feature-description">Garantizamos la más alta calidad en todos nuestros productos con
+                        certificaciones de sanidad.</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <i class="fas fa-truck"></i>
+                    </div>
+                    <h3 class="feature-title">Entrega Rápida</h3>
+                    <p class="feature-description">Entregamos a domicilio en tiempo récord manteniendo la frescura de
+                        nuestros productos.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Call to Action Section -->
+    <section class="cta" id="cta">
+        <div class="container">
+            <div class="cta-content">
+                <h2 class="cta-title">¿Listo para Ordenar?</h2>
+                <p class="cta-description">Regístrate ahora y disfruta de los mejores cortes de carne con entrega a
+                    domicilio.</p>
+                <div class="cta-buttons">
+                    <a href="registro.html" class="btn btn-secondary btn-large">Crear Cuenta</a>
+                    <a href="catalogo.html" class="btn btn-outline btn-large">Explorar Catálogo</a>
+
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-section">
+                    <div class="footer-logo">
+                        <div class="logo-icon">
+                            <img src="../IMG/logoCarniceria.png" alt="Logo Carnicería Delicias" class="logo-image">
+                        </div>
+                        <span class="logo-text">Carnicería Delicias a tu Diestra</span>
+                    </div>
+                    <p class="footer-description">Los mejores cortes de carne fresca, pollo, cerdo y embutidos de la más
+                        alta calidad.</p>
+                </div>
+                <div class="footer-section">
+                    <h3 class="footer-title">Categorias</h3>
+                    <ul class="footer-links">
+                        <li><a href="catalogo.html?categoria=pollo">Pollo</a></li>
+                        <li><a href="catalogo.html?categoria=res">Carne de Res</a></li>
+                        <li><a href="catalogo.html?categoria=cerdo">Carne de Cerdo</a></li>
+                        <li><a href="catalogo.html?categoria=embutidos">Embutidos</a></li>
+                    </ul>
+                </div>
+                <div class="footer-section">
+                    <h3 class="footer-title">Enlaces</h3>
+                    <ul class="footer-links">
+                        <li><a href="catalogo.html">Catálogo</a></li>
+                        <li><a href="#carrito">Carrito</a></li>
+                        <li><a href="#perfil">Mi Cuenta</a></li>
+                    </ul>
+                </div>
+                <div class="footer-section">
+                    <h3 class="footer-title">Contacto</h3>
+                    <div class="contact-info">
+                        <p><i class="fas fa-phone"></i> +57 321 123 4567</p>
+                        <p><i class="fas fa-envelope"></i> info@carniceria.com</p>
+                        <p><i class="fas fa-map-marker-alt"></i> Carrera 26 # 28 - 02, Palmira, Valle - Colombia</p>
+                    </div>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>&copy; 2025 Carnicería Delicias a tu Diestra. Todos los derechos reservados.</p>
+                <p class="scripture">"Delicias a tu diestra" - Salmos 16:11</p>
+            </div>
+        </div>
+    </footer>
+
+
+
+
+    <!-- Scripts -->
+    <script src="../JS/sesion.js"></script>
+    <script src="../JS/app.js"></script>
+
+    <script src="../JS/dateHelper.js"></script>
+    <script src="../JS/auth.js"></script>
+    <script src="../JS/carrito.js"></script>
+    <script src="../JS/productos.js"></script>
+    <script src="../JS/catalogo.js"></script>
+</body>
+
+</html>

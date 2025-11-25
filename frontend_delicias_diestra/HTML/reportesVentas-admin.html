@@ -1,0 +1,473 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Reportes de Ventas - Carnicería Delicias a tu Diestra</title>
+    <meta name="description" content="Panel de reportes de ventas para análisis y gestión comercial">
+    <link rel="stylesheet" href="../CSS/reportesVentas-admin.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+
+<body class="admin-body">
+    <!-- Header -->
+    <header class="admin-header">
+        <div class="admin-header-content">
+            <!-- Logo -->
+            <div class="admin-logo">
+                <div class="admin-logo-icon">
+                    <img src="../IMG/logoCarniceria.png" alt="Logo Carnicería Delicias" class="admin-logo-image">
+                </div>
+                <span class="admin-logo-text">Reportes de Ventas</span>
+            </div>
+
+            <!-- Admin Navigation -->
+            <nav class="admin-nav">
+                <ul class="admin-nav-list">
+                    <li>
+                        <a href="panel-admin.html" class="admin-nav-link">
+                            <i class="fas fa-arrow-left"></i>
+                            Volver al Panel
+                        </a>
+                    </li>
+                    <li>
+                        <a href="#" class="admin-nav-link" id="admin-logout">
+                            <i class="fas fa-sign-out-alt"></i>
+                            Cerrar Sesión
+                        </a>
+                    </li>
+                </ul>
+            </nav>
+        </div>
+    </header>
+
+    <!-- Main Admin Content -->
+    <main class="admin-main">
+        <!-- Sidebar -->
+        <aside class="admin-sidebar">
+            <div class="admin-sidebar-content">
+                <div class="admin-user-info">
+                    <div class="admin-user-avatar">
+                        <i class="fas fa-chart-line"></i>
+                    </div>
+                    <div class="admin-user-details">
+                        <h3 class="admin-user-name" id="admin-user-name">Reportes</h3>
+                        <p class="admin-user-role">Análisis de Ventas</p>
+                    </div>
+                </div>
+
+                <nav class="admin-sidebar-nav">
+                    <ul class="admin-sidebar-list">
+                        <li class="admin-sidebar-item">
+                            <a href="#resumen" class="admin-sidebar-link active" data-section="resumen">
+                                <i class="fas fa-tachometer-alt"></i>
+                                <span>Resumen General</span>
+                            </a>
+                        </li>
+                        <li class="admin-sidebar-item">
+                            <a href="#ventas-productos" class="admin-sidebar-link" data-section="ventas-productos">
+                                <i class="fas fa-box"></i>
+                                <span>Ventas por Producto</span>
+                            </a>
+                        </li>
+                        <li class="admin-sidebar-item">
+                            <a href="#ventas-clientes" class="admin-sidebar-link" data-section="ventas-clientes">
+                                <i class="fas fa-users"></i>
+                                <span>Ventas por Cliente</span>
+                            </a>
+                        </li>
+                        <li class="admin-sidebar-item">
+                            <a href="#ventas-temporales" class="admin-sidebar-link" data-section="ventas-temporales">
+                                <i class="fas fa-calendar"></i>
+                                <span>Análisis Temporal</span>
+                            </a>
+                        </li>
+                        <li class="admin-sidebar-item">
+                            <a href="#ventas-categorias" class="admin-sidebar-link" data-section="ventas-categorias">
+                                <i class="fas fa-tags"></i>
+                                <span>Ventas por Categoría</span>
+                            </a>
+                        </li>
+                        <li class="admin-sidebar-item">
+                            <a href="#exportar-reportes" class="admin-sidebar-link" data-section="exportar-reportes">
+                                <i class="fas fa-download"></i>
+                                <span>Exportar Reportes</span>
+                            </a>
+                        </li>
+                    </ul>
+                </nav>
+            </div>
+        </aside>
+
+        <!-- Content Area -->
+        <div class="admin-content">
+            <!-- Resumen General Section -->
+            <section class="admin-section active" id="resumen-section">
+                <div class="admin-section-header">
+                    <h1 class="admin-section-title">Resumen General de Ventas</h1>
+                    <p class="admin-section-subtitle">Análisis completo del rendimiento comercial</p>
+                </div>
+
+                <!-- Filtros de Fecha -->
+                <div class="admin-card">
+                    <div class="admin-card-header">
+                        <h3 class="admin-card-title">Filtros de Período</h3>
+                    </div>
+                    <div class="admin-card-body">
+                        <div class="admin-filters-row">
+                            <div class="admin-form-group">
+                                <label class="admin-form-label">Fecha Inicio</label>
+                                <input type="date" class="admin-form-input" id="fecha-inicio">
+                            </div>
+                            <div class="admin-form-group">
+                                <label class="admin-form-label">Fecha Fin</label>
+                                <input type="date" class="admin-form-input" id="fecha-fin">
+                            </div>
+                            <div class="admin-form-group">
+                                <label class="admin-form-label">Período Rápido</label>
+                                <select class="admin-form-select" id="periodo-rapido">
+                                    <option value="">Seleccionar período</option>
+                                    <option value="hoy">Hoy</option>
+                                    <option value="ayer">Ayer</option>
+                                    <option value="semana">Esta Semana</option>
+                                    <option value="mes">Este Mes</option>
+                                    <option value="trimestre">Este Trimestre</option>
+                                    <option value="año">Este Año</option>
+                                </select>
+                            </div>
+                            <div class="admin-form-group">
+                                <button class="admin-btn admin-btn-primary" id="aplicar-filtros">
+                                    <i class="fas fa-filter"></i>
+                                    Aplicar Filtros
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Estadísticas Principales -->
+                <div class="admin-stats-grid">
+                    <div class="admin-stat-card">
+                        <div class="admin-stat-icon">
+                            <i class="fas fa-dollar-sign"></i>
+                        </div>
+                        <div class="admin-stat-content">
+                            <h3 class="admin-stat-number" id="total-ventas">$0</h3>
+                            <p class="admin-stat-label">Total Ventas</p>
+                        </div>
+                    </div>
+                    <div class="admin-stat-card">
+                        <div class="admin-stat-icon">
+                            <i class="fas fa-shopping-cart"></i>
+                        </div>
+                        <div class="admin-stat-content">
+                            <h3 class="admin-stat-number" id="total-pedidos">0</h3>
+                            <p class="admin-stat-label">Total Pedidos</p>
+                        </div>
+                    </div>
+                    <div class="admin-stat-card">
+                        <div class="admin-stat-icon">
+                            <i class="fas fa-users"></i>
+                        </div>
+                        <div class="admin-stat-content">
+                            <h3 class="admin-stat-number" id="clientes-activos">0</h3>
+                            <p class="admin-stat-label">Clientes Activos</p>
+                        </div>
+                    </div>
+                    <div class="admin-stat-card">
+                        <div class="admin-stat-icon">
+                            <i class="fas fa-chart-line"></i>
+                        </div>
+                        <div class="admin-stat-content">
+                            <h3 class="admin-stat-number" id="promedio-pedido">$0</h3>
+                            <p class="admin-stat-label">Promedio por Pedido</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Gráficos de Resumen -->
+                <div class="admin-dashboard-grid">
+                    <div class="admin-card">
+                        <div class="admin-card-header">
+                            <h3 class="admin-card-title">Ventas Diarias</h3>
+                        </div>
+                        <div class="admin-card-body">
+                            <canvas id="ventas-diarias-chart"></canvas>
+                        </div>
+                    </div>
+                    <div class="admin-card">
+                        <div class="admin-card-header">
+                            <h3 class="admin-card-title">Ventas por Categoría</h3>
+                        </div>
+                        <div class="admin-card-body">
+                            <canvas id="ventas-categoria-chart"></canvas>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Ventas por Producto Section -->
+            <section class="admin-section" id="ventas-productos-section">
+                <div class="admin-section-header">
+                    <h1 class="admin-section-title">Ventas por Producto</h1>
+                    <p class="admin-section-subtitle">Análisis detallado de productos más vendidos</p>
+                </div>
+
+                <div class="admin-card">
+                    <div class="admin-card-header">
+                        <h3 class="admin-card-title">Ranking de Productos</h3>
+                        <div class="admin-card-actions">
+                            <div class="admin-search-box">
+                                <i class="fas fa-search"></i>
+                                <input type="text" placeholder="Buscar productos..." id="search-productos-ventas">
+                            </div>
+                            <select class="admin-select" id="filter-categoria-productos">
+                                <option value="">Todas las categorías</option>
+                                <option value="Pollo">Pollo</option>
+                                <option value="Res">Res</option>
+                                <option value="Cerdo">Cerdo</option>
+                                <option value="Embutidos">Embutidos</option>
+                            </select>
+                            <button class="admin-btn admin-btn-outline" id="exportar-productos">
+                                <i class="fas fa-download"></i>
+                                Exportar
+                            </button>
+                        </div>
+                    </div>
+                    <div class="admin-card-body">
+                        <div class="admin-table-container">
+                            <table class="admin-table" id="productos-ventas-table">
+                                <thead>
+                                    <tr>
+                                        <th>Ranking</th>
+                                        <th>Producto</th>
+                                        <th>Categoría</th>
+                                        <th>Cantidad Vendida</th>
+                                        <th>Total Vendido</th>
+                                        <th>Precio Promedio</th>
+                                        <th>% del Total</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="productos-ventas-tbody">
+                                    <!-- Productos más vendidos se cargarán aquí -->
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Ventas por Cliente Section -->
+            <section class="admin-section" id="ventas-clientes-section">
+                <div class="admin-section-header">
+                    <h1 class="admin-section-title">Ventas por Cliente</h1>
+                    <p class="admin-section-subtitle">Análisis de comportamiento de clientes</p>
+                </div>
+
+                <div class="admin-card">
+                    <div class="admin-card-header">
+                        <h3 class="admin-card-title">Top Clientes</h3>
+                        <div class="admin-card-actions">
+                            <div class="admin-search-box">
+                                <i class="fas fa-search"></i>
+                                <input type="text" placeholder="Buscar clientes..." id="search-clientes-ventas">
+                            </div>
+                            <select class="admin-select" id="filter-tipo-cliente">
+                                <option value="">Todos los tipos</option>
+                                <option value="frecuente">Clientes Frecuentes</option>
+                                <option value="nuevo">Clientes Nuevos</option>
+                                <option value="vip">Clientes VIP</option>
+                            </select>
+                            <button class="admin-btn admin-btn-outline" id="exportar-clientes">
+                                <i class="fas fa-download"></i>
+                                Exportar
+                            </button>
+                        </div>
+                    </div>
+                    <div class="admin-card-body">
+                        <div class="admin-table-container">
+                            <table class="admin-table" id="clientes-ventas-table">
+                                <thead>
+                                    <tr>
+                                        <th>Ranking</th>
+                                        <th>Cliente</th>
+                                        <th>Email</th>
+                                        <th>Total Compras</th>
+                                        <th>Cantidad Pedidos</th>
+                                        <th>Promedio por Pedido</th>
+                                        <th>Última Compra</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="clientes-ventas-tbody">
+                                    <!-- Clientes más activos se cargarán aquí -->
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Análisis Temporal Section -->
+            <section class="admin-section" id="ventas-temporales-section">
+                <div class="admin-section-header">
+                    <h1 class="admin-section-title">Análisis Temporal</h1>
+                    <p class="admin-section-subtitle">Tendencias y patrones de ventas en el tiempo</p>
+                </div>
+
+                <div class="admin-card">
+                    <div class="admin-card-header">
+                        <h3 class="admin-card-title">Tendencias de Ventas</h3>
+                        <div class="admin-card-actions">
+                            <select class="admin-select" id="tipo-grafico-temporal">
+                                <option value="linea">Gráfico de Línea</option>
+                                <option value="barras">Gráfico de Barras</option>
+                                <option value="area">Gráfico de Área</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="admin-card-body">
+                        <canvas id="tendencias-ventas-chart"></canvas>
+                    </div>
+                </div>
+
+                <div class="admin-dashboard-grid">
+                    <div class="admin-card">
+                        <div class="admin-card-header">
+                            <h3 class="admin-card-title">Comparación Mensual</h3>
+                        </div>
+                        <div class="admin-card-body">
+                            <canvas id="comparacion-mensual-chart"></canvas>
+                        </div>
+                    </div>
+                    <div class="admin-card">
+                        <div class="admin-card-header">
+                            <h3 class="admin-card-title">Ventas por Día de la Semana</h3>
+                        </div>
+                        <div class="admin-card-body">
+                            <canvas id="ventas-dia-semana-chart"></canvas>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Ventas por Categoría Section -->
+            <section class="admin-section" id="ventas-categorias-section">
+                <div class="admin-section-header">
+                    <h1 class="admin-section-title">Ventas por Categoría</h1>
+                    <p class="admin-section-subtitle">Análisis de rendimiento por categorías de productos</p>
+                </div>
+
+                <div class="admin-card">
+                    <div class="admin-card-header">
+                        <h3 class="admin-card-title">Resumen por Categoría</h3>
+                    </div>
+                    <div class="admin-card-body">
+                        <div class="admin-table-container">
+                            <table class="admin-table" id="categorias-ventas-table">
+                                <thead>
+                                    <tr>
+                                        <th>Categoría</th>
+                                        <th>Total Vendido</th>
+                                        <th>Cantidad Productos</th>
+                                        <th>Promedio por Producto</th>
+                                        <th>% del Total</th>
+                                        <th>Tendencia</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="categorias-ventas-tbody">
+                                    <!-- Categorías se cargarán aquí -->
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="admin-card">
+                    <div class="admin-card-header">
+                        <h3 class="admin-card-title">Distribución de Ventas</h3>
+                    </div>
+                    <div class="admin-card-body">
+                        <canvas id="distribucion-categorias-chart"></canvas>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Exportar Reportes Section -->
+            <section class="admin-section" id="exportar-reportes-section">
+                <div class="admin-section-header">
+                    <h1 class="admin-section-title">Exportar Reportes</h1>
+                    <p class="admin-section-subtitle">Generar y descargar reportes en diferentes formatos</p>
+                </div>
+
+                <div class="admin-card">
+                    <div class="admin-card-header">
+                        <h3 class="admin-card-title">Configuración de Exportación</h3>
+                    </div>
+                    <div class="admin-card-body">
+                        <div class="admin-form">
+                            <div class="admin-form-row">
+                                <div class="admin-form-group">
+                                    <label class="admin-form-label">Tipo de Reporte</label>
+                                    <select class="admin-form-select" id="tipo-reporte">
+                                        <option value="resumen">Resumen General</option>
+                                        <option value="productos">Ventas por Producto</option>
+                                        <option value="clientes">Ventas por Cliente</option>
+                                        <option value="temporal">Análisis Temporal</option>
+                                        <option value="categorias">Ventas por Categoría</option>
+                                        <option value="completo">Reporte Completo</option>
+                                    </select>
+                                </div>
+                                <div class="admin-form-group">
+                                    <label class="admin-form-label">Formato</label>
+                                    <select class="admin-form-select" id="formato-reporte">
+                                        <option value="pdf">PDF</option>
+                                        <option value="excel">Excel</option>
+                                        <option value="csv">CSV</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="admin-form-row">
+                                <div class="admin-form-group">
+                                    <label class="admin-form-label">Fecha Inicio</label>
+                                    <input type="date" class="admin-form-input" id="export-fecha-inicio">
+                                </div>
+                                <div class="admin-form-group">
+                                    <label class="admin-form-label">Fecha Fin</label>
+                                    <input type="date" class="admin-form-input" id="export-fecha-fin">
+                                </div>
+                            </div>
+                            <div class="admin-form-group">
+                                <label class="admin-form-label">Incluir Gráficos</label>
+                                <input type="checkbox" id="incluir-graficos" checked>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="admin-card-footer">
+                        <button class="admin-btn admin-btn-primary" id="generar-reporte">
+                            <i class="fas fa-file-export"></i>
+                            Generar Reporte
+                        </button>
+                    </div>
+                </div>
+            </section>
+        </div>
+    </main>
+
+    <!-- Loading Overlay -->
+    <div class="admin-loading-overlay" id="admin-loading">
+        <div class="admin-loading-spinner">
+            <i class="fas fa-spinner fa-spin"></i>
+            <p>Cargando reportes...</p>
+        </div>
+    </div>
+
+    <!-- Scripts -->
+    <script src="../JS/reportesVentas-admin.js"></script>
+</body>
+
+</html>

@@ -1,0 +1,268 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gestión de Administradores - Carnicería Delicias a tu Diestra</title>
+    <meta name="description" content="Panel de gestión de administradores - Crear, editar, eliminar y asignar roles">
+    <link rel="stylesheet" href="../CSS/administradores-admin.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+
+<body class="administradores-body">
+    <!-- Modal de Gestión de Administradores -->
+    <div class="administradores-modal" id="administradores-modal">
+        <div class="administradores-modal-content administradores-modal-large">
+            <div class="administradores-modal-header">
+                <h3 class="administradores-modal-title" id="administradores-modal-title">Gestión de Administradores</h3>
+                <button  class="administradores-modal-close" id="administradores-modal-close">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+
+            <div class="administradores-modal-body" id="administradores-modal-body">
+                <!-- Botones de Acción -->
+                <div class="administradores-actions-section" id="administradores-actions-section">
+                    <div class="administradores-actions-grid">
+                        <button class="administradores-action-btn administradores-action-primary"
+                            id="btn-crear-administrador">
+                            <div class="administradores-action-icon">
+                                <i class="fas fa-user-plus"></i>
+                            </div>
+                            <div class="administradores-action-content">
+                                <h4 class="administradores-action-title">Crear Administrador</h4>
+                                <p class="administradores-action-description">Registrar un nuevo administrador en el
+                                    sistema</p>
+                            </div>
+                        </button>
+
+                        <button class="administradores-action-btn administradores-action-info" id="btn-listar-admins">
+                            <div class="administradores-action-icon">
+                                <i class="fas fa-list"></i>
+                            </div>
+                            <div class="administradores-action-content">
+                                <h4 class="administradores-action-title">Listar Usuarios</h4>
+                                <p class="administradores-action-description">Ver todos los usuarios del panel
+                                    administrativo
+                                </p>
+                            </div>
+                        </button>
+
+                        <button class="administradores-action-btn administradores-action-warning"
+                            id="btn-asignar-roles">
+                            <div class="administradores-action-icon">
+                                <i class="fas fa-key"></i>
+                            </div>
+                            <div class="administradores-action-content">
+                                <h4 class="administradores-action-title">Asignar Roles</h4>
+                                <p class="administradores-action-description">Gestionar permisos y roles de
+                                    administradores</p>
+                            </div>
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Formulario de Administrador (se muestra dinámicamente) -->
+                <div class="administradores-form-section" id="administradores-form-section" style="display: none;">
+                    <form class="administradores-form" id="administrador-form">
+                        <div class="administradores-form-group">
+                            <label class="administradores-form-label">Nombre *</label>
+                            <input type="text" class="administradores-form-input" id="admin-nombre" name="nombre"
+                                required>
+                            <span class="form-error-message" id="error-nombre"></span>
+                        </div>
+                        <div class="administradores-form-group">
+                            <label class="administradores-form-label">Email *</label>
+                            <input type="email" class="administradores-form-input" id="admin-email" name="email"
+                                required>
+                            <span class="form-error-message" id="error-email"></span>
+                        </div>
+                        <div class="administradores-form-group">
+                            <label class="administradores-form-label">Teléfono</label>
+                            <input type="tel" class="administradores-form-input" id="admin-telefono" name="telefono" 
+                                maxlength="10" pattern="[0-9]{10}" 
+                                oninput="this.value = this.value.replace(/[^0-9]/g, '')"
+                                >
+                            <span class="form-error-message" id="error-telefono"></span>
+                        </div>
+                        <div class="administradores-form-group">
+                            <label class="administradores-form-label">Dirección</label>
+                            <input type="text" class="administradores-form-input" id="admin-direccion" name="direccion">
+                        </div>
+                        <div class="administradores-form-group">
+                            <label class="administradores-form-label">Rol *</label>
+                            <select class="administradores-form-input" id="admin-rol" name="id_rol" required>
+                                <option value="">Seleccionar rol</option>
+                            </select>
+                            <small class="administradores-form-help">Selecciona el rol que tendrá este usuario en el
+                                sistema</small>
+                        </div>
+                        <div class="administradores-form-group">
+                            <label class="administradores-form-label">Contraseña *</label>
+                            <input type="password" class="administradores-form-input" id="admin-password"
+                                name="password" required>
+                            <span class="form-error-message" id="error-password"></span>
+                            <small class="administradores-form-help">Mínimo 8 caracteres, debe incluir letras y
+                                números</small>
+                        </div>
+                        <div class="administradores-form-group">
+                            <label class="administradores-form-label">Confirmar Contraseña *</label>
+                            <input type="password" class="administradores-form-input" id="admin-confirm-password"
+                                name="confirm_password" required>
+                            <span class="form-error-message" id="error-confirm-password"></span>
+                        </div>
+                    </form>
+                </div>
+
+                <!-- Lista de Administradores (se muestra dinámicamente) -->
+                <div class="administradores-list-section" id="administradores-list-section" style="display: none;">
+                    <!-- Estadísticas -->
+                    <div class="administradores-stats">
+                        <div class="administradores-stat">
+                            <span class="administradores-stat-number" id="total-administradores">0</span>
+                            <span class="administradores-stat-label">Total Usuarios</span>
+                        </div>
+                        <div class="administradores-stat">
+                            <span class="administradores-stat-number" id="administradores-activos">0</span>
+                            <span class="administradores-stat-label">Activos</span>
+                        </div>
+                        <div class="administradores-stat">
+                            <span class="administradores-stat-number" id="administradores-inactivos">0</span>
+                            <span class="administradores-stat-label">Inactivos</span>
+                        </div>
+                    </div>
+
+                    <div class="administradores-list-header">
+                        <h4 class="administradores-list-title">Lista de Usuarios del Panel Administrativo</h4>
+                        <div class="administradores-list-actions">
+                            <div class="administradores-search-box">
+                                <i class="fas fa-search"></i>
+                                <input type="text" placeholder="Buscar usuarios..." id="administradores-search">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="administradores-table-container">
+                        <table class="administradores-table" id="administradores-table">
+                            <thead>
+                                <tr>
+                                    <th>ID</th>
+                                    <th>Nombre</th>
+                                    <th>Email</th>
+                                    <th>Teléfono</th>
+                                    <th>Rol</th>
+                                    <th>Fecha Registro</th>
+                                    <th>Acciones</th>
+                                </tr>
+                            </thead>
+                            <tbody id="administradores-tbody">
+                                <!-- Los administradores se cargarán dinámicamente -->
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <!-- Sección de Asignación de Roles (se muestra dinámicamente) -->
+                <div class="administradores-roles-section" id="administradores-roles-section" style="display: none;">
+                    <!-- Botones de acción para roles -->
+                    <div class="administradores-roles-actions">
+                        <button class="administradores-btn administradores-btn-primary" id="btn-crear-rol">
+                            <i class="fas fa-plus"></i> Crear Nuevo Rol
+                        </button>
+                        <button class="administradores-btn administradores-btn-secondary" id="btn-listar-roles">
+                            <i class="fas fa-list"></i> Listar Roles
+                        </button>
+                    </div>
+
+                    <!-- Formulario de Crear/Editar Rol -->
+                    <div class="administradores-rol-form-section" id="administradores-rol-form-section"
+                        style="display: none;">
+                        <h4 class="administradores-rol-form-title" id="rol-form-title">Crear Nuevo Rol</h4>
+                        <form id="rol-form">
+                            <div class="administradores-form-group">
+                                <label class="administradores-form-label">Nombre del Rol *</label>
+                                <input type="text" class="administradores-form-input" id="rol-nombre"
+                                    placeholder="Ej: Domiciliario, Cajero, etc." required>
+                            </div>
+
+                            <div class="administradores-form-group">
+                                <label class="administradores-form-label">Permisos (Secciones del Panel) *</label>
+                                <p class="administradores-form-description">Selecciona las secciones a las que tendrá
+                                    acceso este rol:</p>
+                                <div class="administradores-permisos-grid" id="permisos-grid">
+                                    <!-- Los permisos se cargarán dinámicamente -->
+                                </div>
+                            </div>
+
+                            <div class="administradores-form-actions">
+                                <button type="button" class="administradores-btn administradores-btn-outline"
+                                    id="cancel-rol-form">
+                                    Cancelar
+                                </button>
+                                <button type="submit" class="administradores-btn administradores-btn-primary"
+                                    id="save-rol">
+                                    <i class="fas fa-save"></i> Guardar Rol
+                                </button>
+                            </div>
+                        </form>
+                    </div>
+
+                    <!-- Lista de Roles -->
+                    <div class="administradores-roles-list-section" id="administradores-roles-list-section"
+                        style="display: none;">
+                        <div class="administradores-roles-list-header">
+                            <h4 class="administradores-roles-list-title">Lista de Roles</h4>
+                            <div class="administradores-roles-search">
+                                <input type="text" class="administradores-form-input" id="roles-search"
+                                    placeholder="Buscar roles...">
+                            </div>
+                        </div>
+                        <div class="administradores-roles-table-container">
+                            <table class="administradores-table">
+                                <thead>
+                                    <tr>
+                                        <th>ID</th>
+                                        <th>Nombre del Rol</th>
+                                        <th>Permisos</th>
+                                        <th>Usuarios</th>
+                                        <th>Acciones</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="roles-tbody">
+                                    <!-- Los roles se cargarán dinámicamente -->
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="administradores-modal-footer" id="administradores-modal-footer">
+                <button class="administradores-btn administradores-btn-outline" id="cancel-administradores">
+                    <i class="fas fa-arrow-left"></i>
+                    Volver
+                </button>
+                <button class="administradores-btn administradores-btn-primary" id="save-administrador"
+                    style="display: none;">
+                    <i class="fas fa-save"></i>
+                    Guardar Administrador
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Loading Overlay -->
+    <div class="administradores-loading-overlay" id="administradores-loading-overlay">
+        <div class="administradores-loading-spinner">
+            <i class="fas fa-spinner fa-spin"></i>
+            <p>Cargando...</p>
+        </div>
+    </div>
+
+    <script src="../JS/administradores-admin.js"></script>
+</body>
+
+</html>

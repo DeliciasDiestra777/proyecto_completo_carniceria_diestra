@@ -1,0 +1,639 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Carrito de Compras - Carnicería Delicias a tu Diestra</title>
+    <meta name="description" content="Gestiona tu carrito de compras con los mejores productos de carnicería">
+    <link rel="stylesheet" href="../CSS/styles.css">
+    <link rel="stylesheet" href="../CSS/carrito.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script src="../JS/client-session.js"></script>
+    <script src="../JS/notificaciones-cliente.js"></script>
+</head>
+
+<body>
+    <!-- Header -->
+    <header class="header">
+        <div class="container">
+            <div class="header-content">
+                <!-- Logo -->
+                <div class="logo">
+                    <div class="logo-icon">
+                        <a href="catalogo.html"><img src="../IMG/logoCarniceria.png" alt="Logo Carnicería Delicias"
+                                class="logo-image"></a>
+                    </div>
+                    <span class="logo-text">Carnicería Delicias a tu Diestra</span>
+                </div>
+
+                <!-- Navigation -->
+                <nav class="nav">
+                    <ul class="nav-list">
+                        <li><a href="index.html" class="nav-link">Inicio</a></li>
+                        <li><a href="catalogo.html" class="nav-link">Catálogo</a></li>
+                        <li><a href="carrito.html" class="nav-link active">
+                                <i class="fas fa-shopping-cart"></i>
+                                <span class="carrito-badge" id="carrito-badge">0</span>
+                            </a></li>
+                        <li id="notificaciones-cliente-li" style="display: none;">
+                            <a href="#" class="nav-link" id="notificaciones-cliente-link"
+                                onclick="event.preventDefault(); abrirNotificacionesCliente();">
+                                <i class="fas fa-bell"></i>
+                                <span class="notificacion-badge-cliente" id="notificacion-badge-cliente"
+                                    style="display: none;">0</span>
+                            </a>
+                        </li>
+                        <!-- Área de usuario (se muestra cuando no está logueado) -->
+                        <li class="nav-user-area" id="nav-user-area" style="display: flex;">
+                            <a href="login.html" class="nav-link" id="login-link" target="_self">Iniciar Sesión</a>
+                            <a href="registro.html" class="btn btn-primary" id="registro-link"
+                                target="_self">Registrarse</a>
+                        </li>
+
+                        <!-- Usuario logueado (se muestra cuando está logueado) -->
+                        <li class="nav-user-logged" id="nav-user-logged" style="display: none;">
+                            <div class="user-dropdown">
+                                <button class="user-button" id="user-button">
+                                    <i class="fas fa-user-circle"></i>
+                                    <span id="user-name">Usuario</span>
+                                    <i class="fas fa-chevron-down"></i>
+                                </button>
+                                <div class="user-menu" id="user-menu">
+                                    <a href="#" class="user-menu-item" id="user-profile">
+                                        <i class="fas fa-user"></i>
+                                        Mi Perfil
+                                    </a>
+                                    <a href="#" class="user-menu-item" id="user-orders">
+                                        <i class="fas fa-shopping-bag"></i>
+                                        Mis Pedidos
+                                    </a>
+                                    <div class="user-menu-divider"></div>
+                                    <a href="#" class="user-menu-item" id="user-logout">
+                                        <i class="fas fa-sign-out-alt"></i>
+                                        Cerrar Sesión
+                                    </a>
+                                </div>
+                            </div>
+                        </li>
+                    </ul>
+                </nav>
+
+                <!-- Mobile Menu Button -->
+                <button class="mobile-menu-btn" id="mobile-menu-btn">
+                    <i class="fas fa-bars"></i>
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <!-- Breadcrumb -->
+    <section class="breadcrumb">
+        <div class="container">
+            <nav class="breadcrumb-nav">
+                <a href="../index.html" class="breadcrumb-link">
+                    <i class="fas fa-home"></i> Inicio
+                </a>
+                <span class="breadcrumb-separator">></span>
+                <span class="breadcrumb-current">Carrito de Compras</span>
+            </nav>
+        </div>
+    </section>
+
+    <!-- Carrito Principal -->
+    <main class="main-content">
+        <div class="container">
+            <div class="carrito-page">
+                <!-- Header del Carrito -->
+                <div class="carrito-page-header">
+                    <h1 class="page-title">
+                        <i class="fas fa-shopping-cart"></i>
+                        Carrito de Compras
+                    </h1>
+                    <p class="page-subtitle"><b>Revisa y gestiona los productos en tu carrito</b></p>
+                </div>
+
+                <!-- Contenido del Carrito -->
+                <div class="carrito-page-content">
+                    <div class="carrito-container" id="carrito-container">
+                        <!-- Ejemplo de carrito con productos -->
+
+                    </div>
+
+                    <!-- Sidebar de Resumen -->
+                    <div class="carrito-sidebar">
+                        <div class="resumen-pedido">
+                            <h3>Resumen del Pedido</h3>
+                            <div class="resumen-items" id="resumen-items">
+                                <div class="resumen-item">
+                                    <span>Envío:</span>
+                                    <span>Gratis</span>
+                                </div>
+                            </div>
+                            <div class="resumen-total" id="resumen-total">
+
+                            </div>
+                            <div class="resumen-acciones">
+                                <button class="btn btn-secondary btn-full" type="button" id="btn-limpiar-carrito"
+                                    onclick="abrirModalLimpiarCarrito()">
+                                    <i class="fas fa-trash-alt"></i> Limpiar Carrito
+                                </button>
+                                <button class="btn btn-primary btn-full" type="button" onclick="procederAlPago()">
+                                    <i class="fas fa-credit-card"></i> Proceder al Pago
+                                </button>
+                            </div>
+                        </div>
+
+                        <!-- Información de Entrega -->
+                        <div class="info-entrega">
+                            <h4><i class="fas fa-truck"></i> Información de Entrega</h4>
+                            <div class="info-item">
+                                <i class="fas fa-clock"></i>
+                                <span>Entrega ágil, directa y segura</span>
+                            </div>
+                            <div class="info-item">
+                                <i class="fas fa-shield-alt"></i>
+                                <span>Productos frescos garantizados</span>
+                            </div>
+                            <div class="info-item">
+                                <i class="fas fa-money-bill-wave"></i>
+                                <span>Pago contra entrega u otros medios de pago</span>
+                            </div>
+                        </div>
+
+                        <!-- Productos Recomendados -->
+                        <div class="productos-recomendados">
+                            <h4><i class="fas fa-star"></i> También te puede interesar</h4>
+                            <div class="recomendados-grid" id="recomendados-grid">
+                                <!-- Los productos más vendidos se cargarán dinámicamente aquí -->
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-section">
+                    <div class="footer-logo">
+                        <div class="logo-icon">
+                            <img src="../IMG/logoCarniceria.png" alt="Logo Carnicería Delicias" class="logo-image">
+                        </div>
+                        <span class="logo-text">Carnicería Delicias a tu Diestra</span>
+                    </div>
+                    <p class="footer-description">Los mejores cortes de carne fresca, pollo, cerdo y embutidos de la más
+                        alta calidad.</p>
+                </div>
+                <div class="footer-section">
+                    <h3 class="footer-title">Productos</h3>
+                    <ul class="footer-links">
+                        <li><a href="../catalogo.html?categoria=pollo">Pollo</a></li>
+                        <li><a href="../catalogo.html?categoria=res">Carne de Res</a></li>
+                        <li><a href="../catalogo.html?categoria=cerdo">Carne de Cerdo</a></li>
+                        <li><a href="../catalogo.html?categoria=embutidos">Embutidos</a></li>
+                    </ul>
+                </div>
+                <div class="footer-section">
+                    <h3 class="footer-title">Enlaces</h3>
+                    <ul class="footer-links">
+                        <li><a href="../catalogo.html">Catálogo</a></li>
+                        <li><a href="../carrito.html">Carrito</a></li>
+                        <li><a href="#perfil">Mi Cuenta</a></li>
+                        <li><a href="#admin">Administrador</a></li>
+                    </ul>
+                </div>
+                <div class="footer-section">
+                    <h3 class="footer-title">Contacto</h3>
+                    <div class="contact-info">
+                        <p><i class="fas fa-phone"></i> +57 321 123 4567</p>
+                        <p><i class="fas fa-envelope"></i> info@carniceria.com</p>
+                        <p><i class="fas fa-map-marker-alt"></i> Carrera 26 # 28 - 02, Palmira, Valle - Colombia</p>
+                    </div>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>&copy; 2025 Carnicería Delicias a tu Diestra. Todos los derechos reservados.</p>
+                <p class="scripture">"Delicias a tu diestra" - Salmos 16:11</p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Modal Validar Datos -->
+    <div class="modal-overlay" id="modal-validar-datos">
+        <div class="modal-content">
+            <div class="modal-header">
+                <div class="modal-header-left">
+                    <div class="modal-icon">
+                        <i class="fas fa-check-circle"></i>
+                    </div>
+                    <h2 class="modal-title">Confirmar Datos</h2>
+                </div>
+                <button class="modal-close" type="button" onclick="cerrarModalValidarDatos()">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            <div class="modal-body">
+                <!-- Información Importante -->
+                <div class="info-important-box">
+                    <div class="info-icon">
+                        <i class="fas fa-info-circle"></i>
+                    </div>
+                    <div class="info-content">
+                        <h4 class="info-title">Información importante</h4>
+                        <p class="info-message">Por favor verifica que tus datos sean correctos para garantizar una
+                            entrega exitosa.</p>
+                    </div>
+                </div>
+
+                <!-- Datos de Entrega -->
+                <div class="datos-entrega-header">
+                    <h3 class="datos-title">Datos de Entrega</h3>
+                    <button class="btn btn-secondary btn-sm" type="button" onclick="toggleEditMode()" id="edit-btn">
+                        <i class="fas fa-save"></i> Editar
+                    </button>
+                </div>
+
+                <form class="validar-form">
+                    <div class="form-group">
+                        <label for="nombre" class="form-label">Nombre</label>
+                        <input type="text" id="nombre" class="form-input" value="Juan Carlos" readonly>
+                    </div>
+                    <div class="form-group">
+                        <label for="apellido" class="form-label">Apellido</label>
+                        <input type="text" id="apellido" class="form-input" value="González Martínez" readonly>
+                    </div>
+                    <div class="form-group">
+                        <label for="telefono" class="form-label">Teléfono</label>
+                        <div class="input-with-icon">
+                            <i class="fas fa-phone input-icon"></i>
+                            <input type="tel" id="telefono" class="form-input" value="+52 555 123 4567" readonly>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="direccion" class="form-label">Dirección *</label>
+                        <input type="text" id="direccion" class="form-input" value="Calle 123 #45-67" readonly>
+                    </div>
+                    <div class="form-group">
+                        <label for="referencias" class="form-label">Referencias de la dirección</label>
+                        <textarea id="referencias" class="form-textarea" maxlength="500"
+                            readonly>Casa blanca con portón azul</textarea>
+                        <div class="char-counter">27/500 caracteres</div>
+                    </div>
+                </form>
+                <div class="total-pagar">
+                    <span>Total a pagar:</span>
+                    <span class="total-amount">$ 119.000</span>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-primary btn-full" type="button" onclick="continuarAlPago()">
+                    Continuar al Pago
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal Método de Pago -->
+    <div class="modal-overlay" id="modal-metodo-pago">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 class="modal-title">Método de Pago</h2>
+                <button class="modal-close" type="button" onclick="cerrarModal('modal-metodo-pago')">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="form-group">
+                    <label class="form-label">Selecciona tu método de pago *</label>
+                    <div class="payment-methods">
+                        <label class="payment-option">
+                            <input type="radio" name="metodo-pago" value="nequi" class="payment-radio">
+                            <div class="payment-option-content">
+                                <i class="fas fa-mobile-alt payment-icon"></i>
+                                <span>Nequi</span>
+                            </div>
+                        </label>
+                        <label class="payment-option">
+                            <input type="radio" name="metodo-pago" value="daviplata" class="payment-radio">
+                            <div class="payment-option-content">
+                                <i class="fas fa-mobile-alt payment-icon"></i>
+                                <span>Daviplata</span>
+                            </div>
+                        </label>
+                        <label class="payment-option">
+                            <input type="radio" name="metodo-pago" value="bancolombia" class="payment-radio">
+                            <div class="payment-option-content">
+                                <i class="fas fa-university payment-icon"></i>
+                                <span>Bancolombia (Ahorros)</span>
+                            </div>
+                        </label>
+                        <label class="payment-option">
+                            <input type="radio" name="metodo-pago" value="efectivo" class="payment-radio">
+                            <div class="payment-option-content">
+                                <i class="fas fa-dollar-sign payment-icon"></i>
+                                <span>Efectivo</span>
+                            </div>
+                        </label>
+                    </div>
+                </div>
+                <div class="total-pagar">
+                    <span>Total a pagar:</span>
+                    <span class="total-amount">$ 119.000</span>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-secondary" type="button" onclick="volverValidarDatos()">
+                    Volver
+                </button>
+                <button class="btn btn-primary" type="button" id="btn-procesar-pago" onclick="procesarPago()">
+                    Confirmar Pago
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal Cambio Efectivo -->
+    <div class="modal-overlay" id="modal-cambio-efectivo">
+        <div class="modal-content">
+            <div class="modal-header">
+                <div class="modal-header-left">
+                    <div class="modal-icon">
+                        <i class="fas fa-dollar-sign"></i>
+                    </div>
+                    <h2 class="modal-title">Pago en Efectivo</h2>
+                </div>
+                <button class="modal-close" type="button" onclick="cerrarModal('modal-cambio-efectivo')">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            <div class="modal-body">
+                <!-- Información del pedido -->
+                <div class="efectivo-info-box">
+                    <div class="info-icon">
+                        <i class="fas fa-info-circle"></i>
+                    </div>
+                    <div class="info-content">
+                        <h4 class="info-title">Información importante</h4>
+                        <p class="info-message">Por favor indica con cuánto dinero vas a pagar para que el repartidor
+                            lleve el cambio exacto.</p>
+                    </div>
+                </div>
+
+                <!-- Detalles del pago -->
+                <div class="pago-details">
+                    <h3 class="pago-title">Detalles del Pago</h3>
+
+                    <div class="pago-summary">
+                        <div class="pago-item">
+                            <span>Total del pedido:</span>
+                            <span class="pago-amount">$ 119.000</span>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="monto-recibido" class="form-label">Con cuánto vas a pagar *</label>
+                        <div class="input-with-icon">
+                            <i class="fas fa-dollar-sign input-icon"></i>
+                            <input type="number" id="monto-recibido" class="form-input" placeholder="Ej: 150000"
+                                min="119000" step="1000" required>
+                        </div>
+                        <div class="cambio-preview" id="cambio-preview" style="display: none;">
+                            <span>Cambio:</span>
+                            <span class="cambio-amount">$ 0</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-secondary" type="button" onclick="volverMetodoPago()">
+                    Volver
+                </button>
+                <button class="btn btn-primary" type="button" onclick="procesarPagoEfectivo()">
+                    Confirmar Pago
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal Instrucciones Transferencia (Nequi/Daviplata) -->
+    <div class="modal-overlay" id="modal-instrucciones-transferencia">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 class="modal-title">Instrucciones de Pago</h2>
+                <button class="modal-close" type="button" onclick="cerrarModal('modal-instrucciones-transferencia')">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="confirmation-content">
+                    <div class="success-icon" style="color: #10b981;">
+                        <i class="fas fa-mobile-alt" style="font-size: 48px;"></i>
+                    </div>
+                    <h3 class="confirmation-title" id="transferencia-titulo">Transferencia Nequi</h3>
+                    <p class="confirmation-message">
+                        Para enviar tu pedido, por favor envía el comprobante de la transferencia a este WhatsApp:
+                    </p>
+
+                    <div class="payment-info-box">
+                        <div class="payment-info-detail">
+                            <span>Número WhatsApp:</span>
+                            <span class="payment-number" id="transferencia-whatsapp">321 123 4567</span>
+                        </div>
+                        <div class="payment-info-detail" style="margin-top: 15px;">
+                            <span>Valor a transferir:</span>
+                            <span class="payment-number" id="transferencia-total">$ 0</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <a href="#" id="link-whatsapp-transferencia" target="_blank" class="btn btn-success btn-full"
+                    style="text-decoration: none; display: inline-block;">
+                    <i class="fab fa-whatsapp"></i> Enviar Comprobante por WhatsApp
+                </a>
+                <button class="btn btn-secondary btn-full" type="button"
+                    onclick="cerrarModal('modal-instrucciones-transferencia')" style="margin-top: 10px;">
+                    Cerrar
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal Instrucciones Bancolombia -->
+    <div class="modal-overlay" id="modal-instrucciones-bancolombia">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 class="modal-title">Instrucciones de Pago</h2>
+                <button class="modal-close" type="button" onclick="cerrarModal('modal-instrucciones-bancolombia')">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="confirmation-content">
+                    <div class="success-icon" style="color: #fbbf24;">
+                        <i class="fas fa-university" style="font-size: 48px;"></i>
+                    </div>
+                    <h3 class="confirmation-title" id="bancolombia-titulo">Transferencia Bancolombia</h3>
+                    <p class="confirmation-message">
+                        Para enviar tu pedido, por favor envía el comprobante de la transferencia a este WhatsApp:
+                    </p>
+
+                    <div class="payment-info-box">
+                        <div class="payment-info-detail">
+                            <span>Número de cuenta:</span>
+                            <span class="payment-number" id="bancolombia-cuenta">1234567890</span>
+                        </div>
+                        <div class="payment-info-detail" style="margin-top: 15px;">
+                            <span>Tipo de cuenta:</span>
+                            <span class="payment-number" id="bancolombia-tipo">Ahorros</span>
+                        </div>
+                        <div class="payment-info-detail" style="margin-top: 15px;">
+                            <span>Número WhatsApp:</span>
+                            <span class="payment-number" id="bancolombia-whatsapp">321 123 4567</span>
+                        </div>
+                        <div class="payment-info-detail" style="margin-top: 15px;">
+                            <span>Valor a transferir:</span>
+                            <span class="payment-number" id="bancolombia-total">$ 0</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <a href="#" id="link-whatsapp-bancolombia" target="_blank" class="btn btn-success btn-full"
+                    style="text-decoration: none; display: inline-block;">
+                    <i class="fab fa-whatsapp"></i> Enviar Comprobante por WhatsApp
+                </a>
+                <button class="btn btn-secondary btn-full" type="button"
+                    onclick="cerrarModal('modal-instrucciones-bancolombia')" style="margin-top: 10px;">
+                    Cerrar
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal Confirmar Pedido -->
+    <div class="modal-overlay" id="modal-confirmar-pedido">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 class="modal-title">Confirmar Pedido</h2>
+                <button class="modal-close" type="button" onclick="cerrarModal('modal-confirmar-pedido')">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="confirmation-content">
+                    <div class="success-icon">
+                        <i class="fas fa-check-circle"></i>
+                    </div>
+                    <h3 class="confirmation-title">¡Pedido Confirmado!</h3>
+                    <p class="confirmation-message">Tu pedido ha sido procesado exitosamente</p>
+
+                    <div class="payment-info-box">
+                        <h4 class="payment-info-title">Transferencia Nequi</h4>
+                        <div class="payment-info-detail">
+                            <span>Número:</span>
+                            <span class="payment-number">300 123 4567</span>
+                        </div>
+                        <p class="payment-instruction">Envía el comprobante al WhatsApp para verificar el pago</p>
+                    </div>
+
+                    <div class="total-pagado">
+                        <span>Total pagado:</span>
+                        <span class="total-amount">$ 119.000</span>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-success btn-full" type="button" onclick="enviarWhatsApp()">
+                    Enviar Pedido por WhatsApp
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal Confirmar Limpiar Carrito -->
+    <div class="modal-overlay" id="modal-limpiar-carrito">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 class="modal-title">Confirmar Acción</h2>
+                <button class="modal-close" type="button" onclick="cerrarModalLimpiarCarrito()">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="confirmation-content">
+                    <div class="warning-icon">
+                        <i class="fas fa-exclamation-triangle"></i>
+                    </div>
+                    <h3 class="confirmation-title">¿Estás seguro?</h3>
+                    <p class="confirmation-message">
+                        Esta acción eliminará todos los productos de tu carrito de compras.
+                        No podrás recuperar esta información una vez confirmada.
+                    </p>
+                    <div class="warning-details">
+                        <p><strong>Se eliminarán:</strong></p>
+                        <ul>
+                            <li>Todos los productos seleccionados</li>
+                            <li>Las cantidades configuradas</li>
+                            <li>El historial de selección</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-secondary" type="button" onclick="cerrarModalLimpiarCarrito()">
+                    <i class="fas fa-times"></i> Cancelar
+                </button>
+                <button class="btn btn-danger" type="button" onclick="confirmarLimpiarCarrito()">
+                    <i class="fas fa-trash-alt"></i> Sí, Limpiar Carrito
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Cargar carrito.js al final para asegurar que esté disponible -->
+    <script src="../JS/dateHelper.js"></script>
+    <script src="../JS/carrito.js"></script>
+
+    <!-- Script de verificación (después de cargar carrito.js) -->
+    <script>
+        // Verificar que las funciones estén cargadas después de que carrito.js se haya cargado
+        (function () {
+            // Esperar a que el script se cargue
+            function verificarFunciones() {
+                if (typeof procederAlPago === 'undefined') {
+                    console.error('Error: La función procederAlPago no está disponible');
+                    // Reintentar después de un breve delay
+                    setTimeout(verificarFunciones, 100);
+                    return;
+                }
+
+                console.log('Función procederAlPago cargada correctamente');
+
+                if (typeof abrirModalLimpiarCarrito === 'undefined') {
+                    console.error('Error: La función abrirModalLimpiarCarrito no está disponible');
+                } else {
+                    console.log('Función abrirModalLimpiarCarrito cargada correctamente');
+                }
+            }
+
+            // Verificar cuando el DOM esté listo
+            if (document.readyState === 'loading') {
+                document.addEventListener('DOMContentLoaded', verificarFunciones);
+            } else {
+                verificarFunciones();
+            }
+        })();
+    </script>
+
+
+</body>
+
+</html>

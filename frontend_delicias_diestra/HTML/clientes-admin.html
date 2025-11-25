@@ -1,0 +1,410 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gestión de Clientes - Carnicería Delicias a tu Diestra</title>
+    <meta name="description" content="Panel de gestión de clientes - Crear, editar, eliminar y listar clientes">
+    <link rel="stylesheet" href="../CSS/clientes-admin.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+
+<body class="clientes-body">
+    <!-- Modal de Gestión de Clientes -->
+    <div class="clientes-modal" id="clientes-modal">
+        <div class="clientes-modal-content clientes-modal-large">
+            <div class="clientes-modal-header">
+                <h3 class="clientes-modal-title" id="clientes-modal-title">Gestión de Clientes</h3>
+                <a href="usuarios-admin.html">
+                    <button class="clientes-modal-close" id="close-clientes-modal">
+                        <i class="fas fa-times"></i>
+                    </button>
+                </a>
+            </div>
+
+            <div class="clientes-modal-body">
+                <!-- Botones de Acción -->
+                <div class="clientes-actions-section">
+                    <div class="clientes-actions-grid">
+                        <button class="clientes-action-btn clientes-action-primary" id="btn-crear-cliente">
+                            <div class="clientes-action-icon">
+                                <i class="fas fa-user-plus"></i>
+                            </div>
+                            <div class="clientes-action-content">
+                                <h4 class="clientes-action-title">Crear Cliente</h4>
+                                <p class="clientes-action-description">Registrar un nuevo cliente en el sistema</p>
+                            </div>
+                        </button>
+
+                        <button class="clientes-action-btn clientes-action-info" id="btn-listar-clientes">
+                            <div class="clientes-action-icon">
+                                <i class="fas fa-list"></i>
+                            </div>
+                            <div class="clientes-action-content">
+                                <h4 class="clientes-action-title">Listar Clientes</h4>
+                                <p class="clientes-action-description">Ver todos los clientes registrados</p>
+                            </div>
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Formulario de Cliente (se muestra dinámicamente) -->
+                <div class="clientes-form-section" id="clientes-form-section" style="display: none;">
+                    <form class="clientes-form" id="clientes-form">
+                        <!-- Información Personal -->
+                        <div class="clientes-form-section">
+                            <h4 class="clientes-form-section-title">Información Personal</h4>
+                            <div class="clientes-form-row">
+                                <div class="clientes-form-group">
+                                    <label class="clientes-form-label">Nombre *</label>
+                                    <input type="text" class="clientes-form-input" id="cliente-nombre"
+                                        name="nombre_user" required>
+                                </div>
+                                <div class="clientes-form-group">
+                                    <label class="clientes-form-label">Apellido *</label>
+                                    <input type="text" class="clientes-form-input" id="cliente-apellido"
+                                        name="apellido_user" required>
+                                </div>
+                            </div>
+                            <div class="clientes-form-row">
+                                <div class="clientes-form-group">
+                                    <label class="clientes-form-label">Tipo de Documento *</label>
+                                    <select class="clientes-form-select" id="cliente-tipo-doc" name="tipo_documento"
+                                        required>
+                                        <option value="">Seleccionar tipo</option>
+                                        <option value="C.C">Cédula de Ciudadanía</option>
+                                        <option value="C.E">Cédula de Extranjería</option>
+                                        <option value="NIT">NIT</option>
+                                        <option value="PA.">Pasaporte</option>
+                                    </select>
+                                </div>
+                                <div class="clientes-form-group">
+                                    <label class="clientes-form-label">Número de Documento *</label>
+                                    <input type="text" class="clientes-form-input" id="cliente-num-doc"
+                                        name="numero_documento" required>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Información de Contacto -->
+                        <div class="clientes-form-section">
+                            <h4 class="clientes-form-section-title">Información de Contacto</h4>
+                            <div class="clientes-form-row">
+                                <div class="clientes-form-group">
+                                    <label class="clientes-form-label">Teléfono *</label>
+                                    <input type="tel" class="clientes-form-input" id="cliente-telefono" name="telefono"
+                                        required>
+                                </div>
+                                <div class="clientes-form-group">
+                                    <label class="clientes-form-label">Email *</label>
+                                    <input type="email" class="clientes-form-input" id="cliente-email" name="email"
+                                        required>
+                                </div>
+                            </div>
+                            <div class="clientes-form-group">
+                                <label class="clientes-form-label">Dirección *</label>
+                                <textarea class="clientes-form-textarea" id="cliente-direccion" name="direccion"
+                                    rows="3" required></textarea>
+                            </div>
+                        </div>
+
+                        <!-- Información de Acceso -->
+                        <div class="clientes-form-section">
+                            <h4 class="clientes-form-section-title">Información de Acceso</h4>
+                            <div class="clientes-form-row">
+                                <div class="clientes-form-group">
+                                    <label class="clientes-form-label">Contraseña *</label>
+                                    <input type="password" class="clientes-form-input" id="cliente-password"
+                                        name="contraseña" required>
+                                </div>
+                                <div class="clientes-form-group">
+                                    <label class="clientes-form-label">Confirmar Contraseña *</label>
+                                    <input type="password" class="clientes-form-input" id="cliente-password-confirm"
+                                        required>
+                                </div>
+                            </div>
+                            <div class="clientes-form-group">
+                                <label class="clientes-checkbox-label">
+                                    <input type="checkbox" id="cliente-activo" name="activo" checked>
+                                    <span class="clientes-checkmark"></span>
+                                    Cliente Activo
+                                </label>
+                                <small class="clientes-form-help">Los clientes inactivos no podrán acceder al
+                                    sistema</small>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+
+                <!-- Lista de Clientes (se muestra dinámicamente) -->
+                <div class="clientes-list-section" id="clientes-list-section" style="display: none;">
+                    <div class="clientes-list-header">
+                        <h4 class="clientes-list-title">Lista de Clientes</h4>
+                        <div class="clientes-list-actions">
+                            <div class="clientes-search-box">
+                                <i class="fas fa-search"></i>
+                                <input type="text" placeholder="Buscar clientes..." id="search-clientes">
+                            </div>
+                            <select class="clientes-select" id="filter-estado-cliente">
+                                <option value="">Todos los estados</option>
+                                <option value="activo">Activos</option>
+                                <option value="inactivo">Inactivos</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="clientes-table-container">
+                        <table class="clientes-table" id="clientes-table">
+                            <thead>
+                                <tr>
+                                    <th>ID</th>
+                                    <th>Nombre</th>
+                                    <th>Email</th>
+                                    <th>Teléfono</th>
+                                    <th>Documento</th>
+                                    <th>Estado</th>
+                                    <th>Último Login</th>
+                                    <th>Acciones</th>
+                                </tr>
+                            </thead>
+                            <tbody id="clientes-tbody">
+                                <!-- Los clientes se cargarán dinámicamente -->
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+            <div class="clientes-modal-footer">
+                <button class="clientes-btn clientes-btn-outline" id="cancel-clientes">
+                    <i class="fas fa-arrow-left"></i>
+                    Volver
+                </button>
+                <button class="clientes-btn clientes-btn-danger" id="delete-cliente" style="display: none;">
+                    <i class="fas fa-trash"></i>
+                    Eliminar
+                </button>
+                <button class="clientes-btn clientes-btn-primary" id="save-cliente" style="display: none;">
+                    <i class="fas fa-save"></i>
+                    Guardar Cliente
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Loading Overlay -->
+    <div class="clientes-loading-overlay" id="clientes-loading">
+        <div class="clientes-loading-spinner">
+            <i class="fas fa-spinner fa-spin"></i>
+            <p>Cargando...</p>
+        </div>
+    </div>
+
+    <!-- Sección de Lista de Clientes -->
+    <div class="clientes-list-section" id="clientes-list-section" style="display: none;">
+        <!-- La lista se cargará dinámicamente aquí -->
+    </div>
+
+    <!-- Script para funcionalidad -->
+    <!-- Scripts -->
+    <script src="../JS/clientes-admin.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            // Elementos del DOM
+            const btnCrear = document.getElementById('btn-crear-cliente');
+            const btnListar = document.getElementById('btn-listar-clientes');
+            const formSection = document.getElementById('clientes-form-section');
+            const listSection = document.getElementById('clientes-list-section');
+            const saveBtn = document.getElementById('save-cliente');
+            const deleteBtn = document.getElementById('delete-cliente');
+            const cancelBtn = document.getElementById('cancel-clientes');
+            const form = document.getElementById('clientes-form');
+            const modalTitle = document.getElementById('clientes-modal-title');
+            const loadingOverlay = document.getElementById('clientes-loading');
+
+            // Usar variables globales del script principal
+            if (typeof window.currentAction === 'undefined') {
+                window.currentAction = '';
+            }
+            if (typeof window.currentClienteId === 'undefined') {
+                window.currentClienteId = null;
+            }
+
+            // Función para mostrar loading
+            function showLoading(show) {
+                if (show) {
+                    loadingOverlay.classList.add('show');
+                } else {
+                    loadingOverlay.classList.remove('show');
+                }
+            }
+
+            // Función para mostrar sección
+            function showSection(section, action = '') {
+                // Ocultar todas las secciones
+                formSection.style.display = 'none';
+                listSection.style.display = 'none';
+
+                // Mostrar la sección correspondiente
+                if (section === 'form') {
+                    formSection.style.display = 'block';
+                    saveBtn.style.display = 'inline-flex';
+                    deleteBtn.style.display = action === 'edit' ? 'inline-flex' : 'none';
+                } else if (section === 'list') {
+                    listSection.style.display = 'block';
+                    saveBtn.style.display = 'none';
+                    deleteBtn.style.display = 'none';
+                }
+
+                window.currentAction = action;
+            }
+
+            // Event Listeners para botones de acción
+            btnCrear.addEventListener('click', function () {
+                modalTitle.textContent = 'Crear Nuevo Cliente';
+                showSection('form', 'create');
+                form.reset();
+                window.currentClienteId = null;
+
+                // Restablecer campos de contraseña como requeridos
+                const passwordInput = document.getElementById('cliente-password');
+                const passwordConfirmInput = document.getElementById('cliente-password-confirm');
+                if (passwordInput) passwordInput.setAttribute('required', 'required');
+                if (passwordConfirmInput) passwordConfirmInput.setAttribute('required', 'required');
+            });
+
+            btnListar.addEventListener('click', function () {
+                modalTitle.textContent = 'Lista de Clientes';
+                showSection('list', 'list');
+                loadClientes();
+            });
+
+            // Función para cargar clientes (simulada)
+            function loadClientes() {
+                showLoading(true);
+                setTimeout(() => {
+                    showLoading(false);
+                    // Aquí cargarías los datos reales desde la API
+                    console.log('Cargando clientes...');
+                }, 1000);
+            }
+
+            // Event listener para guardar
+            saveBtn.addEventListener('click', async function () {
+                if (form.checkValidity()) {
+                    showLoading(true);
+                    const formData = new FormData(form);
+                    const clienteData = Object.fromEntries(formData);
+
+                    // Preparar datos para enviar
+                    const datosEnviar = {
+                        nombre_cliente: clienteData.nombre_user,
+                        apellido_cliente: clienteData.apellido_user,
+                        tipo_documento: clienteData.tipo_documento,
+                        numero_documento: clienteData.numero_documento,
+                        telefono: clienteData.telefono,
+                        direccion: clienteData.direccion,
+                        email: clienteData.email,
+                        estado: document.getElementById('cliente-activo').checked ? 'activo' : 'inactivo'
+                    };
+
+                    // Solo incluir contraseña si se está creando o si se proporcionó una nueva
+                    if (window.currentAction === 'create' || clienteData.contraseña) {
+                        datosEnviar.clave = clienteData.contraseña;
+                    }
+
+                    try {
+                        let response;
+                        if (window.currentAction === 'create') {
+                            // Crear nuevo cliente
+                            response = await fetch('http://localhost:3000/api/clientes', {
+                                method: 'POST',
+                                headers: { 'Content-Type': 'application/json' },
+                                body: JSON.stringify(datosEnviar)
+                            });
+                        } else if (window.currentAction === 'edit' && window.currentClienteId) {
+                            // Actualizar cliente existente
+                            response = await fetch(`http://localhost:3000/api/clientes/${window.currentClienteId}`, {
+                                method: 'PUT',
+                                headers: { 'Content-Type': 'application/json' },
+                                body: JSON.stringify(datosEnviar)
+                            });
+                        }
+
+                        if (response && response.ok) {
+                            const resultado = await response.json();
+                            alert(window.currentAction === 'create' ? 'Cliente creado exitosamente!' : 'Cliente actualizado exitosamente!');
+
+                            // Recargar lista de clientes si está disponible
+                            if (window.cargarClientes) {
+                                await window.cargarClientes();
+                                // Mostrar la lista después de cargar
+                                if (listSection) {
+                                    listSection.style.display = 'block';
+                                }
+                            } else {
+                                showSection('list', 'list');
+                            }
+                        } else {
+                            const error = await response.json();
+                            let errorMessage = error.error || 'No se pudo guardar el cliente';
+
+                            // Detectar tipo de error y mostrar mensaje específico
+                            if (errorMessage.includes('número de documento') && errorMessage.includes('tipo')) {
+                                errorMessage = '⚠️ ' + errorMessage + '. Por favor, verifica e intenta con otro número o tipo de documento.';
+                            } else if (errorMessage.includes('número de documento')) {
+                                errorMessage = '⚠️ El número de documento ya está registrado con este tipo de documento. Por favor, verifica e intenta con otro número.';
+                            } else if (errorMessage.includes('correo electrónico') || errorMessage.includes('email')) {
+                                errorMessage = '⚠️ El correo electrónico ya está registrado. Por favor, usa otro correo.';
+                            }
+
+                            alert(`Error: ${errorMessage}`);
+                        }
+                    } catch (error) {
+                        console.error('Error al guardar cliente:', error);
+                        alert(`Error al guardar cliente: ${error.message}`);
+                    } finally {
+                        showLoading(false);
+                    }
+                } else {
+                    alert('Por favor, completa todos los campos requeridos.');
+                }
+            });
+
+            // Event listener para eliminar
+            deleteBtn.addEventListener('click', function () {
+                if (confirm('¿Estás seguro de que quieres eliminar este cliente?')) {
+                    showLoading(true);
+                    setTimeout(() => {
+                        showLoading(false);
+                        alert('Cliente eliminado exitosamente!');
+                        console.log('Eliminar cliente:', window.currentClienteId);
+                        showSection('list', 'list');
+                    }, 1500);
+                }
+            });
+
+            // Event listener para cancelar
+            cancelBtn.addEventListener('click', function () {
+                window.location.href = 'usuarios-admin.html';
+            });
+
+            // Cerrar modal con Escape
+            document.addEventListener('keydown', function (event) {
+                if (event.key === 'Escape') {
+                    window.location.href = 'usuarios-admin.html';
+                }
+            });
+
+            // Animación de entrada del modal
+            setTimeout(() => {
+                document.getElementById('clientes-modal').classList.add('show');
+            }, 100);
+        });
+    </script>
+</body>
+
+</html>

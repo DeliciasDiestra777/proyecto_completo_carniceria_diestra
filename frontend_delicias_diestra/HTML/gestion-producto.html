@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gestión de Productos - Carnicería Delicias a tu Diestra</title>
+    <meta name="description" content="Modal para gestionar productos del catálogo">
+    <link rel="stylesheet" href="../CSS/gestion-producto.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+
+<body class="gestion-producto-body">
+    <!-- Modal de Gestión de Productos -->
+    <div class="gestion-modal gestion-modal-proporcional" id="gestion-modal">
+        <div class="gestion-modal-content">
+            <div class="gestion-modal-header">
+                <h3 class="gestion-modal-title">Gestión de Productos</h3>
+                <a href="panel-admin.html">
+                    <button class="gestion-modal-close" id="close-categoria-modal">
+                        <i class="fas fa-times"></i>
+                    </button>
+                </a>
+            </div>
+            <div class="gestion-modal-body">
+                <p class="gestion-modal-description">Selecciona la acción que deseas realizar con los productos:</p>
+
+                <div class="gestion-options-grid">
+                    <!-- Crear Producto Nuevo -->
+                    <div class="gestion-option-card" id="crear-producto">
+                        <div class="gestion-option-icon">
+                            <i class="fas fa-plus-circle"></i>
+                        </div>
+                        <div class="gestion-option-content">
+                            <h4 class="gestion-option-title">Crear Producto Nuevo</h4>
+                            <p class="gestion-option-description">Agregar un nuevo producto al catálogo con toda su
+                                información</p>
+                        </div>
+                        <div class="gestion-option-arrow">
+                            <i class="fas fa-chevron-right"></i>
+                        </div>
+                    </div>
+
+                    <!-- Visualizar Todos los Productos -->
+                    <div class="gestion-option-card" id="visualizar-productos">
+                        <div class="gestion-option-icon">
+                            <i class="fas fa-list"></i>
+                        </div>
+                        <div class="gestion-option-content">
+                            <h4 class="gestion-option-title">Visualizar Todos los Productos</h4>
+                            <p class="gestion-option-description">Ver la lista completa de productos del catálogo</p>
+                        </div>
+                        <div class="gestion-option-arrow">
+                            <i class="fas fa-chevron-right"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="gestion-modal-footer">
+                <a href="panel-admin.html" class="gestion-btn gestion-btn-secondary">
+                    <i class="fas fa-arrow-left"></i>
+                    Volver al Panel
+                </a>
+            </div>
+        </div>
+    </div>
+
+    <!-- Loading Overlay -->
+    <div class="gestion-loading-overlay" id="gestion-loading">
+        <div class="gestion-loading-spinner">
+            <i class="fas fa-spinner fa-spin"></i>
+            <p>Cargando...</p>
+        </div>
+    </div>
+
+    <script>
+        // Funcionalidad básica para el modal de gestión
+        document.addEventListener('DOMContentLoaded', function () {
+            // Elementos del DOM
+            const crearProducto = document.getElementById('crear-producto');
+            const visualizarProductos = document.getElementById('visualizar-productos');
+
+            // Event Listeners
+            crearProducto.addEventListener('click', function () {
+                // Redirigir a producto-admin.html para crear nuevo producto
+                window.location.href = 'producto-admin.html';
+            });
+
+            visualizarProductos.addEventListener('click', function () {
+                // Redirigir a página de visualización de productos
+                window.location.href = 'producto-listar.html';
+            });
+        });
+    </script>
+</body>
+
+</html>

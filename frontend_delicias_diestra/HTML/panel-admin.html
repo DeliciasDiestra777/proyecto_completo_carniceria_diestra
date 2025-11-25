@@ -1,0 +1,640 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Panel de Administrador - Carnicería Delicias a tu Diestra</title>
+    <meta name="description" content="Panel de administración para gestionar productos, usuarios y pedidos">
+    <link rel="stylesheet" href="../CSS/panel-admin.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+</head>
+
+<body class="admin-body">
+    <!-- Header -->
+    <header class="admin-header">
+        <div class="admin-header-content">
+            <!-- Logo -->
+            <div class="admin-logo">
+                <div class="admin-logo-icon">
+                    <img src="../IMG/logoCarniceria.png" alt="Logo Carnicería Delicias" class="admin-logo-image">
+                </div>
+                <span class="admin-logo-text">Panel de Administrador</span>
+            </div>
+
+            <!-- Admin Navigation -->
+            <nav class="admin-nav">
+                <ul class="admin-nav-list">
+                    <li id="admin-name-link">
+                            <i class="fas fa-home"></i>
+                            <span id="admin-name-display">Cargando...</span>
+                        
+                    </li>
+                    <li>
+                        <a href="#" class="admin-nav-link" id="admin-logout">
+                            <i class="fas fa-sign-out-alt"></i>
+                            Cerrar Sesión
+                        </a>
+                    </li>
+                </ul>
+            </nav>
+        </div>
+    </header>
+
+    <!-- Main Admin Content -->
+    <main class="admin-main">
+        <!-- Sidebar -->
+        <aside class="admin-sidebar">
+            <div class="admin-sidebar-content">
+                <div class="admin-user-info">
+                    <div class="admin-user-avatar">
+                        <i class="fas fa-user-shield"></i>
+                    </div>
+                    <div class="admin-user-details">
+                        <h3 class="admin-user-name" id="admin-user-name">Administrador</h3>
+                        <p class="admin-user-role" id="admin-user-role">Administrador del Sistema</p>
+                    </div>
+                </div>
+
+                <nav class="admin-sidebar-nav">
+                    <ul class="admin-sidebar-list">
+                        <li class="admin-sidebar-item">
+                            <a href="#dashboard" class="admin-sidebar-link active" data-section="dashboard">
+                                <i class="fas fa-tachometer-alt"></i>
+                                <span>Dashboard</span>
+                            </a>
+                        </li>
+                        <li class="admin-sidebar-item">
+                            <a href="gestion-producto.html" class="admin-sidebar-link" data-section="productos">
+                                <i class="fas fa-box"></i>
+                                <span>Productos</span>
+                            </a>
+                        </li>
+                        <li class="admin-sidebar-item">
+                            <a href="categoria-admin.html" class="admin-sidebar-link" data-section="categorias">
+                                <i class="fas fa-tags"></i>
+                                <span>Categorías</span>
+                            </a>
+                        </li>
+                        <li class="admin-sidebar-item">
+                            <a href="usuarios-admin.html" class="admin-sidebar-link" data-section="usuarios">
+                                <i class="fas fa-users"></i>
+                                <span>Usuarios</span>
+                            </a>
+                        </li>
+                        <li class="admin-sidebar-item">
+                            <a href="pedidos-admin.html" class="admin-sidebar-link" data-section="pedidos">
+                                <i class="fas fa-shopping-cart"></i>
+                                <span>Pedidos</span>
+                            </a>
+                        </li>
+                        <li class="admin-sidebar-item">
+                            <a href="notificaciones-admin.html" class="admin-sidebar-link" data-section="notificaciones">
+                                <i class="fas fa-bell"></i>
+                                <span>Notificaciones</span>
+                                <span class="notificacion-badge" id="notificacion-badge" style="display: none;">0</span>
+                            </a>
+                        </li>
+                        <li class="admin-sidebar-item">
+                            <a href="inventario-admin.html" class="admin-sidebar-link" data-section="inventario">
+                                <i class="fas fa-warehouse"></i>
+                                <span>Inventario</span>
+                            </a>
+                        </li>
+                        <li class="admin-sidebar-item">
+                            <a href="proveedores-admin.html" class="admin-sidebar-link" data-section="proveedores">
+                                <i class="fas fa-truck"></i>
+                                <span>Proveedores</span>
+                            </a>
+                        </li>
+                        <li class="admin-sidebar-item">
+                            <a href="compras-admin.html" class="admin-sidebar-link" data-section="compras">
+                                <i class="fas fa-shopping-bag"></i>
+                                <span>Compras</span>
+                            </a>
+                        </li>
+                        <li class="admin-sidebar-item">
+                            <a href="recetas-admin.html" class="admin-sidebar-link" data-section="recetas">
+                                <i class="fas fa-book"></i>
+                                <span>Recetas</span>
+                            </a>
+                        </li>
+                        <li class="admin-sidebar-item">
+                            <a href="produccion-admin.html" class="admin-sidebar-link" data-section="produccion">
+                                <i class="fas fa-industry"></i>
+                                <span>Producción</span>
+                            </a>
+                        </li>
+                        <li class="admin-sidebar-item">
+                            <a href="reportesVentas-admin.html" class="admin-sidebar-link"
+                                data-section="reportes-ventas">
+                                <i class="fas fa-chart-line"></i>
+                                <span>Reportes Ventas</span>
+                            </a>
+                        </li>
+                    </ul>
+                </nav>
+            </div>
+        </aside>
+
+        <!-- Content Area -->
+        <div class="admin-content">
+            <!-- Dashboard Section -->
+            <section class="admin-section active" id="dashboard-section">
+                <div class="admin-section-header">
+                    <h1 class="admin-section-title">Dashboard</h1>
+                    <p class="admin-section-subtitle">Resumen general del sistema</p>
+                </div>
+
+                <!-- Stats Cards -->
+                <div class="admin-stats-grid">
+                    <div class="admin-stat-card">
+                        <div class="admin-stat-icon">
+                            <i class="fas fa-box"></i>
+                        </div>
+                        <div class="admin-stat-content">
+                            <h3 class="admin-stat-number" id="total-productos">0</h3>
+                            <p class="admin-stat-label">Productos</p>
+                        </div>
+                    </div>
+                    <div class="admin-stat-card">
+                        <div class="admin-stat-icon">
+                            <i class="fas fa-users"></i>
+                        </div>
+                        <div class="admin-stat-content">
+                            <h3 class="admin-stat-number" id="total-usuarios">0</h3>
+                            <p class="admin-stat-label">Usuarios</p>
+                        </div>
+                    </div>
+                    <div class="admin-stat-card">
+                        <div class="admin-stat-icon">
+                            <i class="fas fa-shopping-cart"></i>
+                        </div>
+                        <div class="admin-stat-content">
+                            <h3 class="admin-stat-number" id="total-pedidos">0</h3>
+                            <p class="admin-stat-label">Pedidos</p>
+                        </div>
+                    </div>
+                    <div class="admin-stat-card">
+                        <div class="admin-stat-icon">
+                            <i class="fas fa-dollar-sign"></i>
+                        </div>
+                        <div class="admin-stat-content">
+                            <h3 class="admin-stat-number" id="total-ventas">$0</h3>
+                            <p class="admin-stat-label">Ventas Hoy</p>
+                        </div>
+                    </div>
+                    <div class="admin-stat-card">
+                        <div class="admin-stat-icon">
+                            <i class="fas fa-book"></i>
+                        </div>
+                        <div class="admin-stat-content">
+                            <h3 class="admin-stat-number" id="total-recetas">0</h3>
+                            <p class="admin-stat-label">Recetas</p>
+                        </div>
+                    </div>
+                    <div class="admin-stat-card">
+                        <div class="admin-stat-icon">
+                            <i class="fas fa-warehouse"></i>
+                        </div>
+                        <div class="admin-stat-content">
+                            <h3 class="admin-stat-number" id="total-inventario">0</h3>
+                            <p class="admin-stat-label">Inventario</p>
+                        </div>
+                    </div>
+                    <div class="admin-stat-card">
+                        <div class="admin-stat-icon">
+                            <i class="fas fa-tags"></i>
+                        </div>
+                        <div class="admin-stat-content">
+                            <h3 class="admin-stat-number" id="total-categorias">0</h3>
+                            <p class="admin-stat-label">Categorías</p>
+                        </div>
+                    </div>
+                    <div class="admin-stat-card">
+                        <div class="admin-stat-icon">
+                            <i class="fas fa-truck"></i>
+                        </div>
+                        <div class="admin-stat-content">
+                            <h3 class="admin-stat-number" id="total-proveedores">0</h3>
+                            <p class="admin-stat-label">Proveedores</p>
+                        </div>
+                    </div>
+                    <div class="admin-stat-card">
+                        <div class="admin-stat-icon">
+                            <i class="fas fa-shopping-bag"></i>
+                        </div>
+                        <div class="admin-stat-content">
+                            <h3 class="admin-stat-number" id="total-compras">0</h3>
+                            <p class="admin-stat-label">Compras</p>
+                        </div>
+                    </div>
+                    <div class="admin-stat-card">
+                        <div class="admin-stat-icon">
+                            <i class="fas fa-industry"></i>
+                        </div>
+                        <div class="admin-stat-content">
+                            <h3 class="admin-stat-number" id="total-producciones">0</h3>
+                            <p class="admin-stat-label">Producciones</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Recent Activity -->
+                <div class="admin-dashboard-grid">
+                    <div class="admin-card">
+                        <div class="admin-card-header">
+                            <h3 class="admin-card-title">Actividad Reciente</h3>
+                            <button class="admin-btn admin-btn-sm admin-btn-outline" id="btn-ver-actividad">Ver
+                                Todo</button>
+                        </div>
+                    </div>
+
+                </div>
+            </section>
+
+            <!-- Productos Section -->
+            <section class="admin-section" id="productos-section">
+                <div class="admin-section-header">
+                    <h1 class="admin-section-title">Gestión de Productos</h1>
+                    <div class="admin-section-actions">
+                        <button class="admin-btn admin-btn-primary" id="btn-nuevo-producto">
+                            <i class="fas fa-plus"></i>
+                            Nuevo Producto
+                        </button>
+                    </div>
+                </div>
+
+                <div class="admin-card">
+                    <div class="admin-card-header">
+                        <h3 class="admin-card-title">Lista de Productos</h3>
+                        <div class="admin-card-actions">
+                            <div class="admin-search-box">
+                                <i class="fas fa-search"></i>
+                                <input type="text" placeholder="Buscar productos..." id="search-productos">
+                            </div>
+                            <select class="admin-select" id="filter-categoria">
+                                <option value="">Todas las categorías</option>
+                                <option value="Pollo">Pollo</option>
+                                <option value="Res">Res</option>
+                                <option value="Cerdo">Cerdo</option>
+                                <option value="Embutidos">Embutidos</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="admin-card-body">
+                        <div class="admin-table-container">
+                            <table class="admin-table" id="productos-table">
+                                <thead>
+                                    <tr>
+                                        <th>ID</th>
+                                        <th>Imagen</th>
+                                        <th>Nombre</th>
+                                        <th>Categoría</th>
+                                        <th>Precio</th>
+                                        <th>Stock</th>
+                                        <th>Estado</th>
+                                        <th>Acciones</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="productos-tbody">
+                                    <!-- Productos will be loaded here -->
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Usuarios Section -->
+            <section class="admin-section" id="usuarios-section">
+                <div class="admin-section-header">
+                    <h1 class="admin-section-title">Gestión de Usuarios</h1>
+                    <div class="admin-section-actions">
+                        <button class="admin-btn admin-btn-primary" id="btn-nuevo-usuario">
+                            <i class="fas fa-plus"></i>
+                            Nuevo Usuario
+                        </button>
+                    </div>
+                </div>
+
+                <div class="admin-card">
+                    <div class="admin-card-header">
+                        <h3 class="admin-card-title">Lista de Usuarios</h3>
+                        <div class="admin-card-actions">
+                            <div class="admin-search-box">
+                                <i class="fas fa-search"></i>
+                                <input type="text" placeholder="Buscar usuarios..." id="search-usuarios">
+                            </div>
+                            <select class="admin-select" id="filter-rol">
+                                <option value="">Todos los roles</option>
+                                <option value="cliente">Cliente</option>
+                                <option value="admin">Administrador</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="admin-card-body">
+                        <div class="admin-table-container">
+                            <table class="admin-table" id="usuarios-table">
+                                <thead>
+                                    <tr>
+                                        <th>ID</th>
+                                        <th>Avatar</th>
+                                        <th>Nombre</th>
+                                        <th>Email</th>
+                                        <th>Teléfono</th>
+                                        <th>Rol</th>
+                                        <th>Estado</th>
+                                        <th>Acciones</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="usuarios-tbody">
+                                    <!-- Usuarios will be loaded here -->
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Pedidos Section -->
+            <section class="admin-section" id="pedidos-section">
+                <div class="admin-section-header">
+                    <h1 class="admin-section-title">Gestión de Pedidos</h1>
+                </div>
+
+                <div class="admin-card">
+                    <div class="admin-card-header">
+                        <h3 class="admin-card-title">Lista de Pedidos</h3>
+                        <div class="admin-card-actions">
+                            <div class="admin-search-box">
+                                <i class="fas fa-search"></i>
+                                <input type="text" placeholder="Buscar pedidos..." id="search-pedidos">
+                            </div>
+                            <select class="admin-select" id="filter-estado-pedido">
+                                <option value="">Todos los estados</option>
+                                <option value="pendiente">Pendiente</option>
+                                <option value="confirmado">Confirmado</option>
+                                <option value="preparando">Preparando</option>
+                                <option value="enviado">Enviado</option>
+                                <option value="entregado">Entregado</option>
+                                <option value="cancelado">Cancelado</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="admin-card-body">
+                        <div class="admin-table-container">
+                            <table class="admin-table" id="pedidos-table">
+                                <thead>
+                                    <tr>
+                                        <th>ID</th>
+                                        <th>Cliente</th>
+                                        <th>Fecha</th>
+                                        <th>Total</th>
+                                        <th>Estado</th>
+                                        <th>Acciones</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="pedidos-tbody">
+                                    <!-- Pedidos will be loaded here -->
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Other sections will be added similarly -->
+            <section class="admin-section" id="categorias-section">
+                <div class="admin-section-header">
+                    <h1 class="admin-section-title">Gestión de Categorías</h1>
+                    <div class="admin-section-actions">
+                        <button class="admin-btn admin-btn-primary" id="btn-nueva-categoria">
+                            <i class="fas fa-plus"></i>
+                            Nueva Categoría
+                        </button>
+                    </div>
+                </div>
+                <div class="admin-card">
+                    <div class="admin-card-body">
+                        <p class="admin-placeholder">Gestión de categorías - En desarrollo</p>
+                    </div>
+                </div>
+            </section>
+
+            <section class="admin-section" id="inventario-section">
+                <div class="admin-section-header">
+                    <h1 class="admin-section-title">Control de Inventario</h1>
+                </div>
+                <div class="admin-card">
+                    <div class="admin-card-body">
+                        <p class="admin-placeholder">Control de inventario - En desarrollo</p>
+                    </div>
+                </div>
+            </section>
+
+            <section class="admin-section" id="facturas-section">
+                <div class="admin-section-header">
+                    <h1 class="admin-section-title">Gestión de Facturas</h1>
+                </div>
+                <div class="admin-card">
+                    <div class="admin-card-body">
+                        <p class="admin-placeholder">Gestión de facturas - En desarrollo</p>
+                    </div>
+                </div>
+            </section>
+
+            <section class="admin-section" id="recetas-section">
+                <div class="admin-section-header">
+                    <h1 class="admin-section-title">Gestión de Recetas</h1>
+                </div>
+                <div class="admin-card">
+                    <div class="admin-card-body">
+                        <p class="admin-placeholder">Gestión de recetas - En desarrollo</p>
+                    </div>
+                </div>
+            </section>
+
+            <section class="admin-section" id="produccion-section">
+                <div class="admin-section-header">
+                    <h1 class="admin-section-title">Gestión de Producción</h1>
+                </div>
+                <div class="admin-card">
+                    <div class="admin-card-body">
+                        <p class="admin-placeholder">Gestión de producción - En desarrollo</p>
+                    </div>
+                </div>
+            </section>
+
+            <section class="admin-section" id="notificaciones-section">
+                <div class="admin-section-header">
+                    <h1 class="admin-section-title">Gestión de Notificaciones</h1>
+                </div>
+                <div class="admin-card">
+                    <div class="admin-card-body">
+                        <p class="admin-placeholder">Gestión de notificaciones - En desarrollo</p>
+                    </div>
+                </div>
+            </section>
+
+            <section class="admin-section" id="auditoria-section">
+                <div class="admin-section-header">
+                    <h1 class="admin-section-title">Auditoría del Sistema</h1>
+                </div>
+                <div class="admin-card">
+                    <div class="admin-card-body">
+                        <p class="admin-placeholder">Auditoría del sistema - En desarrollo</p>
+                    </div>
+                </div>
+            </section>
+        </div>
+    </main>
+
+    <!-- Modals -->
+    <!-- User Modal -->
+    <div class="admin-modal" id="user-modal">
+        <div class="admin-modal-content">
+            <div class="admin-modal-header">
+                <h3 class="admin-modal-title" id="user-modal-title">Nuevo Usuario</h3>
+                <button class="admin-modal-close" id="close-user-modal">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            <div class="admin-modal-body">
+                <form class="admin-form" id="user-form">
+                    <div class="admin-form-row">
+                        <div class="admin-form-group">
+                            <label class="admin-form-label">Nombre</label>
+                            <input type="text" class="admin-form-input" id="user-name" required>
+                        </div>
+                        <div class="admin-form-group">
+                            <label class="admin-form-label">Apellido</label>
+                            <input type="text" class="admin-form-input" id="user-lastname" required>
+                        </div>
+                    </div>
+                    <div class="admin-form-row">
+                        <div class="admin-form-group">
+                            <label class="admin-form-label">Email</label>
+                            <input type="email" class="admin-form-input" id="user-email" required>
+                        </div>
+                        <div class="admin-form-group">
+                            <label class="admin-form-label">Teléfono</label>
+                            <input type="tel" class="admin-form-input" id="user-phone">
+                        </div>
+                    </div>
+                    <div class="admin-form-row">
+                        <div class="admin-form-group">
+                            <label class="admin-form-label">Contraseña</label>
+                            <input type="password" class="admin-form-input" id="user-password" required>
+                        </div>
+                        <div class="admin-form-group">
+                            <label class="admin-form-label">Rol</label>
+                            <select class="admin-form-select" id="user-role" required>
+                                <option value="cliente">Cliente</option>
+                                <option value="admin">Administrador</option>
+                            </select>
+                        </div>
+                    </div>
+                </form>
+            </div>
+            <div class="admin-modal-footer">
+                <button class="admin-btn admin-btn-secondary" id="cancel-user">Cancelar</button>
+                <button class="admin-btn admin-btn-primary" id="save-user">Guardar</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal de Actividad Reciente -->
+    <div class="admin-modal" id="actividad-modal">
+        <div class="admin-modal-content admin-modal-large">
+            <div class="admin-modal-header">
+                <h3 class="admin-modal-title">Actividad Reciente del Sistema</h3>
+                <button class="admin-modal-close" id="close-actividad-modal">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            <div class="admin-modal-body">
+                <!-- Filtros -->
+                <div class="admin-filter-section">
+                    <div class="admin-filter-row">
+                        <div class="admin-form-group">
+                            <label class="admin-form-label">Fecha Inicio</label>
+                            <input type="date" class="admin-form-input" id="filter-fecha-inicio-actividad">
+                        </div>
+                        <div class="admin-form-group">
+                            <label class="admin-form-label">Fecha Fin</label>
+                            <input type="date" class="admin-form-input" id="filter-fecha-fin-actividad">
+                        </div>
+                        <div class="admin-form-group">
+                            <label class="admin-form-label">Tipo de Actividad</label>
+                            <select class="admin-form-select" id="filter-tipo-actividad">
+                                <option value="">Todos</option>
+                                <option value="producto">Productos</option>
+                                <option value="pedido">Pedidos</option>
+                                <option value="compra">Compras</option>
+                                <option value="produccion">Producciones</option>
+                                <option value="receta">Recetas</option>
+                                <option value="usuario">Usuarios</option>
+                            </select>
+                        </div>
+                        <div class="admin-form-group">
+                            <label class="admin-form-label">Usuario</label>
+                            <select class="admin-form-select" id="filter-usuario-actividad">
+                                <option value="">Todos</option>
+                            </select>
+                        </div>
+                        <div class="admin-form-group">
+                            <button class="admin-btn admin-btn-primary" id="btn-filtrar-actividad">
+                                <i class="fas fa-filter"></i> Filtrar
+                            </button>
+                            <button class="admin-btn admin-btn-outline" id="btn-limpiar-filtros">
+                                <i class="fas fa-times"></i> Limpiar
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Tabla de Actividades -->
+                <div class="admin-table-container">
+                    <table class="admin-table">
+                        <thead>
+                            <tr>
+                                <th>Fecha</th>
+                                <th>Usuario</th>
+                                <th>Tipo</th>
+                                <th>Acción</th>
+                                <th>Descripción</th>
+                                <th>Detalles</th>
+                            </tr>
+                        </thead>
+                        <tbody id="actividad-tbody">
+                            <!-- Las actividades se cargarán aquí -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Loading Overlay -->
+    <div class="admin-loading-overlay" id="admin-loading">
+        <div class="admin-loading-spinner">
+            <i class="fas fa-spinner fa-spin"></i>
+            <p>Cargando...</p>
+        </div>
+    </div>
+
+
+    <!-- Scripts al final para asegurar que el DOM esté cargado -->
+    <script src="../JS/permisos-admin.js"></script>
+    <script src="../JS/admin-session.js"></script>
+    <script src="../JS/limpiar-sesion.js"></script>
+    <script src="../JS/dashboard-admin.js"></script>
+    <script src="../JS/panel-admin.js"></script>
+</body>
+
+</html>

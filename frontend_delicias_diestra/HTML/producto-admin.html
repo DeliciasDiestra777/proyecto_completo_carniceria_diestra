@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gestión de Productos - Carnicería Delicias a tu Diestra</title>
+    <meta name="description" content="Modal para gestionar productos del catálogo">
+    <link rel="stylesheet" href="../CSS/producto-admin.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script src="../JS/categoria.js"></script>
+    <script src="../JS/unidades-medida.js"></script>
+</head>
+
+<body class="producto-admin-body">
+    <!-- Modal de Gestión de Productos -->
+    <div class="producto-modal" id="product-modal">
+        <div class="producto-modal-content">
+            <div class="producto-modal-header">
+                <h3 class="producto-modal-title" id="product-modal-title">Nuevo Producto</h3>
+                <a href="gestion-producto.html"><button class="producto-modal-close" id="close-product-modal">
+                        <i class="fas fa-times"></i>
+                    </button></a>
+            </div>
+            <div class="producto-modal-body">
+                <form class="producto-form" id="product-form" enctype="multipart/form-data">
+                    <!-- Información Básica -->
+                    <div class="producto-form-section">
+                        <h4 class="producto-form-section-title">Información Básica</h4>
+                        <div class="producto-form-group">
+                            <label class="producto-form-label">Producto Base (del Inventario)</label>
+                            <div class="producto-autocomplete-wrapper">
+                                <input type="text" class="producto-form-input" id="product-base-search" 
+                                    placeholder="Buscar producto del inventario (ej: sobrebarriga)" autocomplete="off">
+                                <div class="producto-autocomplete-dropdown" id="product-base-dropdown" style="display: none;"></div>
+                            </div>
+                            <small class="producto-form-help">Selecciona un producto creado desde Inventario Inicial para usar su información</small>
+                            <input type="hidden" id="product-base-id" name="producto_base_id">
+                        </div>
+                        <div class="producto-form-row">
+                            <div class="producto-form-group">
+                                <label class="producto-form-label">Nombre del Producto *</label>
+                                <input type="text" class="producto-form-input" id="product-name" name="nombre_producto" required>
+                            </div>
+                            <div class="producto-form-group">
+                                <label class="producto-form-label">Categoría *</label>
+                                <select class="producto-form-select" id="product-category" name="id_categoria" required>
+                                    <option value="">Seleccionar categoría</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="producto-form-group">
+                            <label class="producto-form-label">Descripción</label>
+                            <textarea class="producto-form-textarea" id="product-description" name="descripcion"
+                                rows="3" placeholder="Describe las características del producto..."></textarea>
+                        </div>
+                    </div>
+
+                    <!-- Precios -->
+                    <div class="producto-form-section">
+                        <h4 class="producto-form-section-title">Precios</h4>
+                        <div class="producto-form-row">
+                            <div class="producto-form-group">
+                                <label class="producto-form-label">Precio del Producto *</label>
+                                <input type="number" class="producto-form-input" id="product-price"
+                                    name="precio_producto" step="0.01" min="0" required placeholder="0.00">
+                                <small class="producto-form-help">Precio de venta del producto</small>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Inventario -->
+                    <div class="producto-form-section">
+                        <h4 class="producto-form-section-title">Inventario</h4>
+                        <div class="producto-form-row">
+                            <div class="producto-form-group">
+                                <label class="producto-form-label">Stock Mínimo</label>
+                                <input type="number" class="producto-form-input" id="product-stock-min"
+                                    name="stock_minimo" step="0.01" min="0" value="0" placeholder="0" readonly>
+                                <small class="producto-form-help">Cantidad mínima de stock (el stock se gestiona en el
+                                    módulo de Inventario)</small>
+                            </div>
+                            <div class="producto-form-group">
+                                <label class="producto-form-label">Stock Actual</label>
+                                <input type="number" class="producto-form-input" id="product-stock-actual"
+                                    name="stock_actual" step="0.01" min="0" value="0" placeholder="0" readonly>
+                                <small class="producto-form-help">Stock actualizado del producto (solo lectura)</small>
+                            </div>
+                        </div>
+                    </div>
+
+
+                    <!-- Imagen -->
+                    <div class="producto-form-section">
+                        <h4 class="producto-form-section-title">Imagen del Producto</h4>
+                        <div class="producto-form-group">
+                            <label class="producto-form-label">Imagen</label>
+                            <input type="file" class="producto-form-input" id="product-image" name="imagen"
+                                accept="image/*">
+                            <small class="producto-form-help">Formatos permitidos: JPG, PNG, WEBP. Tamaño máximo:
+                                5MB</small>
+                            <div class="producto-image-preview" id="image-preview" style="display: none;">
+                                <img id="preview-img" src="" alt="Vista previa">
+                                <button type="button" class="producto-btn producto-btn-sm producto-btn-danger"
+                                    id="remove-image">Eliminar imagen</button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Configuración -->
+                    <div class="producto-form-section">
+                        <h4 class="producto-form-section-title">Configuración</h4>
+                        <div class="producto-form-row">
+                            <div class="producto-form-group">
+                                <label class="producto-form-label">Estado del Producto *</label>
+                                <select class="producto-form-select" id="product-active" name="estado" required>
+                                    <option value="activo" selected>Activo</option>
+                                    <option value="inactivo">Inactivo</option>
+                                </select>
+                                <small class="producto-form-help">Los productos inactivos no se mostrarán en el
+                                    catálogo</small>
+                            </div>
+                        </div>
+                    </div>
+                </form>
+            </div>
+            <div class="producto-modal-footer">
+                <button type="button" class="producto-btn producto-btn-secondary" id="cancel-product">Cancelar</button>
+                <button type="button" class="producto-btn producto-btn-danger" id="delete-product"
+                    style="display: none;">Eliminar</button>
+                <button type="button" class="producto-btn producto-btn-primary" id="save-product">Guardar
+                    Producto</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Loading Overlay -->
+    <div class="producto-loading-overlay" id="producto-loading">
+        <div class="producto-loading-spinner">
+            <i class="fas fa-spinner fa-spin"></i>
+            <p>Cargando...</p>
+        </div>
+    </div>
+
+    <!-- Scripts -->
+    <script src="../JS/utils-auto-select-zero.js"></script>
+    <script src="../JS/categoria.js"></script>
+    <script src="../JS/producto-admin.js"></script>
+</body>
+
+</html>

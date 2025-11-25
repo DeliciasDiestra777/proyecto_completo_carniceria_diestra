@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Eliminar Producto - Carnicería Delicias a tu Diestra</title>
+    <meta name="description" content="Seleccionar producto para eliminar">
+    <link rel="stylesheet" href="../CSS/gestion-producto.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+
+<body class="gestion-producto-body">
+    <!-- Modal de Selección de Producto para Eliminar -->
+    <div class="gestion-modal" id="gestion-modal">
+        <div class="gestion-modal-content">
+            <div class="gestion-modal-header">
+                <h3 class="gestion-modal-title">Ocultar Producto del Catálogo</h3>
+                <a href="gestion-producto.html">
+                    <button class="gestion-modal-close" id="close-gestion-modal">
+                        <i class="fas fa-times"></i>
+                    </button>
+                </a>
+            </div>
+            <div class="gestion-modal-body">
+                <div class="eliminar-advertencia">
+                    <i class="fas fa-info-circle"></i>
+                    <h4>Información</h4>
+                    <p>Esta acción ocultará el producto del catálogo público. El producto y su información de inventario se mantendrán en la base de datos. Puedes volver a mostrarlo editando el producto.
+                    </p>
+                </div>
+
+                <p class="gestion-modal-description">Selecciona el producto que deseas ocultar del catálogo:</p>
+
+                <!-- Filtros de búsqueda -->
+                <div class="productos-filtros">
+                    <div class="filtros-row">
+                        <div class="filtro-group">
+                            <label for="buscar-producto-eliminar">Buscar producto:</label>
+                            <input type="text" id="buscar-producto-eliminar" placeholder="Nombre del producto...">
+                        </div>
+                        <div class="filtro-group">
+                            <label for="filtro-categoria-eliminar">Categoría:</label>
+                            <select id="filtro-categoria-eliminar">
+                                <option value="">Todas las categorías</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Lista de productos para eliminar -->
+                <div class="productos-lista-eliminar" id="productos-lista-eliminar">
+                    <!-- Los productos se cargarán aquí dinámicamente -->
+                </div>
+
+                <!-- Paginación -->
+                <div class="productos-paginacion" id="productos-paginacion-eliminar">
+                    <!-- Los controles de paginación se cargarán aquí -->
+                </div>
+            </div>
+            <div class="gestion-modal-footer">
+                <a href="gestion-producto.html" class="gestion-btn gestion-btn-secondary">
+                    <i class="fas fa-arrow-left"></i>
+                    Volver a Gestión
+                </a>
+                <button class="gestion-btn gestion-btn-primary" id="actualizar-lista-eliminar">
+                    <i class="fas fa-sync-alt"></i>
+                    Actualizar Lista
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal de Confirmación de Eliminación -->
+    <div class="modal-confirmacion" id="modal-confirmacion">
+        <div class="modal-confirmacion-content">
+            <div class="modal-confirmacion-header">
+                <i class="fas fa-eye-slash"></i>
+                <h3>Ocultar del Catálogo</h3>
+            </div>
+            <div class="modal-confirmacion-body">
+                <p>¿Estás seguro de que quieres ocultar este producto del catálogo público?</p>
+                <div class="producto-info-confirmacion" id="producto-info-confirmacion">
+                    <!-- Información del producto se cargará aquí -->
+                </div>
+                <p class="advertencia-texto">
+                    <strong>Nota importante:</strong> El producto y toda su información de inventario se mantendrán en la base de datos. Solo se ocultará del catálogo público. Puedes volver a mostrarlo editando el producto y activando "Mostrar en catálogo".
+                </p>
+            </div>
+            <div class="modal-confirmacion-footer">
+                <button class="btn-cancelar" id="btn-cancelar-eliminar">
+                    <i class="fas fa-times"></i>
+                    Cancelar
+                </button>
+                <button class="btn-confirmar-eliminar" id="btn-confirmar-eliminar">
+                    <i class="fas fa-eye-slash"></i>
+                    Ocultar del Catálogo
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Loading Overlay -->
+    <div class="gestion-loading-overlay" id="gestion-loading">
+        <div class="gestion-loading-spinner">
+            <i class="fas fa-spinner fa-spin"></i>
+            <p>Cargando productos...</p>
+        </div>
+    </div>
+
+    <!-- Scripts -->
+    <script src="../JS/categoria.js"></script>
+    <script src="../JS/producto-eliminar.js"></script>
+</body>
+
+</html>

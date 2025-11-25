@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Lista de Productos - Carnicería Delicias a tu Diestra</title>
+    <meta name="description" content="Visualizar todos los productos del catálogo">
+    <link rel="stylesheet" href="../CSS/gestion-producto.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+
+<body class="gestion-producto-body">
+    <!-- Modal de Lista de Productos -->
+    <div class="gestion-modal" id="gestion-modal">
+        <div class="gestion-modal-content">
+            <div class="gestion-modal-header">
+                <h3 class="gestion-modal-title">Lista de Productos</h3>
+                <a href="gestion-producto.html">
+                    <button class="gestion-modal-close" id="close-gestion-modal">
+                        <i class="fas fa-times"></i>
+                    </button>
+                </a>
+            </div>
+            <div class="gestion-modal-body">
+                <!-- Filtros y búsqueda -->
+                <div class="productos-filtros">
+                    <div class="filtros-row">
+                        <div class="filtro-group">
+                            <label for="buscar-producto">Buscar producto:</label>
+                            <input type="text" id="buscar-producto" placeholder="Nombre del producto...">
+                        </div>
+                        <div class="filtro-group">
+                            <label for="filtro-categoria">Categoría:</label>
+                            <select id="filtro-categoria">
+                                <option value="">Todas las categorías</option>
+                            </select>
+                        </div>
+                        <div class="filtro-group">
+                            <label for="filtro-estado">Estado:</label>
+                            <select id="filtro-estado">
+                                <option value="">Todos los estados</option>
+                                <option value="activo">Activos</option>
+                                <option value="inactivo">Inactivos</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Estadísticas -->
+                <div class="productos-estadisticas" id="productos-estadisticas">
+                    <div class="estadistica-item">
+                        <i class="fas fa-box"></i>
+                        <span class="estadistica-numero" id="total-productos">0</span>
+                        <span class="estadistica-label">Total Productos</span>
+                    </div>
+                    <div class="estadistica-item">
+                        <i class="fas fa-check-circle"></i>
+                        <span class="estadistica-numero" id="productos-activos">0</span>
+                        <span class="estadistica-label">Activos</span>
+                    </div>
+                    <div class="estadistica-item">
+                        <i class="fas fa-exclamation-triangle"></i>
+                        <span class="estadistica-numero" id="stock-bajo">0</span>
+                        <span class="estadistica-label">Stock Bajo</span>
+                    </div>
+                    <div class="estadistica-item">
+                        <i class="fas fa-times-circle"></i>
+                        <span class="estadistica-numero" id="sin-stock">0</span>
+                        <span class="estadistica-label">Sin Stock</span>
+                    </div>
+                </div>
+
+                <!-- Tabla de productos -->
+                <div class="productos-tabla-container">
+                    <table class="productos-tabla" id="productos-tabla">
+                        <thead>
+                            <tr>
+                                <th>Imagen</th>
+                                <th>Nombre</th>
+                                <th>Categoría</th>
+                                <th>Precio</th>
+                                <th>Stock</th>
+                                <th>Stock Mínimo</th>
+                                <th>Estado</th>
+                                <th>Acciones</th>
+                            </tr>
+                        </thead>
+                        <tbody id="productos-tbody">
+                            <!-- Los productos se cargarán aquí dinámicamente -->
+                        </tbody>
+                    </table>
+                </div>
+
+                <!-- Paginación -->
+                <div class="productos-paginacion" id="productos-paginacion">
+                    <!-- Los controles de paginación se cargarán aquí -->
+                </div>
+            </div>
+            <div class="gestion-modal-footer">
+                <a href="gestion-producto.html" class="gestion-btn gestion-btn-secondary">
+                    <i class="fas fa-arrow-left"></i>
+                    Volver a Gestión
+                </a>
+                <button class="gestion-btn gestion-btn-primary" id="actualizar-lista">
+                    <i class="fas fa-sync-alt"></i>
+                    Actualizar Lista
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Loading Overlay -->
+    <div class="gestion-loading-overlay" id="gestion-loading">
+        <div class="gestion-loading-spinner">
+            <i class="fas fa-spinner fa-spin"></i>
+            <p>Cargando productos...</p>
+        </div>
+    </div>
+
+    <!-- Scripts -->
+    <script src="../JS/categoria.js"></script>
+    <script src="../JS/producto-listar.js"></script>
+</body>
+
+</html>

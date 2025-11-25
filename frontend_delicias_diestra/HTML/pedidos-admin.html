@@ -1,0 +1,885 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gestión de Pedidos - Carnicería Delicias a tu Diestra</title>
+    <meta name="description"
+        content="Panel de gestión de pedidos - Ver, editar, actualizar estado y gestionar entregas">
+    <link rel="stylesheet" href="../CSS/pedidos-admin.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Librerías para generar PDF y Excel -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+</head>
+
+<body class="pedidos-body">
+    <!-- Modal de Gestión de Pedidos -->
+    <div class="pedidos-modal" id="pedidos-modal">
+        <div class="pedidos-modal-content pedidos-modal-large">
+            <div class="pedidos-modal-header">
+                <h3 class="pedidos-modal-title" id="pedidos-modal-title">Gestión de Pedidos</h3>
+                <a href="panel-admin.html">
+                    <button class="pedidos-modal-close" id="close-pedidos-modal">
+                        <i class="fas fa-times"></i>
+                    </button>
+                </a>
+            </div>
+
+            <div class="pedidos-modal-body">
+                <!-- Botones de Acción -->
+                <div class="pedidos-actions-section">
+                    <div class="pedidos-actions-grid">
+                        <button class="pedidos-action-btn pedidos-action-primary" id="btn-ver-pedidos">
+                            <div class="pedidos-action-icon">
+                                <i class="fas fa-list"></i>
+                            </div>
+                            <div class="pedidos-action-content">
+                                <h4 class="pedidos-action-title">Ver Pedidos</h4>
+                                <p class="pedidos-action-description">Visualizar todos los pedidos del sistema</p>
+                            </div>
+                        </button>
+
+                        <button class="pedidos-action-btn pedidos-action-info" id="btn-reportes-pedidos">
+                            <div class="pedidos-action-icon">
+                                <i class="fas fa-chart-bar"></i>
+                            </div>
+                            <div class="pedidos-action-content">
+                                <h4 class="pedidos-action-title">Reportes</h4>
+                                <p class="pedidos-action-description">Generar reportes de ventas y pedidos</p>
+                            </div>
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Lista de Pedidos (se muestra dinámicamente) -->
+                <div class="pedidos-list-section" id="pedidos-list-section" style="display: none;">
+                    <div class="pedidos-list-header">
+                        <h4 class="pedidos-list-title">Lista de Pedidos</h4>
+                        <div class="pedidos-list-actions">
+                            <div class="pedidos-search-box">
+                                <i class="fas fa-search"></i>
+                                <input type="text" placeholder="Buscar pedidos..." id="search-pedidos">
+                            </div>
+                            <select class="pedidos-select" id="filter-estado-pedido">
+                                <option value="">Todos los estados</option>
+                                <option value="Pendiente">Pendiente</option>
+                                <option value="Pagado">Pagado</option>
+                                <option value="Entregado">Entregado</option>
+                                <option value="Cancelado">Cancelado</option>
+                            </select>
+                            <select class="pedidos-select" id="filter-metodo-pago">
+                                <option value="">Todos los métodos</option>
+                                <option value="efectivo">Efectivo</option>
+                                <option value="Nequi">Nequi</option>
+                                <option value="Bancolombia(Ahorros)">Bancolombia</option>
+                            </select>
+                            <input type="date" class="pedidos-date-input" id="filter-fecha-pedido">
+                        </div>
+                    </div>
+                    <div class="pedidos-table-container">
+                        <table class="pedidos-table" id="pedidos-table">
+                            <thead>
+                                <tr>
+                                    <th>ID</th>
+                                    <th>Cliente</th>
+                                    <th>Total</th>
+                                    <th>Método Pago</th>
+                                    <th>Estado</th>
+                                    <th>Fecha Pedido</th>
+                                    <th>Fecha Entrega</th>
+                                    <th>Acciones</th>
+                                </tr>
+                            </thead>
+                            <tbody id="pedidos-tbody">
+                                <!-- Los pedidos se cargarán dinámicamente -->
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <!-- Formulario de Edición de Pedido (se muestra dinámicamente) -->
+                <div class="pedidos-form-section" id="pedidos-form-section" style="display: none;">
+                    <form class="pedidos-form" id="pedidos-form">
+                        <!-- Información del Pedido -->
+                        <div class="pedidos-form-section">
+                            <h4 class="pedidos-form-section-title">Información del Pedido</h4>
+                            <div class="pedidos-form-row">
+                                <div class="pedidos-form-group">
+                                    <label class="pedidos-form-label">ID del Pedido</label>
+                                    <input type="text" class="pedidos-form-input" id="pedido-id" name="id_pedido"
+                                        readonly>
+                                </div>
+                                <div class="pedidos-form-group">
+                                    <label class="pedidos-form-label">Cliente</label>
+                                    <input type="text" class="pedidos-form-input" id="pedido-cliente" readonly>
+                                </div>
+                            </div>
+                            <div class="pedidos-form-row">
+                                <div class="pedidos-form-group">
+                                    <label class="pedidos-form-label">Subtotal *</label>
+                                    <input type="number" class="pedidos-form-input" id="pedido-subtotal"
+                                        name="subtotal_pedido" step="0.01" required>
+                                </div>
+                                <div class="pedidos-form-group">
+                                    <label class="pedidos-form-label">Descuento</label>
+                                    <input type="number" class="pedidos-form-input" id="pedido-descuento"
+                                        name="descuento_pedido" step="0.01" value="0">
+                                </div>
+                                <div class="pedidos-form-group">
+                                    <label class="pedidos-form-label">Total</label>
+                                    <input type="number" class="pedidos-form-input" id="pedido-total"
+                                        name="total_pedido" step="0.01" readonly>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Información de Pago y Estado -->
+                        <div class="pedidos-form-section">
+                            <h4 class="pedidos-form-section-title">Pago y Estado</h4>
+                            <div class="pedidos-form-row">
+                                <div class="pedidos-form-group">
+                                    <label class="pedidos-form-label">Método de Pago *</label>
+                                    <select class="pedidos-form-select" id="pedido-metodo-pago" name="metodo_pago"
+                                        required>
+                                        <option value="">Seleccionar método</option>
+                                        <option value="Efectivo">Efectivo</option>
+                                        <option value="Transferencia">Transferencia</option>
+                                    </select>
+                                </div>
+                                <div class="pedidos-form-group">
+                                    <label class="pedidos-form-label">Estado del Pedido *</label>
+                                    <select class="pedidos-form-select" id="pedido-estado" name="estado"
+                                        required>
+                                        <option value="">Seleccionar estado</option>
+                                        <option value="Pendiente">Pendiente</option>
+                                        <option value="Pagado">Pagado</option>
+                                        <option value="Entregado">Entregado</option>
+                                        <option value="Cancelado">Cancelado</option>
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Información de Entrega -->
+                        <div class="pedidos-form-section">
+                            <h4 class="pedidos-form-section-title">Información de Entrega</h4>
+                            <div class="pedidos-form-group">
+                                <label class="pedidos-form-label">Dirección de Entrega</label>
+                                <textarea class="pedidos-form-textarea" id="pedido-direccion" name="direccion_entrega"
+                                    rows="3"></textarea>
+                            </div>
+                            <div class="pedidos-form-row">
+                                <div class="pedidos-form-group">
+                                    <label class="pedidos-form-label">Fecha de Entrega</label>
+                                    <input type="datetime-local" class="pedidos-form-input" id="pedido-fecha-entrega"
+                                        name="fecha_entrega">
+                                </div>
+                            </div>
+                            <div class="pedidos-form-group">
+                                <label class="pedidos-form-label">Notas del Pedido</label>
+                                <textarea class="pedidos-form-textarea" id="pedido-notas" name="notas" rows="3"
+                                    placeholder="Comentarios adicionales..."></textarea>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+
+                <!-- Sección de Actualización de Estado (se muestra dinámicamente) -->
+                <div class="pedidos-estado-section" id="pedidos-estado-section" style="display: none;">
+                    <div class="pedidos-estado-header">
+                        <h4 class="pedidos-estado-title">Actualización Masiva de Estados</h4>
+                        <p class="pedidos-estado-description">Selecciona múltiples pedidos para cambiar su estado</p>
+                    </div>
+                    <div class="pedidos-estado-content">
+                        <div class="pedidos-estado-controls">
+                            <div class="pedidos-form-group">
+                                <label class="pedidos-form-label">Nuevo Estado</label>
+                                <select class="pedidos-form-select" id="nuevo-estado-pedido">
+                                    <option value="">Seleccionar estado</option>
+                                    <option value="Pendiente">Pendiente</option>
+                                    <option value="Pagado">Pagado</option>
+                                    <option value="Entregado">Entregado</option>
+                                    <option value="Cancelado">Cancelado</option>
+                                </select>
+                            </div>
+                            <button class="pedidos-btn pedidos-btn-primary" id="aplicar-estado-masivo">
+                                <i class="fas fa-check"></i>
+                                Aplicar Estado
+                            </button>
+                        </div>
+                        <div class="pedidos-estado-list" id="pedidos-estado-list">
+                            <!-- Lista de pedidos para seleccionar -->
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Sección de Reportes (se muestra dinámicamente) -->
+                <div class="pedidos-reportes-section" id="pedidos-reportes-section" style="display: none;">
+                    <div class="pedidos-reportes-header">
+                        <h4 class="pedidos-reportes-title">Reportes de Pedidos</h4>
+                        <p class="pedidos-reportes-description">Genera reportes detallados de ventas y pedidos</p>
+                    </div>
+                    <div class="pedidos-reportes-content">
+                        <div class="pedidos-reportes-filters">
+                            <div class="pedidos-form-row">
+                                <div class="pedidos-form-group">
+                                    <label class="pedidos-form-label">Fecha Inicio</label>
+                                    <input type="date" class="pedidos-form-input" id="reporte-fecha-inicio">
+                                </div>
+                                <div class="pedidos-form-group">
+                                    <label class="pedidos-form-label">Fecha Fin</label>
+                                    <input type="date" class="pedidos-form-input" id="reporte-fecha-fin">
+                                </div>
+                                <div class="pedidos-form-group">
+                                    <label class="pedidos-form-label">Tipo de Reporte</label>
+                                    <select class="pedidos-form-select" id="tipo-reporte">
+                                        <option value="ventas">Reporte de Ventas</option>
+                                        <option value="estados">Reporte por Estados</option>
+                                        <option value="metodos-pago">Reporte por Métodos de Pago</option>
+                                        <option value="clientes">Reporte por Clientes</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="pedidos-reportes-actions">
+                                <button class="pedidos-btn pedidos-btn-primary" id="generar-reporte">
+                                    <i class="fas fa-file-pdf"></i>
+                                    Generar PDF
+                                </button>
+                                <button class="pedidos-btn pedidos-btn-secondary" id="exportar-excel">
+                                    <i class="fas fa-file-excel"></i>
+                                    Exportar Excel
+                                </button>
+                            </div>
+                        </div>
+                        <div class="pedidos-reportes-results" id="pedidos-reportes-results">
+                            <!-- Los resultados del reporte se mostrarán aquí -->
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="pedidos-modal-footer">
+                <button class="pedidos-btn pedidos-btn-outline" id="cancel-pedidos">
+                    <i class="fas fa-arrow-left"></i>
+                    Volver
+                </button>
+                <button class="pedidos-btn pedidos-btn-danger" id="cancelar-pedido" style="display: none;">
+                    <i class="fas fa-times"></i>
+                    Cancelar Pedido
+                </button>
+                <button class="pedidos-btn pedidos-btn-primary" id="save-pedido" style="display: none;">
+                    <i class="fas fa-save"></i>
+                    Guardar Cambios
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Loading Overlay -->
+    <div class="pedidos-loading-overlay" id="pedidos-loading">
+        <div class="pedidos-loading-spinner">
+            <i class="fas fa-spinner fa-spin"></i>
+            <p>Cargando...</p>
+        </div>
+    </div>
+
+    <!-- Script para funcionalidad -->
+    <script src="../JS/pedidos-admin.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            // Elementos del DOM
+            const btnVerPedidos = document.getElementById('btn-ver-pedidos');
+            const btnReportes = document.getElementById('btn-reportes-pedidos');
+            const listSection = document.getElementById('pedidos-list-section');
+            const formSection = document.getElementById('pedidos-form-section');
+            const estadoSection = document.getElementById('pedidos-estado-section');
+            const reportesSection = document.getElementById('pedidos-reportes-section');
+            const saveBtn = document.getElementById('save-pedido');
+            const cancelarBtn = document.getElementById('cancelar-pedido');
+            const cancelBtn = document.getElementById('cancel-pedidos');
+            const form = document.getElementById('pedidos-form');
+            const modalTitle = document.getElementById('pedidos-modal-title');
+            const loadingOverlay = document.getElementById('pedidos-loading');
+
+            let currentAction = '';
+            let currentPedidoId = null;
+
+            // Función para mostrar loading
+            function showLoading(show) {
+                if (show) {
+                    loadingOverlay.classList.add('show');
+                } else {
+                    loadingOverlay.classList.remove('show');
+                }
+            }
+
+            // Función para mostrar sección
+            function showSection(section, action = '') {
+                // Ocultar todas las secciones
+                listSection.style.display = 'none';
+                formSection.style.display = 'none';
+                estadoSection.style.display = 'none';
+                reportesSection.style.display = 'none';
+
+                // Mostrar la sección correspondiente
+                if (section === 'list') {
+                    listSection.style.display = 'block';
+                    saveBtn.style.display = 'none';
+                    cancelarBtn.style.display = 'none';
+                } else if (section === 'form') {
+                    formSection.style.display = 'block';
+                    saveBtn.style.display = 'inline-flex';
+                    cancelarBtn.style.display = 'inline-flex';
+                } else if (section === 'estado') {
+                    estadoSection.style.display = 'block';
+                    saveBtn.style.display = 'none';
+                    cancelarBtn.style.display = 'none';
+                } else if (section === 'reportes') {
+                    reportesSection.style.display = 'block';
+                    saveBtn.style.display = 'none';
+                    cancelarBtn.style.display = 'none';
+                }
+
+                currentAction = action;
+            }
+
+            // Event Listeners para botones de acción
+            btnVerPedidos.addEventListener('click', function () {
+                modalTitle.textContent = 'Lista de Pedidos';
+                showSection('list', 'list');
+                loadPedidos();
+            });
+
+            btnReportes.addEventListener('click', function () {
+                modalTitle.textContent = 'Reportes de Pedidos';
+                showSection('reportes', 'reportes');
+                // Cargar pedidos si no están cargados
+                if (todosLosPedidos.length === 0) {
+                    loadPedidos();
+                }
+            });
+
+            // Variable para almacenar todos los pedidos
+            let todosLosPedidos = [];
+
+            // Función para cargar pedidos desde la API
+            async function loadPedidos() {
+                showLoading(true);
+                try {
+                    todosLosPedidos = await window.pedidosAPI.cargarPedidosDesdeAPI();
+                    mostrarPedidosEnTabla(todosLosPedidos);
+                } catch (error) {
+                    console.error('Error al cargar pedidos:', error);
+                    mostrarMensajeError('Error al cargar los pedidos. Por favor, intenta nuevamente.');
+                } finally {
+                    showLoading(false);
+                }
+            }
+
+            // Función para mostrar pedidos en la tabla
+            function mostrarPedidosEnTabla(pedidos) {
+                const tbody = document.getElementById('pedidos-tbody');
+                tbody.innerHTML = '';
+
+                if (pedidos.length === 0) {
+                    tbody.innerHTML = '<tr><td colspan="8" style="text-align: center; padding: 20px;">No hay pedidos registrados</td></tr>';
+                    return;
+                }
+
+                pedidos.forEach(pedido => {
+                    const row = document.createElement('tr');
+                    
+                    // Formatear fecha de pedido
+                    const fechaPedido = pedido.fecha_pedido ? new Date(pedido.fecha_pedido).toLocaleDateString('es-CO', {
+                        year: 'numeric',
+                        month: '2-digit',
+                        day: '2-digit',
+                        hour: '2-digit',
+                        minute: '2-digit'
+                    }) : 'N/A';
+
+                    // Fecha de entrega (no existe en la BD, mostrar N/A o calcular según estado)
+                    const fechaEntrega = pedido.estado === 'Entregado' ? 
+                        (pedido.fecha_pedido ? new Date(pedido.fecha_pedido).toLocaleDateString('es-CO', {
+                            year: 'numeric',
+                            month: '2-digit',
+                            day: '2-digit'
+                        }) : 'N/A') : 'Pendiente';
+
+                    // Formatear total con separador de miles
+                    const totalFormateado = new Intl.NumberFormat('es-CO', {
+                        style: 'currency',
+                        currency: 'COP',
+                        minimumFractionDigits: 0
+                    }).format(pedido.total || 0);
+
+                    // Clase para el estado
+                    const estadoClass = getEstadoClass(pedido.estado);
+
+                    row.innerHTML = `
+                        <td>${pedido.id_pedido}</td>
+                        <td>${pedido.nombre_cliente || 'Cliente no encontrado'}</td>
+                        <td>${totalFormateado}</td>
+                        <td>${pedido.metodo_pago || 'N/A'}</td>
+                        <td><span class="pedido-estado-badge ${estadoClass}">${pedido.estado || 'Pendiente'}</span></td>
+                        <td>${fechaPedido}</td>
+                        <td>${fechaEntrega}</td>
+                        <td>
+                            <button class="pedidos-btn-accion" onclick="verDetallePedido(${pedido.id_pedido})" title="Ver detalles">
+                                <i class="fas fa-eye"></i>
+                            </button>
+                        </td>
+                    `;
+                    tbody.appendChild(row);
+                });
+            }
+
+            // Función para obtener clase CSS según el estado
+            function getEstadoClass(estado) {
+                const estados = {
+                    'Pendiente': 'estado-pendiente',
+                    'Pagado': 'estado-pagado',
+                    'Entregado': 'estado-entregado',
+                    'Cancelado': 'estado-cancelado'
+                };
+                return estados[estado] || 'estado-pendiente';
+            }
+
+            // Función para ver detalle de pedido
+            window.verDetallePedido = function(idPedido) {
+                const pedido = todosLosPedidos.find(p => p.id_pedido === idPedido);
+                if (pedido) {
+                    let detalleTexto = `Pedido #${pedido.id_pedido}\n\n`;
+                    detalleTexto += `Cliente: ${pedido.nombre_cliente}\n`;
+                    detalleTexto += `Total: ${new Intl.NumberFormat('es-CO', { style: 'currency', currency: 'COP' }).format(pedido.total || 0)}\n`;
+                    detalleTexto += `Estado: ${pedido.estado}\n`;
+                    detalleTexto += `Método de Pago: ${pedido.metodo_pago}\n\n`;
+                    detalleTexto += `Productos:\n`;
+                    
+                    if (pedido.detalle && pedido.detalle.length > 0) {
+                        pedido.detalle.forEach((det, index) => {
+                            detalleTexto += `${index + 1}. Producto ID: ${det.id_producto} - Cantidad: ${det.cantidad} ${det.unidad} - Precio: ${new Intl.NumberFormat('es-CO', { style: 'currency', currency: 'COP' }).format(det.precio_unitario || 0)}\n`;
+                        });
+                    } else {
+                        detalleTexto += 'No hay detalles disponibles\n';
+                    }
+                    
+                    alert(detalleTexto);
+                }
+            };
+
+            // Función para mostrar mensaje de error
+            function mostrarMensajeError(mensaje) {
+                const tbody = document.getElementById('pedidos-tbody');
+                tbody.innerHTML = `<tr><td colspan="8" style="text-align: center; padding: 20px; color: #ef4444;">${mensaje}</td></tr>`;
+            }
+
+            // Event listeners para filtros
+            const searchInput = document.getElementById('search-pedidos');
+            const filterEstado = document.getElementById('filter-estado-pedido');
+            const filterMetodoPago = document.getElementById('filter-metodo-pago');
+            const filterFecha = document.getElementById('filter-fecha-pedido');
+
+            function aplicarFiltros() {
+                let pedidosFiltrados = [...todosLosPedidos];
+
+                // Filtro de búsqueda
+                const searchTerm = searchInput.value.toLowerCase();
+                if (searchTerm) {
+                    pedidosFiltrados = pedidosFiltrados.filter(pedido => {
+                        const nombreCliente = (pedido.nombre_cliente || '').toLowerCase();
+                        const idPedido = String(pedido.id_pedido || '');
+                        return nombreCliente.includes(searchTerm) || idPedido.includes(searchTerm);
+                    });
+                }
+
+                // Filtro por estado
+                const estadoFiltro = filterEstado.value;
+                if (estadoFiltro) {
+                    pedidosFiltrados = pedidosFiltrados.filter(pedido => pedido.estado === estadoFiltro);
+                }
+
+                // Filtro por método de pago
+                const metodoFiltro = filterMetodoPago.value;
+                if (metodoFiltro) {
+                    pedidosFiltrados = pedidosFiltrados.filter(pedido => {
+                        const metodo = (pedido.metodo_pago || '').toLowerCase();
+                        return metodo.includes(metodoFiltro.toLowerCase());
+                    });
+                }
+
+                // Filtro por fecha
+                const fechaFiltro = filterFecha.value;
+                if (fechaFiltro) {
+                    pedidosFiltrados = pedidosFiltrados.filter(pedido => {
+                        if (!pedido.fecha_pedido) return false;
+                        const fechaPedido = new Date(pedido.fecha_pedido).toISOString().split('T')[0];
+                        return fechaPedido === fechaFiltro;
+                    });
+                }
+
+                mostrarPedidosEnTabla(pedidosFiltrados);
+            }
+
+            // Agregar event listeners a los filtros
+            searchInput.addEventListener('input', aplicarFiltros);
+            filterEstado.addEventListener('change', aplicarFiltros);
+            filterMetodoPago.addEventListener('change', aplicarFiltros);
+            filterFecha.addEventListener('change', aplicarFiltros);
+
+            // Función para calcular total automáticamente
+            function calculateTotal() {
+                const subtotal = parseFloat(document.getElementById('pedido-subtotal').value) || 0;
+                const descuento = parseFloat(document.getElementById('pedido-descuento').value) || 0;
+                const total = subtotal - descuento;
+                document.getElementById('pedido-total').value = total.toFixed(2);
+            }
+
+            // Event listeners para cálculo automático
+            document.getElementById('pedido-subtotal').addEventListener('input', calculateTotal);
+            document.getElementById('pedido-descuento').addEventListener('input', calculateTotal);
+
+            // Event listener para guardar pedido
+            saveBtn.addEventListener('click', function () {
+                if (form.checkValidity()) {
+                    showLoading(true);
+                    const formData = new FormData(form);
+                    const pedidoData = Object.fromEntries(formData);
+
+                    setTimeout(() => {
+                        showLoading(false);
+                        alert('Pedido actualizado exitosamente!');
+                        console.log('Actualizar pedido:', currentPedidoId, pedidoData);
+                        showSection('list', 'list');
+                    }, 1500);
+                } else {
+                    alert('Por favor, completa todos los campos requeridos.');
+                }
+            });
+
+            // Event listener para cancelar pedido
+            cancelarBtn.addEventListener('click', function () {
+                if (confirm('¿Estás seguro de que quieres cancelar este pedido?')) {
+                    showLoading(true);
+                    setTimeout(() => {
+                        showLoading(false);
+                        alert('Pedido cancelado exitosamente!');
+                        console.log('Cancelar pedido:', currentPedidoId);
+                        showSection('list', 'list');
+                    }, 1500);
+                }
+            });
+
+            // Event listener para cancelar
+            cancelBtn.addEventListener('click', function () {
+                window.location.href = 'panel-admin.html';
+            });
+
+            // Función para obtener pedidos filtrados según los criterios del reporte
+            function obtenerPedidosFiltrados() {
+                const fechaInicio = document.getElementById('reporte-fecha-inicio').value;
+                const fechaFin = document.getElementById('reporte-fecha-fin').value;
+                const tipoReporte = document.getElementById('tipo-reporte').value;
+                
+                let pedidosFiltrados = [...todosLosPedidos];
+                
+                // Filtrar por fecha
+                if (fechaInicio) {
+                    pedidosFiltrados = pedidosFiltrados.filter(pedido => {
+                        if (!pedido.fecha_pedido) return false;
+                        const fechaPedido = new Date(pedido.fecha_pedido).toISOString().split('T')[0];
+                        return fechaPedido >= fechaInicio;
+                    });
+                }
+                
+                if (fechaFin) {
+                    pedidosFiltrados = pedidosFiltrados.filter(pedido => {
+                        if (!pedido.fecha_pedido) return false;
+                        const fechaPedido = new Date(pedido.fecha_pedido).toISOString().split('T')[0];
+                        return fechaPedido <= fechaFin;
+                    });
+                }
+                
+                // Filtrar por tipo de reporte
+                if (tipoReporte === 'estados') {
+                    // Agrupar por estado
+                    return pedidosFiltrados;
+                } else if (tipoReporte === 'metodos-pago') {
+                    // Agrupar por método de pago
+                    return pedidosFiltrados;
+                } else if (tipoReporte === 'clientes') {
+                    // Agrupar por cliente
+                    return pedidosFiltrados;
+                }
+                
+                return pedidosFiltrados;
+            }
+
+            // Función para generar PDF
+            function generarPDF() {
+                const { jsPDF } = window.jspdf;
+                const pedidosFiltrados = obtenerPedidosFiltrados();
+                const tipoReporte = document.getElementById('tipo-reporte').value;
+                const fechaInicio = document.getElementById('reporte-fecha-inicio').value;
+                const fechaFin = document.getElementById('reporte-fecha-fin').value;
+                
+                if (pedidosFiltrados.length === 0) {
+                    alert('No hay pedidos para generar el reporte con los filtros seleccionados.');
+                    return;
+                }
+                
+                showLoading(true);
+                
+                try {
+                    const doc = new jsPDF();
+                    let yPos = 20;
+                    const pageWidth = doc.internal.pageSize.getWidth();
+                    const pageHeight = doc.internal.pageSize.getHeight();
+                    const margin = 15;
+                    const maxWidth = pageWidth - (margin * 2);
+                    
+                    // Título del reporte
+                    doc.setFontSize(18);
+                    doc.setFont('helvetica', 'bold');
+                    let titulo = 'Reporte de Pedidos';
+                    if (tipoReporte === 'estados') titulo = 'Reporte por Estados';
+                    else if (tipoReporte === 'metodos-pago') titulo = 'Reporte por Métodos de Pago';
+                    else if (tipoReporte === 'clientes') titulo = 'Reporte por Clientes';
+                    
+                    doc.text(titulo, margin, yPos);
+                    yPos += 10;
+                    
+                    // Información del reporte
+                    doc.setFontSize(10);
+                    doc.setFont('helvetica', 'normal');
+                    const fechaActual = new Date().toLocaleDateString('es-CO');
+                    doc.text(`Fecha de generación: ${fechaActual}`, margin, yPos);
+                    yPos += 5;
+                    
+                    if (fechaInicio || fechaFin) {
+                        const rangoFechas = `Período: ${fechaInicio || 'Inicio'} - ${fechaFin || 'Fin'}`;
+                        doc.text(rangoFechas, margin, yPos);
+                        yPos += 5;
+                    }
+                    
+                    doc.text(`Total de pedidos: ${pedidosFiltrados.length}`, margin, yPos);
+                    yPos += 10;
+                    
+                    // Encabezados de la tabla
+                    doc.setFontSize(9);
+                    doc.setFont('helvetica', 'bold');
+                    const headers = ['ID', 'Cliente', 'Total', 'Método Pago', 'Estado', 'Fecha'];
+                    const colWidths = [15, 50, 30, 35, 30, 30];
+                    let xPos = margin;
+                    
+                    headers.forEach((header, index) => {
+                        doc.text(header, xPos, yPos);
+                        xPos += colWidths[index];
+                    });
+                    yPos += 8;
+                    
+                    // Línea separadora
+                    doc.setLineWidth(0.5);
+                    doc.line(margin, yPos - 3, pageWidth - margin, yPos - 3);
+                    yPos += 3;
+                    
+                    // Datos de los pedidos
+                    doc.setFontSize(8);
+                    doc.setFont('helvetica', 'normal');
+                    
+                    let totalGeneral = 0;
+                    
+                    pedidosFiltrados.forEach((pedido, index) => {
+                        // Verificar si necesitamos una nueva página
+                        if (yPos > pageHeight - 30) {
+                            doc.addPage();
+                            yPos = 20;
+                            
+                            // Reimprimir encabezados
+                            doc.setFontSize(9);
+                            doc.setFont('helvetica', 'bold');
+                            xPos = margin;
+                            headers.forEach((header, idx) => {
+                                doc.text(header, xPos, yPos);
+                                xPos += colWidths[idx];
+                            });
+                            yPos += 8;
+                            doc.line(margin, yPos - 3, pageWidth - margin, yPos - 3);
+                            yPos += 3;
+                            doc.setFontSize(8);
+                            doc.setFont('helvetica', 'normal');
+                        }
+                        
+                        xPos = margin;
+                        const fechaPedido = pedido.fecha_pedido ? 
+                            new Date(pedido.fecha_pedido).toLocaleDateString('es-CO') : 'N/A';
+                        const total = parseFloat(pedido.total || 0);
+                        totalGeneral += total;
+                        
+                        const rowData = [
+                            String(pedido.id_pedido || ''),
+                            doc.splitTextToSize(pedido.nombre_cliente || 'N/A', colWidths[1] - 2),
+                            new Intl.NumberFormat('es-CO', { style: 'currency', currency: 'COP', minimumFractionDigits: 0 }).format(total),
+                            pedido.metodo_pago || 'N/A',
+                            pedido.estado || 'Pendiente',
+                            fechaPedido
+                        ];
+                        
+                        // Ajustar altura si el nombre del cliente es largo
+                        const maxHeight = Math.max(...rowData.map((cell, idx) => 
+                            Array.isArray(cell) ? cell.length * 4 : 4
+                        ));
+                        
+                        rowData.forEach((cell, idx) => {
+                            if (Array.isArray(cell)) {
+                                cell.forEach((line, lineIdx) => {
+                                    doc.text(line, xPos, yPos + (lineIdx * 4));
+                                });
+                            } else {
+                                doc.text(cell, xPos, yPos);
+                            }
+                            xPos += colWidths[idx];
+                        });
+                        
+                        yPos += maxHeight + 2;
+                    });
+                    
+                    // Total general
+                    yPos += 5;
+                    doc.setFontSize(10);
+                    doc.setFont('helvetica', 'bold');
+                    doc.line(margin, yPos - 2, pageWidth - margin, yPos - 2);
+                    yPos += 5;
+                    doc.text(`Total General: ${new Intl.NumberFormat('es-CO', { style: 'currency', currency: 'COP', minimumFractionDigits: 0 }).format(totalGeneral)}`, margin, yPos);
+                    
+                    // Guardar PDF
+                    const nombreArchivo = `reporte_pedidos_${tipoReporte}_${new Date().toISOString().split('T')[0]}.pdf`;
+                    doc.save(nombreArchivo);
+                    
+                    showLoading(false);
+                    alert('Reporte PDF generado exitosamente!');
+                } catch (error) {
+                    console.error('Error al generar PDF:', error);
+                    showLoading(false);
+                    alert('Error al generar el PDF. Por favor, intenta nuevamente.');
+                }
+            }
+
+            // Función para generar Excel
+            function generarExcel() {
+                const pedidosFiltrados = obtenerPedidosFiltrados();
+                const tipoReporte = document.getElementById('tipo-reporte').value;
+                const fechaInicio = document.getElementById('reporte-fecha-inicio').value;
+                const fechaFin = document.getElementById('reporte-fecha-fin').value;
+                
+                if (pedidosFiltrados.length === 0) {
+                    alert('No hay pedidos para generar el reporte con los filtros seleccionados.');
+                    return;
+                }
+                
+                showLoading(true);
+                
+                try {
+                    // Preparar datos para Excel
+                    const datosExcel = pedidosFiltrados.map(pedido => {
+                        const fechaPedido = pedido.fecha_pedido ? 
+                            new Date(pedido.fecha_pedido).toLocaleDateString('es-CO') : 'N/A';
+                        const total = parseFloat(pedido.total || 0);
+                        
+                        return {
+                            'ID Pedido': pedido.id_pedido || '',
+                            'Cliente': pedido.nombre_cliente || 'N/A',
+                            'Total': total,
+                            'Método de Pago': pedido.metodo_pago || 'N/A',
+                            'Estado': pedido.estado || 'Pendiente',
+                            'Fecha Pedido': fechaPedido,
+                            'Cantidad Productos': pedido.detalle ? pedido.detalle.length : 0
+                        };
+                    });
+                    
+                    // Crear libro de trabajo
+                    const wb = XLSX.utils.book_new();
+                    const ws = XLSX.utils.json_to_sheet(datosExcel);
+                    
+                    // Ajustar ancho de columnas
+                    const colWidths = [
+                        { wch: 10 }, // ID Pedido
+                        { wch: 30 }, // Cliente
+                        { wch: 15 }, // Total
+                        { wch: 18 }, // Método de Pago
+                        { wch: 12 }, // Estado
+                        { wch: 18 }, // Fecha Pedido
+                        { wch: 15 }  // Cantidad Productos
+                    ];
+                    ws['!cols'] = colWidths;
+                    
+                    // Agregar hoja al libro
+                    let nombreHoja = 'Reporte de Pedidos';
+                    if (tipoReporte === 'estados') nombreHoja = 'Reporte por Estados';
+                    else if (tipoReporte === 'metodos-pago') nombreHoja = 'Reporte por Métodos de Pago';
+                    else if (tipoReporte === 'clientes') nombreHoja = 'Reporte por Clientes';
+                    
+                    XLSX.utils.book_append_sheet(wb, ws, nombreHoja);
+                    
+                    // Agregar hoja de resumen si hay datos
+                    if (pedidosFiltrados.length > 0) {
+                        const totalGeneral = pedidosFiltrados.reduce((sum, p) => sum + parseFloat(p.total || 0), 0);
+                        const resumen = [
+                            { 'Concepto': 'Total de Pedidos', 'Valor': pedidosFiltrados.length },
+                            { 'Concepto': 'Total General', 'Valor': totalGeneral },
+                            { 'Concepto': 'Fecha Inicio', 'Valor': fechaInicio || 'No especificada' },
+                            { 'Concepto': 'Fecha Fin', 'Valor': fechaFin || 'No especificada' },
+                            { 'Concepto': 'Fecha Generación', 'Valor': new Date().toLocaleDateString('es-CO') }
+                        ];
+                        
+                        const wsResumen = XLSX.utils.json_to_sheet(resumen);
+                        wsResumen['!cols'] = [{ wch: 20 }, { wch: 25 }];
+                        XLSX.utils.book_append_sheet(wb, wsResumen, 'Resumen');
+                    }
+                    
+                    // Generar nombre del archivo
+                    const nombreArchivo = `reporte_pedidos_${tipoReporte}_${new Date().toISOString().split('T')[0]}.xlsx`;
+                    
+                    // Descargar archivo
+                    XLSX.writeFile(wb, nombreArchivo);
+                    
+                    showLoading(false);
+                    alert('Archivo Excel exportado exitosamente!');
+                } catch (error) {
+                    console.error('Error al generar Excel:', error);
+                    showLoading(false);
+                    alert('Error al generar el Excel. Por favor, intenta nuevamente.');
+                }
+            }
+
+            // Event listener para generar reporte PDF
+            document.getElementById('generar-reporte').addEventListener('click', function () {
+                generarPDF();
+            });
+
+            // Event listener para exportar Excel
+            document.getElementById('exportar-excel').addEventListener('click', function () {
+                generarExcel();
+            });
+
+            // Cerrar modal con Escape
+            document.addEventListener('keydown', function (event) {
+                if (event.key === 'Escape') {
+                    window.location.href = 'panel-admin.html';
+                }
+            });
+
+            // Animación de entrada del modal
+            setTimeout(() => {
+                document.getElementById('pedidos-modal').classList.add('show');
+            }, 100);
+        });
+    </script>
+</body>
+
+</html>

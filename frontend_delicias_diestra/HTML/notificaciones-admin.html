@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Notificaciones de Pedidos - Carnicería Delicias a tu Diestra</title>
+    <meta name="description" content="Panel de gestión de notificaciones de pedidos - Ver, gestionar y actualizar estado de pedidos">
+    <link rel="stylesheet" href="../CSS/notificaciones-admin.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+
+<body class="notificaciones-body">
+    <!-- Modal de Gestión de Notificaciones -->
+    <div class="notificaciones-modal show" id="notificaciones-modal" role="dialog" aria-modal="true"
+        aria-labelledby="notificaciones-modal-title">
+        <div class="notificaciones-modal-content notificaciones-modal-large">
+            <div class="notificaciones-modal-header">
+                <h3 class="notificaciones-modal-title" id="notificaciones-modal-title">Notificaciones de Pedidos</h3>
+                <a href="panel-admin.html">
+                    <button class="notificaciones-modal-close" id="close-notificaciones-modal" aria-label="Cerrar modal">
+                        <i class="fas fa-times"></i>
+                    </button>
+                </a>
+            </div>
+
+            <div class="notificaciones-modal-body">
+                <!-- Filtros -->
+                <div class="notificaciones-filtros">
+                    <div class="filtros-row">
+                        <div class="filtro-group">
+                            <label for="filtro-estado">Filtrar por estado:</label>
+                            <select id="filtro-estado" class="filtro-select">
+                                <option value="">Todos los estados</option>
+                                <option value="pendiente">Pendiente</option>
+                                <option value="en_proceso">En Proceso</option>
+                                <option value="enviado">Enviado</option>
+                                <option value="entregado">Entregado</option>
+                                <option value="cancelado">Cancelado</option>
+                            </select>
+                        </div>
+                        <div class="filtro-group">
+                            <button class="notificaciones-btn notificaciones-btn-primary" id="btn-refresh-notificaciones">
+                                <i class="fas fa-sync-alt"></i> Actualizar
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Estadísticas -->
+                <div class="notificaciones-estadisticas" id="notificaciones-estadisticas">
+                    <div class="estadistica-item">
+                        <i class="fas fa-bell"></i>
+                        <span class="estadistica-numero" id="total-notificaciones">0</span>
+                        <span class="estadistica-label">Total</span>
+                    </div>
+                    <div class="estadistica-item estadistica-pendiente">
+                        <i class="fas fa-clock"></i>
+                        <span class="estadistica-numero" id="pendientes">0</span>
+                        <span class="estadistica-label">Pendientes</span>
+                    </div>
+                    <div class="estadistica-item estadistica-proceso">
+                        <i class="fas fa-cog"></i>
+                        <span class="estadistica-numero" id="en-proceso">0</span>
+                        <span class="estadistica-label">En Proceso</span>
+                    </div>
+                    <div class="estadistica-item estadistica-enviado">
+                        <i class="fas fa-truck"></i>
+                        <span class="estadistica-numero" id="enviados">0</span>
+                        <span class="estadistica-label">Enviados</span>
+                    </div>
+                    <div class="estadistica-item estadistica-entregado">
+                        <i class="fas fa-check-circle"></i>
+                        <span class="estadistica-numero" id="entregados">0</span>
+                        <span class="estadistica-label">Entregados</span>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal Detalle Notificación -->
+    <div class="modal-overlay" id="modal-detalle-notificacion" style="display: none;">
+        <div class="modal-content modal-large">
+            <div class="modal-header">
+                <h2 class="modal-title">Detalle del Pedido</h2>
+                <button class="modal-close" type="button" onclick="cerrarModalDetalle()">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            <div class="modal-body" id="modal-detalle-body">
+                <!-- Contenido dinámico -->
+            </div>
+            <div class="modal-footer" id="modal-detalle-footer">
+                <!-- Botones dinámicos -->
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal de Notificaciones Filtradas -->
+    <div class="modal-overlay" id="modal-notificaciones-filtradas" style="display: none;">
+        <div class="modal-content modal-extra-large">
+            <div class="modal-header">
+                <h2 class="modal-title" id="modal-filtradas-title">Notificaciones</h2>
+                <button class="modal-close" type="button" onclick="cerrarModalNotificacionesFiltradas()">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            <div class="modal-body" id="modal-filtradas-body" style="max-height: 80vh; overflow-y: auto;">
+                <div class="notificaciones-container-filtradas" id="notificaciones-container-filtradas">
+                    <!-- Contenido dinámico -->
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Scripts -->
+    <script src="../JS/auth.js"></script>
+    <script src="../JS/notificaciones-admin.js"></script>
+</body>
+
+</html>
+

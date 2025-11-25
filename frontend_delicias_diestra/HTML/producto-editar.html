@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Editar Producto - Carnicería Delicias a tu Diestra</title>
+    <meta name="description" content="Seleccionar producto para editar">
+    <link rel="stylesheet" href="../CSS/gestion-producto.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+
+<body class="gestion-producto-body">
+    <!-- Modal de Selección de Producto para Editar -->
+    <div class="gestion-modal" id="gestion-modal">
+        <div class="gestion-modal-content">
+            <div class="gestion-modal-header">
+                <h3 class="gestion-modal-title">Editar Producto</h3>
+                <a href="gestion-producto.html">
+                    <button class="gestion-modal-close" id="close-gestion-modal">
+                        <i class="fas fa-times"></i>
+                    </button>
+                </a>
+            </div>
+            <div class="gestion-modal-body">
+                <p class="gestion-modal-description">Selecciona el producto que deseas editar:</p>
+
+                <!-- Filtros de búsqueda -->
+                <div class="productos-filtros">
+                    <div class="filtros-row">
+                        <div class="filtro-group">
+                            <label for="buscar-producto-editar">Buscar producto:</label>
+                            <input type="text" id="buscar-producto-editar" placeholder="Nombre del producto...">
+                        </div>
+                        <div class="filtro-group">
+                            <label for="filtro-categoria-editar">Categoría:</label>
+                            <select id="filtro-categoria-editar">
+                                <option value="">Todas las categorías</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Lista de productos para editar -->
+                <div class="productos-lista-editar" id="productos-lista-editar">
+                    <!-- Los productos se cargarán aquí dinámicamente -->
+                </div>
+
+                <!-- Paginación -->
+                <div class="productos-paginacion" id="productos-paginacion-editar">
+                    <!-- Los controles de paginación se cargarán aquí -->
+                </div>
+            </div>
+            <div class="gestion-modal-footer">
+                <a href="gestion-producto.html" class="gestion-btn gestion-btn-secondary">
+                    <i class="fas fa-arrow-left"></i>
+                    Volver a Gestión
+                </a>
+                <button class="gestion-btn gestion-btn-primary" id="actualizar-lista-editar">
+                    <i class="fas fa-sync-alt"></i>
+                    Actualizar Lista
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Loading Overlay -->
+    <div class="gestion-loading-overlay" id="gestion-loading">
+        <div class="gestion-loading-spinner">
+            <i class="fas fa-spinner fa-spin"></i>
+            <p>Cargando productos...</p>
+        </div>
+    </div>
+
+    <!-- Scripts -->
+    <script src="../JS/categoria.js"></script>
+    <script src="../JS/producto-editar.js"></script>
+</body>
+
+</html>

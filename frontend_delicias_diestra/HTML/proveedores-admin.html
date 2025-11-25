@@ -1,0 +1,208 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gestión de Proveedores - Carnicería Delicias a tu Diestra</title>
+    <meta name="description" content="Panel de gestión de proveedores - Crear, editar, eliminar y listar proveedores">
+    <link rel="stylesheet" href="../CSS/proveedores-admin.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+
+<body class="proveedores-body">
+    <!-- Modal de Gestión de Proveedores -->
+    <div class="proveedores-modal show" id="proveedores-modal">
+        <div class="proveedores-modal-content proveedores-modal-large">
+            <div class="proveedores-modal-header">
+                <h3 class="proveedores-modal-title" id="proveedores-modal-title">Gestión de Proveedores</h3>
+                <a href="panel-admin.html">
+                    <button class="proveedores-modal-close" id="close-proveedores-modal">
+                        <i class="fas fa-times"></i>
+                    </button>
+                </a>
+            </div>
+
+            <div class="proveedores-modal-body">
+                <!-- Botones de Acción -->
+                <div class="proveedores-actions-section">
+                    <div class="proveedores-actions-grid">
+                        <button class="proveedores-action-btn proveedores-action-primary" id="btn-crear-proveedor">
+                            <div class="proveedores-action-icon">
+                                <i class="fas fa-truck"></i>
+                            </div>
+                            <div class="proveedores-action-content">
+                                <h4 class="proveedores-action-title">Crear Proveedor</h4>
+                                <p class="proveedores-action-description">Registrar un nuevo proveedor en el sistema</p>
+                            </div>
+                        </button>
+
+                        <button class="proveedores-action-btn proveedores-action-info" id="btn-listar-proveedores">
+                            <div class="proveedores-action-icon">
+                                <i class="fas fa-list"></i>
+                            </div>
+                            <div class="proveedores-action-content">
+                                <h4 class="proveedores-action-title">Listar Proveedores</h4>
+                                <p class="proveedores-action-description">Ver todos los proveedores registrados</p>
+                            </div>
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Formulario de Proveedor (se muestra dinámicamente) -->
+                <div class="proveedores-form-section" id="proveedores-form-section" style="display: none;">
+                    <form class="proveedores-form" id="proveedores-form">
+                        <!-- Información del Proveedor -->
+                        <div class="proveedores-form-section">
+                            <h4 class="proveedores-form-section-title">Información del Proveedor</h4>
+                            <div class="proveedores-form-row">
+                                <div class="proveedores-form-group">
+                                    <label class="proveedores-form-label">Nombre Comercial *</label>
+                                    <input type="text" class="proveedores-form-input" id="proveedor-nombre-comercial"
+                                        name="nombre_proveedor" required>
+                                </div>
+                                <div class="proveedores-form-group">
+                                    <label class="proveedores-form-label">Usuario Responsable</label>
+                                    <select class="proveedores-form-select" id="proveedor-id-usuario" name="id_usuario">
+                                        <option value="">Seleccionar usuario</option>
+                                        <!-- Se cargarán dinámicamente desde la API -->
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Información de Contacto -->
+                        <div class="proveedores-form-section">
+                            <h4 class="proveedores-form-section-title">Información de Contacto</h4>
+                            <div class="proveedores-form-row">
+                                <div class="proveedores-form-group">
+                                    <label class="proveedores-form-label">Teléfono *</label>
+                                    <input type="tel" class="proveedores-form-input" id="proveedor-telefono" name="telefono"
+                                        required maxlength="10" pattern="[0-9]{7,10}" placeholder="Ej: 3001234567">
+                                    <small class="proveedores-form-help">Solo números, máximo 10 dígitos</small>
+                                </div>
+                                <div class="proveedores-form-group">
+                                    <label class="proveedores-form-label">Email</label>
+                                    <input type="email" class="proveedores-form-input" id="proveedor-email" name="email">
+                                </div>
+                            </div>
+                            <div class="proveedores-form-row">
+                                <div class="proveedores-form-group">
+                                    <label class="proveedores-form-label">Dirección</label>
+                                    <textarea class="proveedores-form-textarea" id="proveedor-direccion" name="direccion"
+                                        rows="2" maxlength="255" placeholder="Ej: Calle 26 # 28-02, Barrio Centro"></textarea>
+                                    <small class="proveedores-form-help">Incluya calle y número. No incluya código postal. Mínimo 5 caracteres.</small>
+                                </div>
+                                <div class="proveedores-form-group">
+                                    <label class="proveedores-form-label">Ciudad</label>
+                                    <input type="text" class="proveedores-form-input" id="proveedor-ciudad" name="ciudad">
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Información Comercial -->
+                        <div class="proveedores-form-section">
+                            <h4 class="proveedores-form-section-title">Información Comercial</h4>
+                            <div class="proveedores-form-row">
+                                <div class="proveedores-form-group">
+                                    <label class="proveedores-form-label">Método de Pago *</label>
+                                    <select class="proveedores-form-select" id="proveedor-metodo-pago" name="metodo_pago" required>
+                                        <option value="Efectivo">Efectivo</option>
+                                        <option value="Transferencia">Transferencia</option>
+                                    </select>
+                                </div>
+                                <div class="proveedores-form-group">
+                                    <label class="proveedores-form-label">Tiempo de Entrega (días)</label>
+                                    <input type="number" class="proveedores-form-input" id="proveedor-tiempo-entrega"
+                                        name="tiempo_entrega_dias" min="0" placeholder="Ej: 3">
+                                </div>
+                            </div>
+                            <div class="proveedores-form-group">
+                                <label class="proveedores-form-label">Observaciones</label>
+                                <textarea class="proveedores-form-textarea" id="proveedor-observaciones" name="observaciones"
+                                    rows="3" placeholder="Observaciones adicionales sobre el proveedor..."></textarea>
+                            </div>
+                            <div class="proveedores-form-group">
+                                <label class="proveedores-checkbox-label">
+                                    <input type="checkbox" id="proveedor-activo" name="activo" checked>
+                                    <span class="proveedores-checkmark"></span>
+                                    Proveedor Activo
+                                </label>
+                                <small class="proveedores-form-help">Los proveedores inactivos no aparecerán en las compras</small>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+
+                <!-- Lista de Proveedores (se muestra dinámicamente) -->
+                <div class="proveedores-list-section" id="proveedores-list-section" style="display: none;">
+                    <div class="proveedores-list-header">
+                        <h4 class="proveedores-list-title">Lista de Proveedores</h4>
+                        <div class="proveedores-list-actions">
+                            <div class="proveedores-search-box">
+                                <i class="fas fa-search"></i>
+                                <input type="text" placeholder="Buscar proveedores..." id="search-proveedores">
+                            </div>
+                            <select class="proveedores-select" id="filter-estado-proveedor">
+                                <option value="">Todos los estados</option>
+                                <option value="activo">Activos</option>
+                                <option value="inactivo">Inactivos</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="proveedores-table-container">
+                        <table class="proveedores-table" id="proveedores-table">
+                            <thead>
+                                <tr>
+                                    <th>ID</th>
+                                    <th>Nombre Comercial</th>
+                                    <th>Email</th>
+                                    <th>Teléfono</th>
+                                    <th>Ciudad</th>
+                                    <th>Método de Pago</th>
+                                    <th>Estado</th>
+                                    <th>Acciones</th>
+                                </tr>
+                            </thead>
+                            <tbody id="proveedores-tbody">
+                                <!-- Los proveedores se cargarán dinámicamente -->
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+            <div class="proveedores-modal-footer">
+                <button class="proveedores-btn proveedores-btn-outline" id="cancel-proveedores">
+                    <i class="fas fa-arrow-left"></i>
+                    Volver
+                </button>
+                <button class="proveedores-btn proveedores-btn-danger" id="delete-proveedor" style="display: none;">
+                    <i class="fas fa-trash"></i>
+                    Eliminar
+                </button>
+                <button class="proveedores-btn proveedores-btn-primary" id="save-proveedor" style="display: none;">
+                    <i class="fas fa-save"></i>
+                    Guardar Proveedor
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Loading Overlay -->
+    <div class="proveedores-loading-overlay" id="proveedores-loading">
+        <div class="proveedores-loading-spinner">
+            <i class="fas fa-spinner fa-spin"></i>
+            <p>Cargando...</p>
+        </div>
+    </div>
+
+    <!-- Script para funcionalidad -->
+    <script src="../JS/proveedores-admin.js"></script>
+</body>
+
+</html>
+

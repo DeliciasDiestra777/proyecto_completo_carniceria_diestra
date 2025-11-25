@@ -1,0 +1,375 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gestión de Inventario - Carnicería Delicias a tu Diestra</title>
+    <meta name="description" content="Panel de gestión de inventario - Registrar ajustes de stock">
+    <link rel="stylesheet" href="../CSS/inventario-admin.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+
+<body class="inventario-body">
+    <!-- Modal de Gestión de Inventario -->
+    <div class="inventario-modal show" id="inventario-modal" role="dialog" aria-modal="true"
+        aria-labelledby="inventario-modal-title">
+        <div class="inventario-modal-content">
+            <div class="inventario-modal-header">
+                <h3 class="inventario-modal-title" id="inventario-modal-title">Gestión de Inventario</h3>
+                <a href="panel-admin.html">
+                    <button class="inventario-modal-close" id="close-inventario-modal" aria-label="Cerrar modal">
+                        <i class="fas fa-times"></i>
+                    </button>
+                </a>
+            </div>
+
+            <div class="inventario-modal-body">
+                <!-- Botones de Acción -->
+                <div class="inventario-actions-section" id="inventario-actions-section">
+                    <div class="inventario-actions-grid">
+                        <button class="inventario-action-btn inventario-action-primary" id="btn-inventario-inicial">
+                            <div class="inventario-action-icon">
+                                <i class="fas fa-box-open"></i>
+                            </div>
+                            <div class="inventario-action-content">
+                                <h4 class="inventario-action-title">Inventario Inicial</h4>
+                                <p class="inventario-action-description">Registrar productos iniciales de la carnicería
+                                </p>
+                            </div>
+                        </button>
+
+                        <button class="inventario-action-btn inventario-action-info" id="btn-ver-inventario">
+                            <div class="inventario-action-icon">
+                                <i class="fas fa-list-alt"></i>
+                            </div>
+                            <div class="inventario-action-content">
+                                <h4 class="inventario-action-title">Ver Todo Mi Inventario</h4>
+                                <p class="inventario-action-description">Visualizar inventario consolidado completo</p>
+                            </div>
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Formulario de Inventario Inicial (se muestra dinámicamente) -->
+                <div class="inventario-form-section-container" id="inventario-form-section" style="display: none;">
+                    <form class="inventario-form" id="inventario-form" enctype="multipart/form-data">
+                        <!-- Campo oculto para ID de inventario (para edición) -->
+                        <input type="hidden" id="inventario-id" name="id_inventario">
+
+                        <!-- Información del Producto (se muestra solo cuando se crea nuevo producto) -->
+                        <div class="inventario-form-section" id="section-nuevo-producto" style="display: none;">
+                            <h4 class="inventario-form-section-title">
+                                <i class="fas fa-box"></i> Registrar Producto para Inventario
+                            </h4>
+                            <div class="inventario-form-row">
+                                <div class="inventario-form-group">
+                                    <label for="nuevo-producto-nombre" class="inventario-form-label">Nombre del Producto
+                                        *</label>
+                                    <input type="text" class="inventario-form-input" id="nuevo-producto-nombre"
+                                        name="nombre_producto" placeholder="Ej: Sobrebarriga" required>
+                                    <small class="inventario-form-help">Este producto estará disponible para crear desde
+                                        el módulo de Productos</small>
+                                    <div class="inventario-form-error" id="error-nuevo-producto-nombre"></div>
+                                </div>
+                                <div class="inventario-form-group">
+                                    <label for="nuevo-producto-categoria" class="inventario-form-label">Categoría
+                                        *</label>
+                                    <select class="inventario-form-select" id="nuevo-producto-categoria"
+                                        name="id_categoria" required>
+                                        <option value="">Seleccionar categoría</option>
+                                        <!-- Se cargarán dinámicamente -->
+                                    </select>
+                                    <div class="inventario-form-error" id="error-nuevo-producto-categoria"></div>
+                                </div>
+                            </div>
+                            <div
+                                style="margin-top: var(--spacing-4); padding-top: var(--spacing-4); border-top: 2px solid var(--color-primary);">
+                            </div>
+                        </div>
+
+                        <!-- Información del Producto (solo visible en modo edición) -->
+                        <div class="inventario-form-section" id="section-editar-producto" style="display: none;">
+                            <h4 class="inventario-form-section-title">
+                                <i class="fas fa-edit"></i> Editar Información del Producto
+                            </h4>
+                            <div class="inventario-form-row">
+                                <div class="inventario-form-group">
+                                    <label for="editar-producto-nombre" class="inventario-form-label">Nombre del
+                                        Producto *</label>
+                                    <input type="text" class="inventario-form-input" id="editar-producto-nombre"
+                                        name="nombre_producto_editar" placeholder="Ej: Sobrebarriga">
+                                    <small class="inventario-form-help">Nombre del producto en el inventario</small>
+                                    <div class="inventario-form-error" id="error-editar-producto-nombre"></div>
+                                </div>
+                                <div class="inventario-form-group">
+                                    <label for="editar-producto-categoria" class="inventario-form-label">Categoría
+                                        *</label>
+                                    <select class="inventario-form-select" id="editar-producto-categoria"
+                                        name="id_categoria_editar">
+                                        <option value="">Seleccionar categoría</option>
+                                        <!-- Se cargarán dinámicamente -->
+                                    </select>
+                                    <div class="inventario-form-error" id="error-editar-producto-categoria"></div>
+                                </div>
+                            </div>
+                            <div
+                                style="margin-top: var(--spacing-4); padding-top: var(--spacing-4); border-top: 2px solid var(--color-primary);">
+                            </div>
+                        </div>
+
+                        <!-- Información del Inventario -->
+                        <div class="inventario-form-section">
+                            <h4 class="inventario-form-section-title">Información del Inventario</h4>
+                            <div class="inventario-form-row">
+                                <div class="inventario-form-group">
+                                    <label for="inventario-producto" class="inventario-form-label">Producto *</label>
+                                    <div style="display: flex; gap: var(--spacing-2); align-items: flex-start;">
+                                        <select class="inventario-form-select" id="inventario-producto"
+                                            name="id_producto" style="flex: 1;">
+                                            <option value="">Seleccionar producto</option>
+                                            <!-- Se cargarán dinámicamente desde la API -->
+                                        </select>
+                                        <button type="button" class="inventario-btn inventario-btn-secondary"
+                                            id="btn-crear-producto-inventario" style="white-space: nowrap;">
+                                            <i class="fas fa-plus"></i>
+                                            Nuevo
+                                        </button>
+                                        <button type="button" class="inventario-btn inventario-btn-outline"
+                                            id="btn-seleccionar-producto-existente"
+                                            style="white-space: nowrap; display: none;">
+                                            <i class="fas fa-arrow-left"></i>
+                                            Seleccionar Existente
+                                        </button>
+                                    </div>
+                                    <small class="inventario-form-help" id="help-producto-select">Selecciona el producto
+                                        o crea uno nuevo</small>
+                                    <div class="inventario-form-error" id="error-producto"></div>
+                                </div>
+                            </div>
+                            <div class="inventario-form-row">
+                                <div class="inventario-form-group">
+                                    <label for="inventario-fecha" class="inventario-form-label">Fecha del Inventario
+                                        *</label>
+                                    <input type="date" class="inventario-form-input" id="inventario-fecha"
+                                        name="fecha_inventario" required>
+                                    <div class="inventario-form-error" id="error-fecha"></div>
+                                </div>
+                            </div>
+                            <div class="inventario-form-row">
+                                <div class="inventario-form-group">
+                                    <label for="inventario-unidad" class="inventario-form-label">Unidad de Medida
+                                        *</label>
+                                    <select class="inventario-form-select" id="inventario-unidad" name="unidad"
+                                        required>
+                                        <option value="">Seleccionar unidad</option>
+                                        <option value="kg">Kilogramo (kg)</option>
+                                        <option value="lb">Libra (lb)</option>
+                                        <option value="gr">Gramo (gr)</option>
+                                        <option value="unidad">Unidad</option>
+                                    </select>
+                                    <small class="inventario-form-help">Cárnicos: libras | Embutidos: unidades</small>
+                                    <div class="inventario-form-error" id="error-unidad"></div>
+                                </div>
+                                <div class="inventario-form-group">
+                                    <label for="inventario-cantidad" class="inventario-form-label">Cantidad (Inventario
+                                        Inicial) *</label>
+                                    <input type="number" class="inventario-form-input" id="inventario-cantidad"
+                                        name="inventario_inicial" step="0.001" min="0" required value="0">
+                                    <small class="inventario-form-help">Cantidad inicial del inventario (valor fijo una vez creado)</small>
+                                    <div class="inventario-form-error" id="error-cantidad"></div>
+                                </div>
+                            </div>
+                            <div class="inventario-form-row">
+                                <div class="inventario-form-group">
+                                    <label for="inventario-stock-minimo" class="inventario-form-label">Stock
+                                        Mínimo</label>
+                                    <input type="number" class="inventario-form-input" id="inventario-stock-minimo"
+                                        name="stock_minimo" step="0.001" min="0" value="0">
+                                    <small class="inventario-form-help">Cantidad mínima de stock antes de
+                                        alertar</small>
+                                    <div class="inventario-form-error" id="error-stock-minimo"></div>
+                                </div>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+
+                <!-- Lista de Registros Individuales de Inventario (para editar/eliminar) -->
+                <div class="inventario-list-section" id="inventario-list-individual-section" style="display: none;">
+                    <div class="inventario-list-header">
+                        <h4 class="inventario-list-title">Registros de Inventario</h4>
+                        <div class="inventario-list-actions">
+                            <div class="inventario-search-box">
+                                <i class="fas fa-search"></i>
+                                <input type="text" placeholder="Buscar registro..." id="search-inventario-individual">
+                            </div>
+                            <button class="inventario-btn inventario-btn-secondary"
+                                id="btn-refresh-inventario-individual">
+                                <i class="fas fa-sync-alt"></i>
+                                Actualizar
+                            </button>
+                        </div>
+                    </div>
+                    <div class="inventario-table-container">
+                        <table class="inventario-table" id="inventario-table-individual">
+                            <thead>
+                                <tr>
+                                    <th>ID</th>
+                                    <th>Producto</th>
+                                    <th>Fecha</th>
+                                    <th>Inventario Inicial</th>
+                                    <th>Entrada Compras</th>
+                                    <th>Salida Pedidos</th>
+                                    <th>Inventario Final</th>
+                                    <th>Stock Mínimo</th>
+                                    <th>Unidad</th>
+                                    <th>Costo</th>
+                                </tr>
+                            </thead>
+                            <tbody id="inventario-tbody-individual">
+                                <tr>
+                                    <td colspan="10" style="text-align: center; padding: 2rem;">
+                                        <i class="fas fa-spinner fa-spin" style="font-size: 2rem; color: #9ca3af;"></i>
+                                        <p style="margin-top: 1rem; color: #9ca3af;">Cargando registros...</p>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <!-- Tabla de Inventario Consolidado (se muestra dinámicamente) -->
+                <div class="inventario-list-section" id="inventario-list-section" style="display: none;">
+                    <div class="inventario-list-header">
+                        <h4 class="inventario-list-title">Inventario Consolidado</h4>
+                        <a href="inventario-admin.html">
+                            <button class="inventario-modal-close" id="close-inventario-modal"
+                                aria-label="Cerrar modal">
+                                <i class="fas fa-times"></i>
+                            </button>
+                        </a>
+                        <div class="inventario-list-actions">
+                            <div class="inventario-search-box">
+                                <i class="fas fa-search"></i>
+                                <input type="text" placeholder="Buscar producto..." id="search-inventario">
+                            </div>
+                            <button class="inventario-btn inventario-btn-secondary" id="btn-refresh-inventario">
+                                <i class="fas fa-sync-alt"></i>
+                                Actualizar
+                            </button>
+                        </div>
+                    </div>
+                    <div class="inventario-table-container">
+                        <table class="inventario-table" id="inventario-table">
+                            <thead>
+                                <tr>
+                                    <th>Producto</th>
+                                    <th>Inventario Inicial</th>
+                                    <th>Compras</th>
+                                    <th>Pedidos</th>
+                                    <th>Prod. Salida</th>
+                                    <th>Prod. Entrada</th>
+                                    <th>Inventario Saldo</th>
+                                    <th>Stock Mínimo</th>
+                                    <th>Unidad</th>
+                                    <th>ID Detalle Compra</th>
+                                    <th>ID Detalle Pedido</th>
+                                    <th>ID Producción</th>
+                                    <th>Acciones</th>
+                                </tr>
+                            </thead>
+                            <tbody id="inventario-tbody">
+                                <!-- Los datos se cargarán dinámicamente -->
+                                <tr>
+                                    <td colspan="10" style="text-align: center; padding: 2rem;">
+                                        <i class="fas fa-spinner fa-spin" style="font-size: 2rem; color: #9ca3af;"></i>
+                                        <p style="margin-top: 1rem; color: #9ca3af;">Cargando inventario...</p>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+            <div class="inventario-modal-footer">
+                <button class="inventario-btn inventario-btn-outline" id="cancel-inventario" type="button">
+                    <i class="fas fa-arrow-left"></i>
+                    Volver
+                </button>
+                <button class="inventario-btn inventario-btn-primary" id="save-inventario" type="submit"
+                    style="display: none;">
+                    <i class="fas fa-save"></i>
+                    Guardar Inventario
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal para Crear Producto -->
+    <div class="inventario-modal-producto" id="modal-crear-producto" style="display: none;">
+        <div class="inventario-modal-producto-content" style="max-width: 600px;">
+            <div class="inventario-modal-producto-header">
+                <h4>Crear Nuevo Producto</h4>
+                <button class="inventario-modal-producto-close" onclick="cerrarModalCrearProducto()">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            <div class="inventario-modal-producto-body">
+                <form id="form-crear-producto">
+                    <div class="inventario-form-row">
+                        <div class="inventario-form-group">
+                            <label class="inventario-form-label">Nombre del Producto *</label>
+                            <input type="text" class="inventario-form-input" id="producto-nombre" name="nombre" required
+                                placeholder="Ej: Carne de Res">
+                            <small class="inventario-form-help">Ingresa el nombre del producto</small>
+                        </div>
+                        <div class="inventario-form-group">
+                            <label class="inventario-form-label">Categoría *</label>
+                            <select class="inventario-form-select" id="producto-categoria" name="id_categoria" required>
+                                <option value="">Seleccionar categoría</option>
+                                <!-- Se cargarán dinámicamente -->
+                            </select>
+                            <small class="inventario-form-help">Selecciona la categoría del producto</small>
+                        </div>
+                    </div>
+                    <div class="inventario-form-group"
+                        style="margin-top: var(--spacing-4); padding-top: var(--spacing-4); border-top: 1px solid var(--color-gray-200);">
+                        <small style="color: var(--color-gray-600); font-style: italic;">
+                            <i class="fas fa-info-circle"></i>
+                            Nota: El producto se creará con datos básicos. Puedes completar el resto de la información
+                            (precio, cantidad, etc.) desde el módulo de gestión de productos.
+                        </small>
+                    </div>
+                </form>
+            </div>
+            <div class="inventario-modal-producto-footer">
+                <button class="inventario-btn inventario-btn-outline"
+                    onclick="cerrarModalCrearProducto()">Cancelar</button>
+                <button class="inventario-btn inventario-btn-primary" onclick="guardarProductoDesdeInventario()">Crear
+                    Producto</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Loading Overlay -->
+    <div class="inventario-loading-overlay" id="inventario-loading">
+        <div class="inventario-loading-spinner">
+            <i class="fas fa-spinner fa-spin"></i>
+            <p>Guardando inventario...</p>
+        </div>
+    </div>
+
+    <!-- Script para funcionalidad -->
+    <script src="../JS/dateHelper.js"></script>
+    <script src="../JS/utils-auto-select-zero.js"></script>
+    <script src="../JS/categoria.js"></script>
+    <script src="../JS/unidades-medida.js"></script>
+    <script src="../JS/inventario-admin.js"></script>
+</body>
+
+</html>

@@ -1,0 +1,210 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gestión de Categorías - Carnicería Delicias a tu Diestra</title>
+    <meta name="description" content="Modal para gestionar categorías de productos">
+    <link rel="stylesheet" href="../CSS/categoria-admin.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+
+<body class="categoria-admin-body">
+    <!-- Sección de Listado de Categorías -->
+    <div class="categoria-listing-section" id="categoria-listing-section">
+        <div class="categoria-listing-header">
+            <h2 class="categoria-listing-title">Gestión de Categorías</h2>
+            <div class="categoria-listing-actions">
+                <div class="categoria-search-box">
+                    <input type="text" id="categoria-search" placeholder="Buscar categorías..."
+                        class="categoria-search-input">
+                    <i class="fas fa-search categoria-search-icon"></i>
+                </div>
+                <button class="categoria-btn categoria-btn-primary" id="btn-nueva-categoria">
+                    <i class="fas fa-plus"></i>
+                    Nueva Categoría
+                </button>
+                <button class="categoria-modal-close" id="close-categoria-modal">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+        </div>
+
+        <div class="categoria-listing-content">
+            <div class="categoria-stats" id="categoria-stats">
+                <div class="categoria-stat">
+                    <span class="categoria-stat-number" id="total-categorias">0</span>
+                    <span class="categoria-stat-label">Total</span>
+                </div>
+                <div class="categoria-stat">
+                    <span class="categoria-stat-number" id="categorias-activas">0</span>
+                    <span class="categoria-stat-label">Activas</span>
+                </div>
+                <div class="categoria-stat">
+                    <span class="categoria-stat-number" id="categorias-inactivas">0</span>
+                    <span class="categoria-stat-label">Inactivas</span>
+                </div>
+                <div class="categoria-stat categoria-stat-warning" id="categorias-duplicadas-container"
+                    style="display: none;">
+                    <span class="categoria-stat-number" id="categorias-duplicadas">0</span>
+                    <span class="categoria-stat-label">Duplicadas</span>
+                </div>
+            </div>
+
+            <div class="categoria-table-container">
+                <table class="categoria-table" id="categoria-table">
+                    <thead>
+                        <tr>
+                            <th>Nombre</th>
+                            <th>Descripción</th>
+                            <th>Estado</th>
+                            <th>Fecha Creación</th>
+                            <th>Acciones</th>
+                        </tr>
+                    </thead>
+                    <tbody id="categoria-table-body">
+                        <!-- Las categorías se cargarán dinámicamente -->
+                    </tbody>
+                </table>
+            </div>
+
+            <div class="categoria-empty-state" id="categoria-empty-state" style="display: none;">
+                <div class="categoria-empty-icon">
+                    <i class="fas fa-tags"></i>
+                </div>
+                <h3 class="categoria-empty-title">No hay categorías</h3>
+                <p class="categoria-empty-message">Comienza creando tu primera categoría</p>
+                <button class="categoria-btn categoria-btn-primary" id="btn-crear-primera-categoria">
+                    <i class="fas fa-plus"></i>
+                    Crear Primera Categoría
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal de Gestión de Categorías -->
+    <div class="categoria-modal" id="categoria-modal">
+        <div class="categoria-modal-content">
+            <div class="categoria-modal-header">
+                <h3 class="categoria-modal-title" id="categoria-modal-title">Nueva Categoría</h3>
+                <button class="categoria-modal-close" id="close-categoria-modal">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            <div class="categoria-modal-body">
+                <form class="categoria-form" id="categoria-form">
+                    <!-- Información Básica -->
+                    <div class="categoria-form-section">
+                        <h4 class="categoria-form-section-title">Información de la Categoría</h4>
+                        <div class="categoria-form-group">
+                            <label class="categoria-form-label">Nombre de la Categoría *</label>
+                            <input type="text" class="categoria-form-input" id="categoria-name" name="nombre_categoria"
+                                required placeholder="Ej: Pollo, Res, Cerdo...">
+                            <small class="categoria-form-help">Nombre único para identificar la categoría</small>
+                        </div>
+                        <div class="categoria-form-group">
+                            <label class="categoria-form-label">Descripción</label>
+                            <textarea class="categoria-form-input" id="categoria-description"
+                                name="descripcion_categoria" rows="3"
+                                placeholder="Descripción opcional de la categoría..."></textarea>
+                            <small class="categoria-form-help">Descripción adicional de la categoría</small>
+                        </div>
+                    </div>
+
+                    <!-- Configuración -->
+                    <div class="categoria-form-section">
+                        <h4 class="categoria-form-section-title">Configuración</h4>
+                        <div class="categoria-form-row">
+                            <div class="categoria-form-group">
+                                <label class="categoria-form-label">Orden de Visualización</label>
+                                <input type="number" class="categoria-form-input" id="categoria-order" name="orden"
+                                    min="0" placeholder="0">
+                                <small class="categoria-form-help">Número para ordenar las categorías (0 =
+                                    primero)</small>
+                            </div>
+                            <div class="categoria-form-group">
+                                <label class="categoria-form-label">Estado de la Categoría</label>
+                                <select class="categoria-form-input" id="categoria-status" name="estado_categoria"
+                                    required>
+                                    <option value="activo" selected>Activa</option>
+                                    <option value="inactivo">Inactiva</option>
+                                </select>
+                                <small class="categoria-form-help">Estado general de la categoría en el sistema</small>
+                            </div>
+                        </div>
+                        <div class="categoria-form-group">
+                            <label class="categoria-form-label categoria-checkbox-label">
+                                <input type="checkbox" class="categoria-checkbox" id="categoria-mostrar-catalogo" 
+                                    name="mostrar_en_catalogo" checked>
+                                <span class="categoria-checkbox-text">
+                                    <i class="fas fa-store"></i> Mostrar en catálogo
+                                </span>
+                            </label>
+                            <small class="categoria-form-help">Si está desactivado, la categoría no se mostrará en el catálogo público, solo en el panel administrativo</small>
+                        </div>
+                    </div>
+
+                    <!-- Vista Previa -->
+                    <div class="categoria-form-section">
+                        <h4 class="categoria-form-section-title">Vista Previa</h4>
+                        <div class="categoria-preview">
+                            <div class="categoria-preview-card">
+                                <div class="categoria-preview-icon">
+                                    <i class="fas fa-tag"></i>
+                                </div>
+                                <div class="categoria-preview-content">
+                                    <h5 class="categoria-preview-name" id="preview-name">Nombre de la Categoría</h5>
+                                    <p class="categoria-preview-description" id="preview-description">Descripción de la
+                                        categoría</p>
+                                    <p class="categoria-preview-status" id="preview-status">Estado: Activa</p>
+                                    <p class="categoria-preview-catalogo" id="preview-catalogo">
+                                        <i class="fas fa-store"></i> Visible en catálogo: <span id="preview-catalogo-value">Sí</span>
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </form>
+            </div>
+            <div class="categoria-modal-footer">
+                <button type="button" class="categoria-btn categoria-btn-secondary"
+                    id="cancel-categoria">Cancelar</button>
+                <button type="button" class="categoria-btn categoria-btn-danger" id="delete-categoria"
+                    style="display: none;">Eliminar</button>
+                <button type="button" class="categoria-btn categoria-btn-primary" id="save-categoria">Guardar
+                    Categoría</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Loading Overlay -->
+    <div class="categoria-loading-overlay" id="categoria-loading">
+        <div class="categoria-loading-spinner">
+            <i class="fas fa-spinner fa-spin"></i>
+            <p>Cargando...</p>
+        </div>
+    </div>
+
+    <!-- Scripts -->
+    <script src="../JS/categoria.js"></script>
+    <script src="../JS/categoria-admin.js"></script>
+    <script>
+        // Botón de cerrar en el header de la página
+        document.addEventListener('DOMContentLoaded', function () {
+            const closeButton = document.getElementById('close-categoria-modal');
+            if (closeButton) {
+                closeButton.addEventListener('click', function () {
+                    // Redirigir al panel de administración
+                    window.location.href = 'panel-admin.html';
+                });
+            }
+        });
+    </script>
+
+</body>
+
+</html>
