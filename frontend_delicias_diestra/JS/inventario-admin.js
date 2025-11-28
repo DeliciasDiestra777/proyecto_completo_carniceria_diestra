@@ -49,9 +49,25 @@ document.addEventListener('DOMContentLoaded', function() {
     const sectionNuevoProducto = document.getElementById('section-nuevo-producto');
     let esProductoNuevo = false;
 
-    // Establecer fecha actual por defecto (usando zona horaria de Colombia)
+    // Función para obtener la fecha actual en formato YYYY-MM-DD (zona horaria local)
+    // Esta función usa la fecha local del sistema, no UTC, para evitar problemas de zona horaria
+    // Usa getFullYear(), getMonth(), getDate() que devuelven valores en la zona horaria local
+    function getFechaActualLocal() {
+        const hoy = new Date();
+        // Usar métodos que devuelven valores en zona horaria local
+        const año = hoy.getFullYear();
+        const mes = String(hoy.getMonth() + 1).padStart(2, '0');
+        const dia = String(hoy.getDate()).padStart(2, '0');
+        return `${año}-${mes}-${dia}`;
+    }
+    
+    // Establecer fecha actual por defecto (fecha local, no UTC) y hacer el campo readonly
     if (fechaInventario) {
-        fechaInventario.value = typeof getCurrentDateISO === 'function' ? getCurrentDateISO() : new Date().toISOString().split('T')[0];
+        // Priorizar getFechaActualLocal() que usa la fecha local del sistema
+        // getCurrentDateISO() puede tener problemas de zona horaria en algunos casos
+        fechaInventario.value = getFechaActualLocal();
+        // Hacer el campo readonly para que sea fija
+        fechaInventario.readOnly = true;
     }
 
     // ========================================
@@ -183,7 +199,9 @@ document.addEventListener('DOMContentLoaded', function() {
             }
             showSection('form');
             if (form) form.reset();
-            if (fechaInventario) fechaInventario.value = new Date().toISOString().split('T')[0];
+            if (fechaInventario) {
+                fechaInventario.value = getFechaActualLocal();
+            }
             calcularInventarioFinal();
             // Limpiar campos para inventario inicial
             if (inventarioEntrada) inventarioEntrada.value = 0;
@@ -685,7 +703,9 @@ document.addEventListener('DOMContentLoaded', function() {
                             ocultarSeccionNuevoProducto();
                             esProductoNuevo = false;
                             form.reset();
-                            if (fechaInventario) fechaInventario.value = typeof getCurrentDateISO === 'function' ? getCurrentDateISO() : new Date().toISOString().split('T')[0];
+                            if (fechaInventario) {
+                                fechaInventario.value = getFechaActualLocal();
+                            }
                             return;
                         }
                     }
@@ -820,7 +840,7 @@ document.addEventListener('DOMContentLoaded', function() {
             setTimeout(() => {
                 form.reset();
                 if (inventarioIdInput) inventarioIdInput.value = '';
-                fechaInventario.value = new Date().toISOString().split('T')[0];
+                fechaInventario.value = getFechaActualLocal();
                 calcularInventarioFinal();
                 currentInventarioId = null;
                 currentAction = '';
@@ -1926,7 +1946,7 @@ document.addEventListener('DOMContentLoaded', function() {
             
             // Establecer fecha actual
             if (fechaInventario) {
-                fechaInventario.value = new Date().toISOString().split('T')[0];
+                fechaInventario.value = getFechaActualLocal();
             }
             
             // Actualizar título del modal
