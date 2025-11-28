@@ -44,6 +44,7 @@ document.addEventListener('DOMContentLoaded', function () {
     let allProductos = []; // Almacenar todos los productos del inventario
     let allRecetas = []; // Almacenar todas las recetas
     let filteredRecetas = []; // Recetas filtradas
+    let recetaEditando = null; // ID de la receta que se está editando
 
     // Cargar categorías desde localStorage usando función global
     let categorias = getCategorias();
@@ -117,6 +118,13 @@ document.addEventListener('DOMContentLoaded', function () {
         document.body.style.overflow = '';
         // Volver a mostrar la sección de acciones principales
         showSection('actions', '');
+        // Resetear modo edición
+        recetaEditando = null;
+        // Actualizar título del modal
+        const modalTitle = document.getElementById('recetas-modal-title');
+        if (modalTitle) {
+            modalTitle.textContent = 'Gestión de Recetas';
+        }
     }
 
     // Función para agregar ingrediente a la receta
@@ -277,9 +285,19 @@ document.addEventListener('DOMContentLoaded', function () {
     function mostrarNotificacionReceta(mensaje, tipo = 'info') {
         const notification = document.createElement('div');
         notification.className = `recetas-notification recetas-notification-${tipo}`;
+        
+        let iconClass = 'fa-info-circle';
+        if (tipo === 'warning') {
+            iconClass = 'fa-exclamation-triangle';
+        } else if (tipo === 'error') {
+            iconClass = 'fa-exclamation-circle';
+        } else if (tipo === 'success') {
+            iconClass = 'fa-check-circle';
+        }
+        
         notification.innerHTML = `
             <div class="recetas-notification-content">
-                <i class="fas ${tipo === 'warning' ? 'fa-exclamation-triangle' : tipo === 'error' ? 'fa-exclamation-circle' : 'fa-info-circle'}"></i>
+                <i class="fas ${iconClass}"></i>
                 <span>${mensaje}</span>
             </div>
         `;
@@ -311,17 +329,27 @@ document.addEventListener('DOMContentLoaded', function () {
 
     // Event Listeners para botones de acción
     btnCrear.addEventListener('click', async function () {
+        recetaEditando = null; // Resetear modo edición
         showModal();
         showSection('crear', 'crear');
         // Cargar productos si no están cargados
         if (allProductos.length === 0) {
             await cargarProductos();
         }
+        // Limpiar formulario
+        if (crearForm) {
+            crearForm.reset();
+        }
         // Limpiar ingredientes
         ingredientesContainer.innerHTML = '';
         ingredienteCounter = 0;
         // Agregar primer ingrediente
         addIngredienteToRecipe();
+        // Actualizar título del modal
+        const modalTitle = document.getElementById('recetas-modal-title');
+        if (modalTitle) {
+            modalTitle.textContent = 'Crear Nueva Receta';
+        }
     });
 
     btnListar.addEventListener('click', function () {
@@ -384,9 +412,19 @@ document.addEventListener('DOMContentLoaded', function () {
             }
 
             try {
-                // Guardar receta
-                const response = await fetch(`${API_BASE_URL}/recetas`, {
-                    method: 'POST',
+                let response;
+                let url = `${API_BASE_URL}/recetas`;
+                let method = 'POST';
+                
+                // Si estamos editando, usar PUT
+                if (recetaEditando) {
+                    url = `${API_BASE_URL}/recetas/${recetaEditando}`;
+                    method = 'PUT';
+                }
+                
+                // Guardar o actualizar receta
+                response = await fetch(url, {
+                    method: method,
                     headers: {
                         'Content-Type': 'application/json'
                     },
@@ -398,13 +436,13 @@ document.addEventListener('DOMContentLoaded', function () {
 
                 if (!response.ok) {
                     const error = await response.json();
-                    throw new Error(error.error || 'Error al guardar receta');
+                    throw new Error(error.error || `Error al ${recetaEditando ? 'actualizar' : 'guardar'} receta`);
                 }
 
                 const resultado = await response.json();
                 showLoading(false);
-                alert('Receta guardada exitosamente!');
-                console.log('Receta guardada:', resultado);
+                mostrarNotificacionReceta(`Receta ${recetaEditando ? 'actualizada' : 'guardada'} exitosamente!`, 'success');
+                console.log(`Receta ${recetaEditando ? 'actualizada' : 'guardada'}:`, resultado);
                 
                 // Limpiar formulario
                 if (currentForm) {
@@ -412,6 +450,7 @@ document.addEventListener('DOMContentLoaded', function () {
                 }
                 ingredientesContainer.innerHTML = '';
                 ingredienteCounter = 0;
+                recetaEditando = null; // Resetear modo edición
                 
                 // Recargar lista de recetas si está visible
                 if (listarSection && listarSection.style.display === 'block') {
@@ -420,10 +459,16 @@ document.addEventListener('DOMContentLoaded', function () {
                 
                 // Volver a mostrar la sección de acciones principales (sin ocultar el modal)
                 showSection('actions', '');
+                
+                // Actualizar título del modal
+                const modalTitle = document.getElementById('recetas-modal-title');
+                if (modalTitle) {
+                    modalTitle.textContent = 'Gestión de Recetas';
+                }
             } catch (error) {
                 showLoading(false);
-                console.error('Error al guardar receta:', error);
-                alert(`Error al guardar receta: ${error.message}`);
+                console.error(`Error al ${recetaEditando ? 'actualizar' : 'guardar'} receta:`, error);
+                mostrarNotificacionReceta(`Error al ${recetaEditando ? 'actualizar' : 'guardar'} receta: ${error.message}`, 'error');
             }
         } else {
             alert('Por favor, completa todos los campos requeridos.');
@@ -613,10 +658,149 @@ document.addEventListener('DOMContentLoaded', function () {
     }
 
     // Funciones globales para editar y eliminar
-    window.editarReceta = function(id) {
-        console.log('Editar receta:', id);
-        // TODO: Implementar edición de receta
-        alert('Función de edición en desarrollo');
+    window.editarReceta = async function(id) {
+        try {
+            showLoading(true);
+            recetaEditando = id;
+            
+            // Cargar productos si no están cargados
+            if (allProductos.length === 0) {
+                await cargarProductos();
+            }
+            
+            // Obtener datos de la receta desde la API
+            const response = await fetch(`${API_BASE_URL}/recetas/${id}`);
+            
+            if (!response.ok) {
+                throw new Error('Error al cargar la receta');
+            }
+            
+            const receta = await response.json();
+            console.log('Receta cargada para edición:', receta);
+            
+            // Mostrar modal y sección de crear (que usaremos para editar)
+            showModal();
+            showSection('crear', 'crear');
+            
+            // Actualizar título del modal
+            const modalTitle = document.getElementById('recetas-modal-title');
+            if (modalTitle) {
+                modalTitle.textContent = 'Editar Receta';
+            }
+            
+            // Llenar campos del formulario
+            const nombreInput = document.getElementById('receta-nombre');
+            if (nombreInput) {
+                nombreInput.value = receta.nombre_receta || '';
+            }
+            
+            const descripcionTextarea = document.getElementById('receta-descripcion');
+            if (descripcionTextarea) {
+                descripcionTextarea.value = receta.descripcion || '';
+            }
+            
+            const rendimientoInput = document.getElementById('receta-rendimiento');
+            if (rendimientoInput) {
+                rendimientoInput.value = receta.rendimiento || '';
+            }
+            
+            const unidadSelect = document.getElementById('receta-unidad');
+            if (unidadSelect) {
+                unidadSelect.value = receta.unidad || '';
+            }
+            
+            const estadoSelect = document.getElementById('receta-estado');
+            if (estadoSelect) {
+                estadoSelect.value = receta.estado_receta || 'activa';
+            }
+            
+            // Limpiar contenedor de ingredientes
+            ingredientesContainer.innerHTML = '';
+            ingredienteCounter = 0;
+            
+            // Cargar ingredientes de la receta
+            const ingredientes = receta.ingredientes || [];
+            
+            if (ingredientes.length > 0) {
+                // Constante de conversión: 1 libra = 453.592 gramos
+                const GRAMOS_POR_LIBRA = 453.592;
+                
+                ingredientes.forEach((ingrediente, index) => {
+                    ingredienteCounter++;
+                    
+                    // Convertir libras a gramos si la unidad original era 'gr'
+                    let cantidad = ingrediente.cantidad || 0;
+                    let unidad = ingrediente.unidad || 'lb';
+                    
+                    // Si la unidad es 'lb' pero queremos mostrar en gramos si es pequeño
+                    // Por ahora, mostramos la cantidad tal cual viene
+                    // Si viene en libras y es un valor pequeño, podría ser que originalmente era gramos
+                    // Pero por ahora mantenemos la lógica simple
+                    
+                    const ingredienteHTML = `
+                        <div class="recetas-ingrediente-item" data-counter="${ingredienteCounter}">
+                            <div class="recetas-ingrediente-content">
+                                <div class="recetas-form-row">
+                                    <div class="recetas-form-group">
+                                        <label class="recetas-form-label">Nombre del Ingrediente *</label>
+                                        <div class="recetas-autocomplete-container">
+                                            <input type="text" 
+                                                   class="recetas-form-input recetas-ingrediente-input" 
+                                                   name="nombre_ingrediente[]" 
+                                                   id="ingrediente-input-${ingredienteCounter}"
+                                                   data-counter="${ingredienteCounter}"
+                                                   required 
+                                                   value="${ingrediente.nombre_ingrediente || ''}"
+                                                   placeholder="Ej: Sal, Pimienta, Carne... (escribe para buscar)">
+                                            <div class="recetas-autocomplete-dropdown" id="dropdown-ingrediente-${ingredienteCounter}" style="display: none;"></div>
+                                        </div>
+                                    </div>
+                                    <div class="recetas-form-group">
+                                        <label class="recetas-form-label">Cantidad *</label>
+                                        <input type="number" class="recetas-form-input" name="cantidad[]" step="0.01" min="0" required value="${cantidad}" placeholder="0.00">
+                                    </div>
+                                    <div class="recetas-form-group">
+                                        <label class="recetas-form-label">Unidad de Medida *</label>
+                                        <select class="recetas-form-select ingrediente-unidad-select" name="unidad[]" required>
+                                            <option value="">Seleccionar unidad</option>
+                                            <option value="lb" ${unidad === 'lb' ? 'selected' : ''}>Libra (lb)</option>
+                                            <option value="gr" ${unidad === 'gr' || unidad === 'g' || unidad === 'gramos' ? 'selected' : ''}>Gramos (Gr)</option>
+                                            <option value="unidad" ${unidad === 'unidad' ? 'selected' : ''}>Unidad</option>
+                                        </select>
+                                        <small class="recetas-form-help">Cárnicos: lb | Especias: Gr | Embutidos: unidad</small>
+                                    </div>
+                                    <div class="recetas-form-group">
+                                        <label class="recetas-form-label">Orden</label>
+                                        <input type="number" class="recetas-form-input" name="orden[]" min="1" value="${ingredienteCounter}">
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="recetas-ingrediente-actions">
+                                <button type="button" class="recetas-btn-icon recetas-btn-danger" onclick="removeIngrediente(${ingredienteCounter})" title="Eliminar ingrediente">
+                                    <i class="fas fa-trash"></i>
+                                </button>
+                            </div>
+                        </div>
+                    `;
+                    ingredientesContainer.insertAdjacentHTML('beforeend', ingredienteHTML);
+                    
+                    // Inicializar autocomplete para el nuevo campo
+                    setTimeout(() => {
+                        inicializarAutocompleteIngrediente(ingredienteCounter);
+                    }, 100);
+                });
+            } else {
+                // Si no hay ingredientes, agregar uno vacío
+                addIngredienteToRecipe();
+            }
+            
+            showLoading(false);
+        } catch (error) {
+            showLoading(false);
+            console.error('Error al cargar receta para edición:', error);
+            mostrarNotificacionReceta('Error al cargar la receta: ' + error.message, 'error');
+            recetaEditando = null;
+        }
     };
 
     window.eliminarReceta = function(id) {

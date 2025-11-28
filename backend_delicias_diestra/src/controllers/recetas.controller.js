@@ -142,16 +142,57 @@ class RecetasController {
   // Actualizar receta
   async actualizarReceta(req, res) {
     const { id } = req.params;
-    const { nombre_receta, descripcion, rendimiento, unidad, estado_receta, fecha_creacion, ingrediente_base, cantidad_base, unidad_base, observaciones } = req.body;
+    const { nombre_receta, descripcion, rendimiento, unidad, estado_receta, fecha_creacion, ingrediente_base, cantidad_base, unidad_base, observaciones, ingredientes } = req.body;
+    const connection = await db.getConnection();
+    
     try {
-      await db.query(
+      await connection.beginTransaction();
+
+      // Actualizar la receta
+      await connection.query(
         'UPDATE recetas SET nombre_receta = ?, descripcion = ?, rendimiento = ?, unidad = ?, estado_receta = ?, fecha_creacion = ?, ingrediente_base = ?, cantidad_base = ?, unidad_base = ?, observaciones = ? WHERE id_receta = ?',
         [nombre_receta, descripcion, rendimiento, unidad, estado_receta, fecha_creacion, ingrediente_base, cantidad_base, unidad_base, observaciones, id]
       );
+
+      // Actualizar ingredientes si se proporcionaron (si la tabla existe)
+      if (ingredientes && Array.isArray(ingredientes)) {
+        try {
+          // Eliminar ingredientes antiguos
+          await connection.query('DELETE FROM ingredientes_receta WHERE id_receta = ?', [id]);
+          
+          // Insertar nuevos ingredientes
+          if (ingredientes.length > 0) {
+            for (const ingrediente of ingredientes) {
+              const { nombre_ingrediente, cantidad, unidad: unidadIngrediente } = ingrediente;
+              
+              if (nombre_ingrediente && cantidad !== undefined && unidadIngrediente) {
+                await connection.query(
+                  'INSERT INTO ingredientes_receta (id_receta, nombre_ingrediente, cantidad, unidad) VALUES (?, ?, ?, ?)',
+                  [id, nombre_ingrediente, cantidad, unidadIngrediente]
+                );
+              }
+            }
+          }
+        } catch (err) {
+          // Si la tabla no existe, hacer rollback y retornar error
+          if (err.code === 'ER_NO_SUCH_TABLE' || err.message.includes("doesn't exist")) {
+            await connection.rollback();
+            return res.status(500).json({ 
+              error: 'La tabla ingredientes_receta no existe en la base de datos. Por favor, créala primero.' 
+            });
+          }
+          throw err; // Re-lanzar si es otro tipo de error
+        }
+      }
+
+      await connection.commit();
       res.json({ mensaje: 'Receta actualizada correctamente' });
     } catch (error) {
-      console.error(error);
-      res.status(500).json({ error: 'Error al actualizar receta' });
+      await connection.rollback();
+      console.error('Error al actualizar receta:', error);
+      res.status(500).json({ error: 'Error al actualizar receta: ' + error.message });
+    } finally {
+      connection.release();
     }
   }
 

@@ -503,6 +503,10 @@
     border-left-color: var(--color-error);
 }
 
+.recetas-notification-success {
+    border-left-color: var(--color-success);
+}
+
 .recetas-notification-content {
     display: flex;
     align-items: center;
@@ -520,6 +524,10 @@
 
 .recetas-notification-error .recetas-notification-content i {
     color: var(--color-error);
+}
+
+.recetas-notification-success .recetas-notification-content i {
+    color: var(--color-success);
 }
 
 .recetas-notification-content span {
