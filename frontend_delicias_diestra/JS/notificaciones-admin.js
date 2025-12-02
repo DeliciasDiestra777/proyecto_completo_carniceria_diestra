@@ -48,6 +48,35 @@ document.addEventListener('DOMContentLoaded', function() {
             });
         }
         
+        // Event listener para el botón de confirmar cancelación
+        const btnConfirmarCancelacion = document.getElementById('btn-confirmar-cancelacion');
+        if (btnConfirmarCancelacion) {
+            btnConfirmarCancelacion.addEventListener('click', () => {
+                confirmarCancelacionConMotivo();
+            });
+        }
+        
+        // Event listener para Enter en el textarea (Shift+Enter para nueva línea)
+        const textareaMotivo = document.getElementById('motivo-cancelacion-textarea');
+        if (textareaMotivo) {
+            textareaMotivo.addEventListener('keydown', (e) => {
+                if (e.key === 'Enter' && !e.shiftKey) {
+                    e.preventDefault();
+                    confirmarCancelacionConMotivo();
+                }
+            });
+        }
+        
+        // Cerrar modal de motivo de cancelación al hacer clic fuera
+        const modalMotivoCancelacion = document.getElementById('modal-motivo-cancelacion');
+        if (modalMotivoCancelacion) {
+            modalMotivoCancelacion.addEventListener('click', (e) => {
+                if (e.target === modalMotivoCancelacion) {
+                    cerrarModalMotivoCancelacion();
+                }
+            });
+        }
+        
         // Actualizar contador cada 30 segundos
         setInterval(() => {
             try {
@@ -209,12 +238,14 @@ function actualizarEstadisticas(notificacionesArray) {
     const enProceso = notificacionesArray.filter(n => n.estado === 'en_proceso').length;
     const enviados = notificacionesArray.filter(n => n.estado === 'enviado').length;
     const entregados = notificacionesArray.filter(n => n.estado === 'entregado').length;
+    const cancelados = notificacionesArray.filter(n => n.estado === 'cancelado').length;
     
     document.getElementById('total-notificaciones').textContent = total;
     document.getElementById('pendientes').textContent = pendientes;
     document.getElementById('en-proceso').textContent = enProceso;
     document.getElementById('enviados').textContent = enviados;
     document.getElementById('entregados').textContent = entregados;
+    document.getElementById('cancelados').textContent = cancelados;
     
     // Agregar event listeners a los elementos de estadísticas
     configurarEventListenersEstadisticas();
@@ -255,6 +286,13 @@ function configurarEventListenersEstadisticas() {
     if (entregadosItem) {
         entregadosItem.style.cursor = 'pointer';
         entregadosItem.onclick = () => abrirModalNotificacionesFiltradas('entregado', 'Notificaciones Entregadas');
+    }
+    
+    // Cancelados
+    const canceladosItem = document.querySelector('.estadistica-cancelado');
+    if (canceladosItem) {
+        canceladosItem.style.cursor = 'pointer';
+        canceladosItem.onclick = () => abrirModalNotificacionesFiltradas('cancelado', 'Notificaciones Canceladas');
     }
 }
 
@@ -453,9 +491,9 @@ function abrirModalDetalle(notif) {
         </div>
         
         ${notif.observaciones ? `
-        <div class="notificacion-detalle-section">
-            <h3>Observaciones</h3>
-            <p style="color: var(--color-gray-700);">${notif.observaciones}</p>
+        <div class="notificacion-detalle-section ${notif.estado === 'cancelado' ? 'observaciones-cancelado' : ''}">
+            <h3>${notif.estado === 'cancelado' ? '<i class="fas fa-exclamation-triangle" style="color: var(--color-error); margin-right: 8px;"></i> Motivo de Cancelación' : 'Observaciones'}</h3>
+            <p style="color: ${notif.estado === 'cancelado' ? 'var(--color-error)' : 'var(--color-gray-700)'}; ${notif.estado === 'cancelado' ? 'font-weight: 500; padding: var(--spacing-3); background: rgba(239, 68, 68, 0.1); border-radius: var(--border-radius-md); border-left: 4px solid var(--color-error);' : ''}">${notif.observaciones}</p>
         </div>
         ` : ''}
     `;
@@ -669,18 +707,67 @@ async function cambiarEstado(idNotificacion, nuevoEstado) {
     }
 }
 
-// Cancelar pedido
-async function cancelarPedido(idNotificacion) {
-    if (!confirm('¿Estás seguro de cancelar este pedido?')) {
+// Variable para almacenar el ID de notificación que se está cancelando
+let idNotificacionCancelar = null;
+
+// Cancelar pedido - muestra modal para solicitar motivo
+function cancelarPedido(idNotificacion) {
+    idNotificacionCancelar = idNotificacion;
+    abrirModalMotivoCancelacion();
+}
+
+// Abrir modal de motivo de cancelación
+function abrirModalMotivoCancelacion() {
+    const modal = document.getElementById('modal-motivo-cancelacion');
+    const textarea = document.getElementById('motivo-cancelacion-textarea');
+    
+    if (modal && textarea) {
+        textarea.value = '';
+        modal.style.display = 'flex';
+        
+        // Enfocar el textarea
+        setTimeout(() => {
+            textarea.focus();
+        }, 100);
+    }
+}
+
+// Cerrar modal de motivo de cancelación
+function cerrarModalMotivoCancelacion() {
+    const modal = document.getElementById('modal-motivo-cancelacion');
+    const textarea = document.getElementById('motivo-cancelacion-textarea');
+    
+    if (modal && textarea) {
+        modal.style.display = 'none';
+        textarea.value = '';
+        idNotificacionCancelar = null;
+    }
+}
+
+// Confirmar cancelación con motivo
+async function confirmarCancelacionConMotivo() {
+    const textarea = document.getElementById('motivo-cancelacion-textarea');
+    const motivo = textarea?.value.trim();
+    
+    if (!motivo) {
+        mostrarMensaje('Por favor, ingresa el motivo de cancelación', 'error');
+        textarea?.focus();
+        return;
+    }
+    
+    if (!idNotificacionCancelar) {
+        mostrarMensaje('Error: No se encontró el ID de la notificación', 'error');
+        cerrarModalMotivoCancelacion();
         return;
     }
     
     try {
-        const response = await fetch(`${API_BASE_URL}/notificaciones/${idNotificacion}/estado`, {
+        const response = await fetch(`${API_BASE_URL}/notificaciones/${idNotificacionCancelar}/estado`, {
             method: 'PUT',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({
-                estado: 'cancelado'
+                estado: 'cancelado',
+                observaciones: `[CANCELADO] Motivo: ${motivo}`
             })
         });
         
@@ -688,7 +775,8 @@ async function cancelarPedido(idNotificacion) {
             throw new Error('Error al cancelar pedido');
         }
         
-        mostrarMensaje('Pedido cancelado', 'success');
+        mostrarMensaje('Pedido cancelado correctamente', 'success');
+        cerrarModalMotivoCancelacion();
         cargarNotificaciones();
         cerrarModalDetalle();
     } catch (error) {
@@ -740,4 +828,5 @@ window.verificarComprobante = verificarComprobante;
 window.aceptarPedido = aceptarPedido;
 window.cambiarEstado = cambiarEstado;
 window.cancelarPedido = cancelarPedido;
+window.cerrarModalMotivoCancelacion = cerrarModalMotivoCancelacion;
 

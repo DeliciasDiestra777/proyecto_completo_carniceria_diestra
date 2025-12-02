@@ -197,21 +197,48 @@ document.addEventListener('DOMContentLoaded', function() {
     passwordInput.addEventListener('input', validateForm);
     passwordInput.addEventListener('blur', validateForm);
 
-    // Función para mostrar/ocultar contraseña
-    togglePasswordButton.addEventListener('click', function() {
+    // Función para mostrar/ocultar contraseña mientras se mantiene presionado
+    if (togglePasswordButton) {
         const passwordField = passwordInput;
         const icon = togglePasswordButton.querySelector('i');
         
-        if (passwordField.type === 'password') {
+        // Mostrar contraseña al presionar el botón
+        togglePasswordButton.addEventListener('mousedown', function(e) {
+            e.preventDefault(); // Prevenir que el input pierda el foco
             passwordField.type = 'text';
             icon.classList.remove('fa-eye');
             icon.classList.add('fa-eye-slash');
-        } else {
+        });
+        
+        // Ocultar contraseña al soltar el botón
+        togglePasswordButton.addEventListener('mouseup', function() {
             passwordField.type = 'password';
             icon.classList.remove('fa-eye-slash');
             icon.classList.add('fa-eye');
-        }
-    });
+        });
+        
+        // Ocultar contraseña si el mouse sale del botón mientras está presionado
+        togglePasswordButton.addEventListener('mouseleave', function() {
+            passwordField.type = 'password';
+            icon.classList.remove('fa-eye-slash');
+            icon.classList.add('fa-eye');
+        });
+        
+        // Manejar también eventos táctiles para dispositivos móviles
+        togglePasswordButton.addEventListener('touchstart', function(e) {
+            e.preventDefault();
+            passwordField.type = 'text';
+            icon.classList.remove('fa-eye');
+            icon.classList.add('fa-eye-slash');
+        });
+        
+        togglePasswordButton.addEventListener('touchend', function(e) {
+            e.preventDefault();
+            passwordField.type = 'password';
+            icon.classList.remove('fa-eye-slash');
+            icon.classList.add('fa-eye');
+        });
+    }
     
     // Listener para el checkbox "Recordarme"
     rememberCheckbox.addEventListener('change', function() {

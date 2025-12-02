@@ -557,7 +557,8 @@ body {
 /* Auth Footer */
 .auth-footer {
     text-align: center;
-    margin-top: var(--spacing-4);
+    margin-top: var(--spacing-6);
+    margin-bottom: var(--spacing-2);
 }
 
 .auth-footer p {
@@ -613,9 +614,16 @@ body {
     box-shadow: 0 0 0 3px rgba(239, 68, 68, 0.1);
 }
 
-.form-input.success {
+.form-input.success,
+.form-select.success {
     border-color: var(--color-success);
     box-shadow: 0 0 0 3px rgba(16, 185, 129, 0.1);
+}
+
+.form-input.error,
+.form-select.error {
+    border-color: var(--color-error);
+    box-shadow: 0 0 0 3px rgba(239, 68, 68, 0.1);
 }
 
 /* Loading states */

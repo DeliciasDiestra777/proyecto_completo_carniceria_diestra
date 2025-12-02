@@ -313,6 +313,10 @@
     color: var(--color-success);
 }
 
+.estadistica-cancelado i {
+    color: var(--color-danger, #ef4444);
+}
+
 .estadistica-numero {
     display: block;
     font-size: var(--font-size-3xl);
@@ -830,6 +834,18 @@
     border-bottom: 2px solid var(--color-gray-200);
 }
 
+.observaciones-cancelado {
+    background: rgba(239, 68, 68, 0.05);
+    padding: var(--spacing-4);
+    border-radius: var(--border-radius-md);
+    border: 1px solid rgba(239, 68, 68, 0.2);
+}
+
+.observaciones-cancelado h3 {
+    color: var(--color-error);
+    border-bottom-color: rgba(239, 68, 68, 0.3);
+}
+
 .detalle-info-grid {
     display: grid;
     grid-template-columns: repeat(2, 1fr);
@@ -927,5 +943,30 @@
         width: 100%;
         justify-content: center;
     }
+}
+
+/* Estilos para el modal de motivo de cancelación */
+.motivo-cancelacion-textarea {
+    width: 100%;
+    padding: var(--spacing-4);
+    border: 2px solid var(--color-gray-300);
+    border-radius: var(--border-radius-md);
+    font-size: var(--font-size-base);
+    font-family: var(--font-family);
+    resize: vertical;
+    min-height: 100px;
+    transition: border-color var(--transition-fast);
+    background: var(--color-white);
+    color: var(--color-gray-900);
+}
+
+.motivo-cancelacion-textarea:focus {
+    outline: none;
+    border-color: var(--color-error);
+    box-shadow: 0 0 0 3px rgba(239, 68, 68, 0.1);
+}
+
+.motivo-cancelacion-textarea::placeholder {
+    color: var(--color-gray-400);
 }
 

@@ -77,6 +77,11 @@
                         <span class="estadistica-numero" id="entregados">0</span>
                         <span class="estadistica-label">Entregados</span>
                     </div>
+                    <div class="estadistica-item estadistica-cancelado" style="cursor: pointer;">
+                        <i class="fas fa-times-circle"></i>
+                        <span class="estadistica-numero" id="cancelados">0</span>
+                        <span class="estadistica-label">Cancelados</span>
+                    </div>
                 </div>
 
             </div>
@@ -114,6 +119,37 @@
                 <div class="notificaciones-container-filtradas" id="notificaciones-container-filtradas">
                     <!-- Contenido dinámico -->
                 </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal Motivo Cancelación -->
+    <div class="modal-overlay" id="modal-motivo-cancelacion" style="display: none;">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 class="modal-title">Motivo de Cancelación</h2>
+                <button class="modal-close" type="button" onclick="cerrarModalMotivoCancelacion()">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            <div class="modal-body">
+                <p style="margin-bottom: var(--spacing-4); color: var(--color-gray-700);">
+                    Por favor, indica el motivo por el cual se cancela este pedido:
+                </p>
+                <textarea 
+                    id="motivo-cancelacion-textarea" 
+                    class="motivo-cancelacion-textarea" 
+                    placeholder="Ej: Cliente solicitó cancelación, producto no disponible, pago no verificado, etc."
+                    rows="4"
+                    required></textarea>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-secondary" type="button" onclick="cerrarModalMotivoCancelacion()">
+                    Cancelar
+                </button>
+                <button class="btn btn-danger" type="button" id="btn-confirmar-cancelacion">
+                    <i class="fas fa-times-circle"></i> Confirmar Cancelación
+                </button>
             </div>
         </div>
     </div>

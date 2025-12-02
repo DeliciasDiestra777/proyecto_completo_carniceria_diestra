@@ -64,11 +64,12 @@ function showNombreError(message) {
         errorElement.style.display = 'block';
     }
     if (nombreInput) {
+        nombreInput.classList.remove('success');
         nombreInput.classList.add('error');
     }
 }
 
-// Ocultar error de nombre
+// Ocultar error de nombre y mostrar éxito
 function hideNombreError() {
     const errorElement = document.getElementById('error-nombre');
     const nombreInput = document.getElementById('nombre');
@@ -77,6 +78,9 @@ function hideNombreError() {
     }
     if (nombreInput) {
         nombreInput.classList.remove('error');
+        if (nombreInput.value.trim()) {
+            nombreInput.classList.add('success');
+        }
     }
 }
 
@@ -138,6 +142,7 @@ function showApellidoError(message) {
         errorElement.style.display = 'block';
     }
     if (apellidoInput) {
+        apellidoInput.classList.remove('success');
         apellidoInput.classList.add('error');
     }
 }
@@ -150,6 +155,9 @@ function hideApellidoError() {
     }
     if (apellidoInput) {
         apellidoInput.classList.remove('error');
+        if (apellidoInput.value.trim()) {
+            apellidoInput.classList.add('success');
+        }
     }
 }
 
@@ -202,6 +210,7 @@ function showNumeroDocumentoError(message) {
         errorElement.style.display = 'block';
     }
     if (numeroInput) {
+        numeroInput.classList.remove('success');
         numeroInput.classList.add('error');
     }
 }
@@ -214,6 +223,9 @@ function hideNumeroDocumentoError() {
     }
     if (numeroInput) {
         numeroInput.classList.remove('error');
+        if (numeroInput.value.trim()) {
+            numeroInput.classList.add('success');
+        }
     }
 }
 
@@ -257,6 +269,7 @@ function showDireccionError(message) {
         errorElement.style.display = 'block';
     }
     if (direccionInput) {
+        direccionInput.classList.remove('success');
         direccionInput.classList.add('error');
     }
 }
@@ -269,6 +282,9 @@ function hideDireccionError() {
     }
     if (direccionInput) {
         direccionInput.classList.remove('error');
+        if (direccionInput.value.trim()) {
+            direccionInput.classList.add('success');
+        }
     }
 }
 
@@ -314,6 +330,7 @@ function showTelefonoError(message) {
         errorElement.style.display = 'block';
     }
     if (telefonoInput) {
+        telefonoInput.classList.remove('success');
         telefonoInput.classList.add('error');
     }
 }
@@ -326,6 +343,9 @@ function hideTelefonoError() {
     }
     if (telefonoInput) {
         telefonoInput.classList.remove('error');
+        if (telefonoInput.value.trim()) {
+            telefonoInput.classList.add('success');
+        }
     }
 }
 
@@ -367,6 +387,7 @@ function showPasswordError(message) {
         errorElement.style.display = 'block';
     }
     if (passwordInput) {
+        passwordInput.classList.remove('success');
         passwordInput.classList.add('error');
     }
 }
@@ -379,6 +400,9 @@ function hidePasswordError() {
     }
     if (passwordInput) {
         passwordInput.classList.remove('error');
+        if (passwordInput.value.trim()) {
+            passwordInput.classList.add('success');
+        }
     }
 }
 
@@ -413,6 +437,7 @@ function showConfirmPasswordError(message) {
         errorElement.style.display = 'block';
     }
     if (confirmPasswordInput) {
+        confirmPasswordInput.classList.remove('success');
         confirmPasswordInput.classList.add('error');
     }
 }
@@ -425,6 +450,96 @@ function hideConfirmPasswordError() {
     }
     if (confirmPasswordInput) {
         confirmPasswordInput.classList.remove('error');
+        if (confirmPasswordInput.value.trim()) {
+            confirmPasswordInput.classList.add('success');
+        }
+    }
+}
+
+// Validar tipo de documento
+function validarTipoDocumento(tipoDocumento) {
+    if (!tipoDocumento || tipoDocumento === '') {
+        return {
+            valid: false,
+            message: 'Debes seleccionar un tipo de documento'
+        };
+    }
+    
+    const tiposValidos = ['CC', 'CE', 'NIT'];
+    if (!tiposValidos.includes(tipoDocumento)) {
+        return {
+            valid: false,
+            message: 'Tipo de documento inválido'
+        };
+    }
+    
+    return {
+        valid: true,
+        message: ''
+    };
+}
+
+// Mostrar/ocultar error de tipo de documento
+function showTipoDocumentoError(message) {
+    const errorElement = document.getElementById('error-tipo-documento');
+    const tipoDocumentoSelect = document.getElementById('tipo_documento');
+    if (errorElement) {
+        errorElement.textContent = message;
+        errorElement.style.display = 'block';
+    }
+    if (tipoDocumentoSelect) {
+        tipoDocumentoSelect.classList.remove('success');
+        tipoDocumentoSelect.classList.add('error');
+    }
+}
+
+function hideTipoDocumentoError() {
+    const errorElement = document.getElementById('error-tipo-documento');
+    const tipoDocumentoSelect = document.getElementById('tipo_documento');
+    if (errorElement) {
+        errorElement.style.display = 'none';
+    }
+    if (tipoDocumentoSelect) {
+        tipoDocumentoSelect.classList.remove('error');
+        if (tipoDocumentoSelect.value) {
+            tipoDocumentoSelect.classList.add('success');
+        }
+    }
+}
+
+// Mostrar/ocultar error de email
+function showEmailError(message) {
+    let errorDiv = document.getElementById('email-error');
+    const emailInput = document.getElementById('email');
+    if (!errorDiv) {
+        errorDiv = document.createElement('div');
+        errorDiv.id = 'email-error';
+        errorDiv.className = 'form-error';
+        const emailGroup = emailInput.closest('.form-group');
+        if (emailGroup) {
+            emailGroup.appendChild(errorDiv);
+        }
+    }
+    errorDiv.textContent = message;
+    errorDiv.style.display = 'block';
+    if (emailInput) {
+        emailInput.classList.remove('success');
+        emailInput.classList.add('error');
+    }
+}
+
+function hideEmailError() {
+    const errorDiv = document.getElementById('email-error');
+    const emailInput = document.getElementById('email');
+    if (errorDiv) {
+        errorDiv.textContent = '';
+        errorDiv.style.display = 'none';
+    }
+    if (emailInput) {
+        emailInput.classList.remove('error');
+        if (emailInput.value.trim()) {
+            emailInput.classList.add('success');
+        }
     }
 }
 
@@ -562,6 +677,14 @@ document.addEventListener('DOMContentLoaded', function() {
             if (!soloLetrasRegex.test(valor)) {
                 e.target.value = valor.replace(/[^A-Za-zÁÉÍÓÚáéíóúÑñÜü\s]/g, '');
             }
+            // Validar en tiempo real
+            const validation = validarNombre(nombreInput.value);
+            if (!validation.valid && nombreInput.value.trim()) {
+                showNombreError(validation.message);
+            } else if (validation.valid) {
+                hideNombreError();
+            }
+            verificarTodosLosCamposValidos();
         });
         nombreInput.addEventListener('blur', function() {
             const validation = validarNombre(nombreInput.value);
@@ -570,9 +693,10 @@ document.addEventListener('DOMContentLoaded', function() {
             } else {
                 hideNombreError();
             }
+            verificarTodosLosCamposValidos();
         });
         nombreInput.addEventListener('focus', function() {
-            hideNombreError();
+            // No ocultar error al enfocar, solo validar
         });
     }
     
@@ -585,6 +709,14 @@ document.addEventListener('DOMContentLoaded', function() {
             if (!soloLetrasRegex.test(valor)) {
                 e.target.value = valor.replace(/[^A-Za-zÁÉÍÓÚáéíóúÑñÜü\s]/g, '');
             }
+            // Validar en tiempo real
+            const validation = validarApellido(apellidoInput.value);
+            if (!validation.valid && apellidoInput.value.trim()) {
+                showApellidoError(validation.message);
+            } else if (validation.valid) {
+                hideApellidoError();
+            }
+            verificarTodosLosCamposValidos();
         });
         apellidoInput.addEventListener('blur', function() {
             const validation = validarApellido(apellidoInput.value);
@@ -593,9 +725,24 @@ document.addEventListener('DOMContentLoaded', function() {
             } else {
                 hideApellidoError();
             }
+            verificarTodosLosCamposValidos();
         });
         apellidoInput.addEventListener('focus', function() {
-            hideApellidoError();
+            // No ocultar error al enfocar
+        });
+    }
+    
+    // Validación en tiempo real del tipo de documento
+    const tipoDocumentoSelect = document.getElementById('tipo_documento');
+    if (tipoDocumentoSelect) {
+        tipoDocumentoSelect.addEventListener('change', function() {
+            const validation = validarTipoDocumento(tipoDocumentoSelect.value);
+            if (!validation.valid) {
+                showTipoDocumentoError(validation.message);
+            } else {
+                hideTipoDocumentoError();
+            }
+            verificarTodosLosCamposValidos();
         });
     }
     
@@ -612,6 +759,14 @@ document.addEventListener('DOMContentLoaded', function() {
             if (e.target.value.length > 11) {
                 e.target.value = e.target.value.substring(0, 11);
             }
+            // Validar en tiempo real
+            const validation = validarNumeroDocumento(numeroDocumentoInput.value);
+            if (!validation.valid && numeroDocumentoInput.value.trim()) {
+                showNumeroDocumentoError(validation.message);
+            } else if (validation.valid) {
+                hideNumeroDocumentoError();
+            }
+            verificarTodosLosCamposValidos();
         });
         numeroDocumentoInput.addEventListener('blur', function() {
             const validation = validarNumeroDocumento(numeroDocumentoInput.value);
@@ -620,15 +775,25 @@ document.addEventListener('DOMContentLoaded', function() {
             } else {
                 hideNumeroDocumentoError();
             }
+            verificarTodosLosCamposValidos();
         });
         numeroDocumentoInput.addEventListener('focus', function() {
-            hideNumeroDocumentoError();
+            // No ocultar error al enfocar
         });
     }
     
     // Validación en tiempo real de dirección
     const direccionInput = document.getElementById('direccion');
     if (direccionInput) {
+        direccionInput.addEventListener('input', function() {
+            const validation = validarDireccion(direccionInput.value);
+            if (!validation.valid && direccionInput.value.trim()) {
+                showDireccionError(validation.message);
+            } else if (validation.valid) {
+                hideDireccionError();
+            }
+            verificarTodosLosCamposValidos();
+        });
         direccionInput.addEventListener('blur', function() {
             const validation = validarDireccion(direccionInput.value);
             if (!validation.valid) {
@@ -636,9 +801,10 @@ document.addEventListener('DOMContentLoaded', function() {
             } else {
                 hideDireccionError();
             }
+            verificarTodosLosCamposValidos();
         });
         direccionInput.addEventListener('focus', function() {
-            hideDireccionError();
+            // No ocultar error al enfocar
         });
     }
     
@@ -655,6 +821,14 @@ document.addEventListener('DOMContentLoaded', function() {
             if (e.target.value.length > 10) {
                 e.target.value = e.target.value.substring(0, 10);
             }
+            // Validar en tiempo real
+            const validation = validarTelefono(telefonoInput.value);
+            if (!validation.valid && telefonoInput.value.trim()) {
+                showTelefonoError(validation.message);
+            } else if (validation.valid) {
+                hideTelefonoError();
+            }
+            verificarTodosLosCamposValidos();
         });
         telefonoInput.addEventListener('blur', function() {
             const validation = validarTelefono(telefonoInput.value);
@@ -663,15 +837,71 @@ document.addEventListener('DOMContentLoaded', function() {
             } else {
                 hideTelefonoError();
             }
+            verificarTodosLosCamposValidos();
         });
         telefonoInput.addEventListener('focus', function() {
-            hideTelefonoError();
+            // No ocultar error al enfocar
+        });
+    }
+    
+    // Validación en tiempo real de email
+    const emailInput = document.getElementById('email');
+    if (emailInput) {
+        emailInput.addEventListener('input', function() {
+            const email = emailInput.value.trim();
+            if (email.length > 0) {
+                const emailValidation = isValidEmail(email);
+                if (!emailValidation.valid) {
+                    showEmailError(emailValidation.message);
+                } else {
+                    hideEmailError();
+                }
+            } else {
+                hideEmailError();
+            }
+            verificarTodosLosCamposValidos();
+        });
+        emailInput.addEventListener('blur', function() {
+            const email = emailInput.value.trim();
+            if (email.length > 0) {
+                const emailValidation = isValidEmail(email);
+                if (!emailValidation.valid) {
+                    showEmailError(emailValidation.message);
+                } else {
+                    hideEmailError();
+                }
+            } else {
+                hideEmailError();
+            }
+            verificarTodosLosCamposValidos();
+        });
+        emailInput.addEventListener('focus', function() {
+            // No ocultar error al enfocar
         });
     }
     
     // Validación en tiempo real de contraseña
     const passwordInput = document.getElementById('password');
     if (passwordInput) {
+        passwordInput.addEventListener('input', function() {
+            const validation = validarPassword(passwordInput.value);
+            if (!validation.valid && passwordInput.value.trim()) {
+                showPasswordError(validation.message);
+            } else if (validation.valid) {
+                hidePasswordError();
+            }
+            // Revalidar confirmación de contraseña si ya tiene valor
+            const confirmPasswordInput = document.getElementById('confirm-password');
+            if (confirmPasswordInput && confirmPasswordInput.value) {
+                const confirmValidation = validarConfirmPassword(passwordInput.value, confirmPasswordInput.value);
+                if (!confirmValidation.valid) {
+                    showConfirmPasswordError(confirmValidation.message);
+                } else {
+                    hideConfirmPasswordError();
+                }
+            }
+            verificarTodosLosCamposValidos();
+        });
         passwordInput.addEventListener('blur', function() {
             const validation = validarPassword(passwordInput.value);
             if (!validation.valid) {
@@ -679,23 +909,16 @@ document.addEventListener('DOMContentLoaded', function() {
             } else {
                 hidePasswordError();
             }
+            verificarTodosLosCamposValidos();
         });
         passwordInput.addEventListener('focus', function() {
-            hidePasswordError();
+            // No ocultar error al enfocar
         });
     }
     
     // Validación en tiempo real de confirmación de contraseña
     const confirmPasswordInput = document.getElementById('confirm-password');
     if (confirmPasswordInput && passwordInput) {
-        confirmPasswordInput.addEventListener('blur', function() {
-            const validation = validarConfirmPassword(passwordInput.value, confirmPasswordInput.value);
-            if (!validation.valid) {
-                showConfirmPasswordError(validation.message);
-            } else {
-                hideConfirmPasswordError();
-            }
-        });
         confirmPasswordInput.addEventListener('input', function() {
             // Validar en tiempo real si ambas contraseñas están llenas
             if (passwordInput.value && confirmPasswordInput.value) {
@@ -705,10 +928,121 @@ document.addEventListener('DOMContentLoaded', function() {
                 } else {
                     hideConfirmPasswordError();
                 }
+            } else if (confirmPasswordInput.value.trim()) {
+                showConfirmPasswordError('Debes confirmar tu contraseña');
+            } else {
+                hideConfirmPasswordError();
             }
+            verificarTodosLosCamposValidos();
+        });
+        confirmPasswordInput.addEventListener('blur', function() {
+            const validation = validarConfirmPassword(passwordInput.value, confirmPasswordInput.value);
+            if (!validation.valid) {
+                showConfirmPasswordError(validation.message);
+            } else {
+                hideConfirmPasswordError();
+            }
+            verificarTodosLosCamposValidos();
         });
         confirmPasswordInput.addEventListener('focus', function() {
-            hideConfirmPasswordError();
+            // No ocultar error al enfocar
+        });
+    }
+    
+    // Validación en tiempo real del checkbox de términos
+    const termsCheckbox = document.getElementById('terms');
+    if (termsCheckbox) {
+        termsCheckbox.addEventListener('change', function() {
+            verificarTodosLosCamposValidos();
+        });
+    }
+    
+    // Inicializar estado del botón
+    verificarTodosLosCamposValidos();
+    
+    // Función para mostrar/ocultar contraseña mientras se mantiene presionado
+    const togglePasswordButton = document.getElementById('toggle-password');
+    if (togglePasswordButton && passwordInput) {
+        const icon = togglePasswordButton.querySelector('i');
+        
+        // Mostrar contraseña al presionar el botón
+        togglePasswordButton.addEventListener('mousedown', function(e) {
+            e.preventDefault(); // Prevenir que el input pierda el foco
+            passwordInput.type = 'text';
+            icon.classList.remove('fa-eye');
+            icon.classList.add('fa-eye-slash');
+        });
+        
+        // Ocultar contraseña al soltar el botón
+        togglePasswordButton.addEventListener('mouseup', function() {
+            passwordInput.type = 'password';
+            icon.classList.remove('fa-eye-slash');
+            icon.classList.add('fa-eye');
+        });
+        
+        // Ocultar contraseña si el mouse sale del botón mientras está presionado
+        togglePasswordButton.addEventListener('mouseleave', function() {
+            passwordInput.type = 'password';
+            icon.classList.remove('fa-eye-slash');
+            icon.classList.add('fa-eye');
+        });
+        
+        // Manejar también eventos táctiles para dispositivos móviles
+        togglePasswordButton.addEventListener('touchstart', function(e) {
+            e.preventDefault();
+            passwordInput.type = 'text';
+            icon.classList.remove('fa-eye');
+            icon.classList.add('fa-eye-slash');
+        });
+        
+        togglePasswordButton.addEventListener('touchend', function(e) {
+            e.preventDefault();
+            passwordInput.type = 'password';
+            icon.classList.remove('fa-eye-slash');
+            icon.classList.add('fa-eye');
+        });
+    }
+    
+    // Función para mostrar/ocultar confirmación de contraseña mientras se mantiene presionado
+    const toggleConfirmPasswordButton = document.getElementById('toggle-confirm-password');
+    if (toggleConfirmPasswordButton && confirmPasswordInput) {
+        const icon = toggleConfirmPasswordButton.querySelector('i');
+        
+        // Mostrar contraseña al presionar el botón
+        toggleConfirmPasswordButton.addEventListener('mousedown', function(e) {
+            e.preventDefault(); // Prevenir que el input pierda el foco
+            confirmPasswordInput.type = 'text';
+            icon.classList.remove('fa-eye');
+            icon.classList.add('fa-eye-slash');
+        });
+        
+        // Ocultar contraseña al soltar el botón
+        toggleConfirmPasswordButton.addEventListener('mouseup', function() {
+            confirmPasswordInput.type = 'password';
+            icon.classList.remove('fa-eye-slash');
+            icon.classList.add('fa-eye');
+        });
+        
+        // Ocultar contraseña si el mouse sale del botón mientras está presionado
+        toggleConfirmPasswordButton.addEventListener('mouseleave', function() {
+            confirmPasswordInput.type = 'password';
+            icon.classList.remove('fa-eye-slash');
+            icon.classList.add('fa-eye');
+        });
+        
+        // Manejar también eventos táctiles para dispositivos móviles
+        toggleConfirmPasswordButton.addEventListener('touchstart', function(e) {
+            e.preventDefault();
+            confirmPasswordInput.type = 'text';
+            icon.classList.remove('fa-eye');
+            icon.classList.add('fa-eye-slash');
+        });
+        
+        toggleConfirmPasswordButton.addEventListener('touchend', function(e) {
+            e.preventDefault();
+            confirmPasswordInput.type = 'password';
+            icon.classList.remove('fa-eye-slash');
+            icon.classList.add('fa-eye');
         });
     }
 });
@@ -717,6 +1051,53 @@ document.addEventListener('DOMContentLoaded', function() {
 // FUNCIONES AUXILIARES
 // ========================================
 
+
+// ========================================
+// FUNCIÓN PARA VERIFICAR SI TODOS LOS CAMPOS SON VÁLIDOS
+// ========================================
+
+function verificarTodosLosCamposValidos() {
+    const nombre = document.getElementById('nombre')?.value.trim() || '';
+    const apellido = document.getElementById('apellido')?.value.trim() || '';
+    const tipoDocumento = document.getElementById('tipo_documento')?.value || '';
+    const numeroDocumento = document.getElementById('numero_documento')?.value.trim() || '';
+    const direccion = document.getElementById('direccion')?.value.trim() || '';
+    const email = document.getElementById('email')?.value.trim() || '';
+    const telefono = document.getElementById('telefono')?.value.trim() || '';
+    const password = document.getElementById('password')?.value || '';
+    const confirmPassword = document.getElementById('confirm-password')?.value || '';
+    const terms = document.getElementById('terms')?.checked || false;
+    
+    const validaciones = {
+        nombre: validarNombre(nombre).valid,
+        apellido: validarApellido(apellido).valid,
+        tipoDocumento: validarTipoDocumento(tipoDocumento).valid,
+        numeroDocumento: validarNumeroDocumento(numeroDocumento).valid,
+        direccion: validarDireccion(direccion).valid,
+        email: isValidEmail(email).valid,
+        telefono: validarTelefono(telefono).valid,
+        password: validarPassword(password).valid,
+        confirmPassword: validarConfirmPassword(password, confirmPassword).valid,
+        terms: terms
+    };
+    
+    const todosValidos = Object.values(validaciones).every(v => v === true);
+    
+    // Habilitar/deshabilitar botón
+    const submitButton = document.querySelector('button[type="submit"]');
+    if (submitButton) {
+        submitButton.disabled = !todosValidos;
+        if (todosValidos) {
+            submitButton.classList.remove('btn-disabled');
+            submitButton.classList.add('btn-enabled');
+        } else {
+            submitButton.classList.remove('btn-enabled');
+            submitButton.classList.add('btn-disabled');
+        }
+    }
+    
+    return todosValidos;
+}
 
 // ========================================
 // VALIDACIÓN DE EMAIL

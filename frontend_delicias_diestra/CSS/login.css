@@ -506,7 +506,8 @@ body {
 /* Auth Footer */
 .auth-footer {
     text-align: center;
-    margin-top: var(--spacing-4);
+    margin-top: var(--spacing-6);
+    margin-bottom: var(--spacing-2);
 }
 
 .auth-footer p {
