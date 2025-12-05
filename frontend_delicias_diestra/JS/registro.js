@@ -544,6 +544,115 @@ function hideEmailError() {
 }
 
 // ========================================
+// FUNCIÓN PARA MOSTRAR ERRORES DEL BACKEND
+// ========================================
+/**
+ * Muestra un error del backend de forma clara y resalta el campo problemático
+ * @param {string} mensaje - Mensaje de error detallado del backend
+ * @param {string|null} campoId - ID del campo que tiene el error (null si es error general)
+ */
+function mostrarErrorRegistro(mensaje, campoId) {
+    // Limpiar errores previos de todos los campos
+    const campos = ['numero_documento', 'email', 'telefono', 'tipo_documento'];
+    campos.forEach(campo => {
+        const input = document.getElementById(campo);
+        if (input) {
+            input.classList.remove('error');
+        }
+    });
+    
+    // Resaltar el campo específico con error
+    if (campoId) {
+        const campoInput = document.getElementById(campoId);
+        if (campoInput) {
+            // Agregar clase de error
+            campoInput.classList.add('error');
+            campoInput.classList.remove('success');
+            
+            // Hacer scroll suave al campo
+            campoInput.scrollIntoView({ behavior: 'smooth', block: 'center' });
+            
+            // Enfocar el campo después de un pequeño delay
+            setTimeout(() => {
+                campoInput.focus();
+                // Seleccionar el texto si es un input de texto
+                if (campoInput.type === 'text' || campoInput.type === 'email' || campoInput.type === 'tel') {
+                    campoInput.select();
+                }
+            }, 300);
+            
+            // Mostrar mensaje de error específico del campo
+            mostrarErrorCampo(campoId, mensaje);
+        }
+    }
+    
+    // Mostrar notificación clara al usuario
+    const icono = campoId ? '⚠️' : '❌';
+    const titulo = campoId ? 'Campo con error' : 'Error en el registro';
+    
+    // Crear mensaje formateado
+    let mensajeFormateado = `${icono} ${titulo}\n\n${mensaje}`;
+    
+    if (campoId) {
+        const nombreCampo = obtenerNombreCampo(campoId);
+        mensajeFormateado = `${icono} Error en el campo "${nombreCampo}"\n\n${mensaje}`;
+    }
+    
+    // Mostrar alerta con el mensaje detallado
+    alert(mensajeFormateado);
+}
+
+/**
+ * Obtiene el nombre legible del campo
+ */
+function obtenerNombreCampo(campoId) {
+    const nombres = {
+        'numero_documento': 'Número de documento',
+        'email': 'Correo electrónico',
+        'telefono': 'Teléfono',
+        'tipo_documento': 'Tipo de documento'
+    };
+    return nombres[campoId] || campoId;
+}
+
+/**
+ * Muestra el error en el campo específico del formulario
+ */
+function mostrarErrorCampo(campoId, mensaje) {
+    // Mapeo de campos a sus elementos de error
+    const mapeoErrores = {
+        'numero_documento': 'error-numero-documento',
+        'email': 'email-error',
+        'telefono': 'error-telefono',
+        'tipo_documento': 'error-tipo-documento'
+    };
+    
+    const errorId = mapeoErrores[campoId];
+    if (errorId) {
+        let errorElement = document.getElementById(errorId);
+        if (!errorElement) {
+            // Si no existe, crear el elemento de error
+            const campoInput = document.getElementById(campoId);
+            if (campoInput) {
+                const formGroup = campoInput.closest('.form-group');
+                if (formGroup) {
+                    errorElement = document.createElement('div');
+                    errorElement.id = errorId;
+                    errorElement.className = 'form-error';
+                    formGroup.appendChild(errorElement);
+                }
+            }
+        }
+        
+        if (errorElement) {
+            errorElement.textContent = mensaje;
+            errorElement.style.display = 'block';
+            errorElement.style.color = '#dc3545';
+        }
+    }
+}
+
+// ========================================
 // FUNCIONES PARA MODALES
 // ========================================
 
@@ -1312,21 +1421,26 @@ document.getElementById('registro-form').addEventListener('submit', async (e) =>
         console.log('Resultado completo:', resultado);
 
         if (!respuesta.ok) {
+            // Obtener información del error del backend
             const errorMessage = resultado.error || resultado.mensaje || "No se pudo registrar";
+            const campoError = resultado.campo || null;
+            const mensajeDetallado = resultado.mensaje || errorMessage;
             
-            // Mostrar mensaje específico según el tipo de error
-            let mensajeMostrar = "❌ Error: " + errorMessage;
+            // Mapeo de campos del backend a IDs de campos del formulario
+            const mapeoCampos = {
+                'numero_documento': 'numero_documento',
+                'email': 'email',
+                'telefono': 'telefono',
+                'tipo_documento': 'tipo_documento',
+                'general': null
+            };
             
-            // Detectar tipo de error y mostrar notificación específica
-            if (errorMessage.includes('número de documento') && errorMessage.includes('tipo')) {
-                mensajeMostrar = "⚠️ " + errorMessage + ". Por favor, verifica e intenta con otro número o tipo de documento.";
-            } else if (errorMessage.includes('número de documento')) {
-                mensajeMostrar = "⚠️ El número de documento ya está registrado con este tipo de documento. Por favor, verifica e intenta con otro número.";
-            } else if (errorMessage.includes('correo electrónico') || errorMessage.includes('email')) {
-                mensajeMostrar = "⚠️ El correo electrónico ya está registrado. Por favor, usa otro correo o inicia sesión.";
-            }
+            // Obtener el ID del campo a resaltar
+            const campoId = campoError ? mapeoCampos[campoError] : null;
             
-            alert(mensajeMostrar);
+            // Mostrar notificación clara y específica
+            mostrarErrorRegistro(mensajeDetallado, campoId);
+            
             console.error('Error detallado:', resultado);
         } else {
             // Registro exitoso en tabla clientes

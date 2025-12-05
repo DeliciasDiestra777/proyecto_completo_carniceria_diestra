@@ -35,7 +35,7 @@ CREATE TABLE usuarios (
     nombre_usuario VARCHAR(100) NOT NULL,
     email VARCHAR(300) UNIQUE NOT NULL,
     clave VARCHAR(500) NOT NULL,
-    telefono VARCHAR(20),
+    telefono VARCHAR(20) UNIQUE,
     direccion VARCHAR(255),
     fecha_registro DATETIME DEFAULT NOW(),
     CONSTRAINT fk_usuarios_rol FOREIGN KEY (id_rol) REFERENCES roles(id_rol)
@@ -50,7 +50,7 @@ CREATE TABLE clientes (
     apellido_cliente VARCHAR(100) NOT NULL,
     tipo_documento ENUM('CC', 'CE', 'NIT') NOT NULL,
     numero_documento VARCHAR(20) NOT NULL,
-    telefono VARCHAR(20),
+    telefono VARCHAR(20) UNIQUE,
     direccion VARCHAR(255),
     email VARCHAR(300) UNIQUE,
     clave VARCHAR(500) NOT NULL,

@@ -102,13 +102,33 @@ class ClientesController {
         [tipo_documento, numero_documento]
       );
       if (documentosExistentes.length > 0) {
-        return res.status(400).json({ error: `El número de documento ${numero_documento} con tipo ${tipo_documento} ya está registrado` });
+        return res.status(400).json({ 
+          error: 'El número de documento ya está registrado',
+          campo: 'numero_documento',
+          mensaje: `El número de documento ${numero_documento} con tipo ${tipo_documento} ya está registrado. Por favor, verifica el campo "Número de documento" e intenta con otro número.`
+        });
       }
 
       // Verificar si el email ya existe
       const [emailsExistentes] = await db.query('SELECT id_cliente FROM clientes WHERE email = ?', [email]);
       if (emailsExistentes.length > 0) {
-        return res.status(400).json({ error: 'El correo electrónico ya está registrado' });
+        return res.status(400).json({ 
+          error: 'El correo electrónico ya está registrado',
+          campo: 'email',
+          mensaje: `El correo electrónico ${email} ya está registrado. Por favor, verifica el campo "Correo electrónico" e intenta con otro correo o inicia sesión.`
+        });
+      }
+
+      // Verificar si el teléfono ya existe (si se proporciona)
+      if (telefono && telefono.trim() !== '') {
+        const [telefonosExistentes] = await db.query('SELECT id_cliente FROM clientes WHERE telefono = ?', [telefono]);
+        if (telefonosExistentes.length > 0) {
+          return res.status(400).json({ 
+            error: 'El teléfono ya está registrado',
+            campo: 'telefono',
+            mensaje: `El teléfono ${telefono} ya está registrado. Por favor, verifica el campo "Teléfono" e intenta con otro número.`
+          });
+        }
       }
 
       // Cifrar clave
@@ -125,7 +145,7 @@ class ClientesController {
       // Manejar errores específicos de MySQL
       if (error.code === 'ER_DUP_ENTRY') {
         // Detectar qué campo está duplicado
-        if (error.sqlMessage && error.sqlMessage.includes('numero_documento')) {
+        if (error.sqlMessage && (error.sqlMessage.includes('numero_documento') || error.sqlMessage.includes('uk_cliente_documento'))) {
           // Si hay un error de UNIQUE en numero_documento, verificar si es por tipo_documento también
           const [docExistente] = await db.query(
             'SELECT tipo_documento FROM clientes WHERE numero_documento = ? LIMIT 1', 
@@ -133,15 +153,36 @@ class ClientesController {
           );
           if (docExistente.length > 0) {
             return res.status(400).json({ 
-              error: `El número de documento ${numero_documento} con tipo ${tipo_documento} ya está registrado` 
+              error: 'El número de documento ya está registrado',
+              campo: 'numero_documento',
+              mensaje: `El número de documento ${numero_documento} con tipo ${tipo_documento} ya está registrado. Por favor, verifica el campo "Número de documento" e intenta con otro número.`
             });
           }
-          return res.status(400).json({ error: 'El número de documento ya está registrado' });
+          return res.status(400).json({ 
+            error: 'El número de documento ya está registrado',
+            campo: 'numero_documento',
+            mensaje: 'El número de documento ya está registrado. Por favor, verifica el campo "Número de documento" e intenta con otro número.'
+          });
         }
         if (error.sqlMessage && error.sqlMessage.includes('email')) {
-          return res.status(400).json({ error: 'El correo electrónico ya está registrado' });
+          return res.status(400).json({ 
+            error: 'El correo electrónico ya está registrado',
+            campo: 'email',
+            mensaje: `El correo electrónico ya está registrado. Por favor, verifica el campo "Correo electrónico" e intenta con otro correo o inicia sesión.`
+          });
         }
-        return res.status(400).json({ error: 'Ya existe un registro con estos datos' });
+        if (error.sqlMessage && error.sqlMessage.includes('telefono')) {
+          return res.status(400).json({ 
+            error: 'El teléfono ya está registrado',
+            campo: 'telefono',
+            mensaje: `El teléfono ya está registrado. Por favor, verifica el campo "Teléfono" e intenta con otro número.`
+          });
+        }
+        return res.status(400).json({ 
+          error: 'Ya existe un registro con estos datos',
+          campo: 'general',
+          mensaje: 'Ya existe un registro con estos datos. Por favor, verifica los campos y asegúrate de que no estén duplicados.'
+        });
       }
       
       res.status(500).json({ error: 'Error al agregar cliente' });
